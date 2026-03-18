@@ -1,0 +1,13 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  user: one
+  badge: one
+  challenge: one
+  earned_at: 2026-03-15 18:53:16
+
+two:
+  user: two
+  badge: two
+  challenge: two
+  earned_at: 2026-03-15 18:53:16

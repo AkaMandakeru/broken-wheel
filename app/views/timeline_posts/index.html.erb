@@ -1,0 +1,66 @@
+<div class="pt-8">
+  <%= link_to "← Back to challenge", challenge_path(@challenge), class: "text-[#FC4C02] hover:underline mb-6 inline-block" %>
+
+  <h1 class="text-2xl font-bold text-gray-900 mb-6">Timeline — <%= @challenge.title %></h1>
+
+  <%= form_with model: @timeline_post, url: challenge_timeline_posts_path(@challenge), local: true, html: { class: "bg-white rounded-lg shadow-sm border border-gray-200 p-6 mb-8", data: { controller: "image-preview", image_preview_multiple_value: "true" } } do |f| %>
+    <%= f.text_area :content, rows: 3, placeholder: "Share your workout, thoughts...", class: "w-full rounded-lg border-gray-300 shadow-sm focus:border-[#FC4C02] focus:ring-[#FC4C02] text-base sm:text-sm py-3 px-4 mb-4" %>
+    <div class="flex flex-col gap-4">
+      <div class="flex flex-wrap gap-4 items-center justify-between">
+        <%= f.file_field :images, multiple: true, accept: "image/*", class: "text-sm", data: { image_preview_target: "input", action: "change->image-preview#preview" } %>
+        <%= f.submit "Post", class: "bg-[#FC4C02] text-white px-6 py-2 rounded-lg hover:bg-[#e04402] transition font-medium cursor-pointer" %>
+      </div>
+      <div data-image-preview-target="container" class="flex flex-wrap gap-2"></div>
+    </div>
+  <% end %>
+
+  <div class="space-y-6">
+    <% @timeline_posts.each do |post| %>
+      <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+        <div class="flex items-center gap-3 mb-3">
+          <% if post.user.avatar.attached? %>
+            <%= image_tag url_for(post.user.avatar), class: "rounded-full w-10 h-10 object-cover" %>
+          <% else %>
+            <div class="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center text-gray-600 text-sm font-medium">
+              <%= post.user.first_name&.first %>
+            </div>
+          <% end %>
+          <div>
+            <p class="font-medium text-gray-900"><%= post.user.first_name %> <%= post.user.last_name %></p>
+            <p class="text-sm text-gray-500"><%= time_ago_in_words(post.created_at) %> ago</p>
+          </div>
+        </div>
+        <p class="text-gray-700 whitespace-pre-wrap"><%= post.content %></p>
+        <% if post.images.attached? %>
+          <div class="flex gap-2 mt-4 flex-wrap">
+            <% post.images.each do |img| %>
+              <%= image_tag url_for(img), class: "rounded-lg max-h-48 object-cover" %>
+            <% end %>
+          </div>
+        <% end %>
+        <% if post.workout %>
+          <div class="mt-4 p-3 bg-gray-50 rounded-lg text-sm text-gray-600">
+            Workout: <%= post.workout.sport %> — <%= post.workout.distance_km %> km, <%= post.workout.duration_minutes %> min
+          </div>
+        <% end %>
+
+        <div class="mt-4 pt-4 border-t border-gray-100">
+          <% post.timeline_post_comments.includes(:user).each do |comment| %>
+            <div class="flex gap-2 mb-2">
+              <span class="font-medium text-gray-900"><%= comment.user.first_name %>:</span>
+              <span class="text-gray-700"><%= comment.content %></span>
+            </div>
+          <% end %>
+          <%= form_with model: TimelinePostComment.new, url: challenge_timeline_post_comments_path(@challenge, post), local: true, html: { class: "flex gap-2 mt-2" } do |cf| %>
+            <%= cf.text_field :content, placeholder: "Add a comment...", class: "flex-1 rounded-lg border-gray-300 shadow-sm focus:border-[#FC4C02] focus:ring-[#FC4C02] text-base sm:text-sm py-3 px-4" %>
+            <%= cf.submit "Comment", class: "text-[#FC4C02] hover:underline text-sm font-medium cursor-pointer" %>
+          <% end %>
+        </div>
+      </div>
+    <% end %>
+  </div>
+
+  <% if @timeline_posts.empty? %>
+    <p class="text-gray-500 py-8">No posts yet. Be the first to share!</p>
+  <% end %>
+</div>

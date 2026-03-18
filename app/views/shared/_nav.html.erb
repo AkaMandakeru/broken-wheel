@@ -1,0 +1,79 @@
+<div data-controller="sidebar">
+  <nav class="bg-white border-b border-gray-200 fixed top-0 left-0 right-0 z-50">
+    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex justify-between h-16">
+        <div class="flex items-center gap-4">
+          <button type="button" data-action="click->sidebar#toggle" class="md:hidden p-2 -ml-2 text-gray-600 hover:text-[#FC4C02] focus:outline-none cursor-pointer touch-manipulation" aria-label="Open menu">
+            <i class="fa-solid fa-bars text-xl"></i>
+          </button>
+          <%= link_to root_path, class: "text-xl font-bold text-[#FC4C02] hover:text-[#e04402] transition" do %>
+            Sports Communities
+          <% end %>
+        </div>
+
+        <div class="hidden md:flex items-center gap-4">
+          <% if user_signed_in? %>
+            <%= link_to challenges_path, class: "text-gray-700 hover:text-[#FC4C02] transition flex items-center gap-2" do %>
+              <i class="fa-solid fa-trophy"></i> Challenges
+            <% end %>
+            <%= link_to workouts_path, class: "text-gray-700 hover:text-[#FC4C02] transition flex items-center gap-2" do %>
+              <i class="fa-solid fa-dumbbell"></i> Workouts
+            <% end %>
+            <%= link_to clubs_path, class: "text-gray-700 hover:text-[#FC4C02] transition flex items-center gap-2" do %>
+              <i class="fa-solid fa-users"></i> Clubs
+            <% end %>
+            <%= link_to profile_path, class: "text-gray-700 hover:text-[#FC4C02] transition flex items-center gap-2" do %>
+              <i class="fa-solid fa-user"></i> Profile
+            <% end %>
+            <%= button_to destroy_user_session_path, method: :delete, class: "text-gray-700 hover:text-[#FC4C02] transition flex items-center gap-2" do %>
+              <i class="fa-solid fa-right-from-bracket"></i> Log out
+            <% end %>
+          <% else %>
+            <%= link_to new_user_session_path, class: "text-gray-700 hover:text-[#FC4C02] transition flex items-center gap-2" do %>
+              <i class="fa-solid fa-right-to-bracket"></i> Log in
+            <% end %>
+            <%= link_to new_user_registration_path, class: "bg-[#FC4C02] text-white px-4 py-2 rounded-lg hover:bg-[#e04402] transition font-medium flex items-center gap-2" do %>
+              <i class="fa-solid fa-user-plus"></i> Sign up
+            <% end %>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <%# Sidebar overlay (mobile only) - starts hidden, shown when menu opens %>
+  <div data-sidebar-target="overlay" class="hidden fixed inset-0 z-[60] bg-black/50 md:hidden transition-opacity" data-action="click->sidebar#close" aria-hidden="true"></div>
+
+  <%# Sidebar panel - starts off-screen left, slides in when opened %>
+  <aside data-sidebar-target="panel" class="fixed top-0 left-0 z-[70] h-full w-64 -translate-x-full transition-transform duration-300 ease-in-out md:hidden bg-white shadow-xl">
+    <div class="flex flex-col h-full pt-16">
+      <div class="flex-1 overflow-y-auto px-4 py-4 space-y-1">
+        <% if user_signed_in? %>
+          <%= link_to challenges_path, class: "flex items-center gap-3 px-4 py-3 rounded-lg text-gray-700 hover:bg-gray-100 hover:text-[#FC4C02] transition", data: { action: "click->sidebar#close" } do %>
+            <i class="fa-solid fa-trophy w-5"></i> Challenges
+          <% end %>
+          <%= link_to workouts_path, class: "flex items-center gap-3 px-4 py-3 rounded-lg text-gray-700 hover:bg-gray-100 hover:text-[#FC4C02] transition", data: { action: "click->sidebar#close" } do %>
+            <i class="fa-solid fa-dumbbell w-5"></i> Workouts
+          <% end %>
+          <%= link_to clubs_path, class: "flex items-center gap-3 px-4 py-3 rounded-lg text-gray-700 hover:bg-gray-100 hover:text-[#FC4C02] transition", data: { action: "click->sidebar#close" } do %>
+            <i class="fa-solid fa-users w-5"></i> Clubs
+          <% end %>
+          <%= link_to profile_path, class: "flex items-center gap-3 px-4 py-3 rounded-lg text-gray-700 hover:bg-gray-100 hover:text-[#FC4C02] transition", data: { action: "click->sidebar#close" } do %>
+            <i class="fa-solid fa-user w-5"></i> Profile
+          <% end %>
+          <hr class="my-4 border-gray-200">
+          <%= button_to destroy_user_session_path, method: :delete, class: "flex items-center gap-3 w-full text-left px-4 py-3 rounded-lg text-gray-700 hover:bg-gray-100 hover:text-[#FC4C02] transition", data: { action: "click->sidebar#close" } do %>
+            <i class="fa-solid fa-right-from-bracket w-5"></i> Log out
+          <% end %>
+        <% else %>
+          <%= link_to new_user_session_path, class: "flex items-center gap-3 px-4 py-3 rounded-lg text-gray-700 hover:bg-gray-100 hover:text-[#FC4C02] transition", data: { action: "click->sidebar#close" } do %>
+            <i class="fa-solid fa-right-to-bracket w-5"></i> Log in
+          <% end %>
+          <%= link_to new_user_registration_path, class: "flex items-center gap-3 px-4 py-3 rounded-lg bg-[#FC4C02] text-white hover:bg-[#e04402] transition text-center font-medium", data: { action: "click->sidebar#close" } do %>
+            <i class="fa-solid fa-user-plus w-5"></i> Sign up
+          <% end %>
+        <% end %>
+      </div>
+    </div>
+  </aside>
+</div>

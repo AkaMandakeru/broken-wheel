@@ -1,0 +1,15 @@
+<div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+  <h2 class="text-lg font-semibold text-gray-900 mb-4"><%= local_assigns[:title] || "Your progress" %></h2>
+  <% target = challenge.target_value.to_f %>
+  <% progress = participation.progress_value.to_f %>
+  <% percent = target.positive? ? [100, (progress / target * 100).round].min : 0 %>
+  <div class="space-y-2">
+    <div class="flex justify-between text-sm">
+      <span class="text-gray-600"><%= progress %> / <%= target %> <%= challenge.target_unit %></span>
+      <span class="font-medium text-gray-900"><%= percent %>%</span>
+    </div>
+    <div class="h-3 bg-gray-200 rounded-full overflow-hidden">
+      <div class="h-full bg-[#FC4C02] rounded-full transition-all duration-500" style="width: <%= percent %>%"></div>
+    </div>
+  </div>
+</div>

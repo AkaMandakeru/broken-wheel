@@ -11,19 +11,37 @@
 
     <%= yield :head %>
 
-    <%# Enable PWA manifest for installable apps (make sure to enable in config/routes.rb too!) %>
-    <%#= tag.link rel: "manifest", href: pwa_manifest_path(format: :json) %>
+    <%= tag.link rel: "manifest", href: pwa_manifest_path(format: :json) %>
+    <meta name="theme-color" content="#FC4C02">
 
     <link rel="icon" href="/icon.png" type="image/png">
     <link rel="icon" href="/icon.svg" type="image/svg+xml">
     <link rel="apple-touch-icon" href="/icon.png">
 
-    <%# Includes all stylesheet files in app/assets/stylesheets %>
+    <script src="https://kit.fontawesome.com/6b3c680981.js" crossorigin="anonymous"></script>
+    <%= stylesheet_link_tag "tailwind", "data-turbo-track": "reload" %>
     <%= stylesheet_link_tag :app, "data-turbo-track": "reload" %>
     <%= javascript_importmap_tags %>
   </head>
 
-  <body>
-    <%= yield %>
+  <body class="min-h-screen bg-gray-50 pt-16">
+    <%= render "shared/nav" %>
+
+    <% if notice %>
+      <div class="bg-green-100 border-l-4 border-green-500 text-green-700 p-4 mx-auto max-w-4xl" role="alert">
+        <p><%= notice %></p>
+      </div>
+    <% end %>
+    <% if alert %>
+      <div class="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 mx-auto max-w-4xl" role="alert">
+        <p><%= alert %></p>
+      </div>
+    <% end %>
+
+    <main class="container mx-auto px-4 py-6 sm:px-6 lg:px-8 max-w-4xl">
+      <%= yield %>
+    </main>
+
+    <%= render "shared/footer" %>
   </body>
 </html>

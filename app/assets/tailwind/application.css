@@ -1,0 +1,14 @@
+@import "tailwindcss";
+
+@theme {
+  --color-primary: #FC4C02;
+  --color-primary-hover: #e04402;
+}
+
+@utility -translate-x-full {
+  translate: -100% 0;
+}
+
+@utility translate-x-0 {
+  translate: 0 0;
+}

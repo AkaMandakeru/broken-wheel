@@ -1,14 +1,33 @@
 Rails.application.routes.draw do
-  # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
-
-  # Reveal health status on /up that returns 200 if the app boots with no exceptions, otherwise 500.
-  # Can be used by load balancers and uptime monitors to verify that the app is live.
   get "up" => "rails/health#show", as: :rails_health_check
+  get "manifest", to: "pwa#manifest", as: :pwa_manifest, defaults: { format: :json }
+  get "service-worker", to: "pwa#service_worker", as: :pwa_service_worker
 
-  # Render dynamic PWA files from app/views/pwa/* (remember to link manifest in application.html.erb)
-  # get "manifest" => "rails/pwa#manifest", as: :pwa_manifest
-  # get "service-worker" => "rails/pwa#service_worker", as: :pwa_service_worker
+  devise_for :users, controllers: {
+    registrations: "users/registrations"
+  }
 
-  # Defines the root path route ("/")
-  # root "posts#index"
+  root "challenges#index"
+
+  get "profile", to: "profiles#show"
+  patch "profile", to: "profiles#update"
+  put "profile", to: "profiles#update"
+
+  resources :workouts, only: [:index, :create]
+  resources :challenges, only: [:index, :show] do
+    member do
+      post :join
+      get :invite
+    end
+    resources :timeline_posts, only: [:index, :create], path: "timeline" do
+      resources :comments, only: [:create], controller: "timeline_post_comments"
+    end
+  end
+
+  resources :clubs, only: [:index, :show, :create] do
+    member do
+      post :join
+      delete :leave
+    end
+  end
 end

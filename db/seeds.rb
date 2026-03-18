@@ -1,9 +1,24 @@
-# This file should ensure the existence of records required to run the application in every environment (production,
-# development, test). The code here should be idempotent so that it can be executed at any point in every environment.
-# The data can then be loaded with the bin/rails db:seed command (or created alongside the database with db:setup).
-#
-# Example:
-#
-#   ["Action", "Comedy", "Drama", "Horror"].each do |genre_name|
-#     MovieGenre.find_or_create_by!(name: genre_name)
-#   end
+# frozen_string_literal: true
+
+# Create sample challenges
+Challenge.find_or_create_by!(title: "Weekly Run 20km") do |c|
+  c.description = "Run 20km this week"
+  c.challenge_type = "weekly"
+  c.sport = "run"
+  c.target_value = 20
+  c.target_unit = "km"
+  c.starts_at = Date.current.beginning_of_week
+  c.ends_at = Date.current.end_of_week
+  c.status = "active"
+end
+
+Challenge.find_or_create_by!(title: "Monthly Bike 200km") do |c|
+  c.description = "Bike 200km this month"
+  c.challenge_type = "monthly"
+  c.sport = "bike"
+  c.target_value = 200
+  c.target_unit = "km"
+  c.starts_at = Date.current.beginning_of_month
+  c.ends_at = Date.current.end_of_month
+  c.status = "active"
+end

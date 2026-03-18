@@ -1,0 +1,43 @@
+<div class="pt-8">
+  <h1 class="text-2xl font-bold text-gray-900 mb-6">Challenges</h1>
+
+  <% if user_signed_in? %>
+    <p class="text-gray-600 mb-6">Browse and join challenges to compete with friends.</p>
+  <% else %>
+    <p class="text-gray-600 mb-6">Join challenges, track your workouts, and compete with friends. Sign up to get started.</p>
+    <div class="flex gap-4 mb-8">
+      <%= link_to "Sign up", new_user_registration_path, class: "bg-[#FC4C02] text-white px-6 py-3 rounded-lg hover:bg-[#e04402] transition font-medium" %>
+      <%= link_to "Log in", new_user_session_path, class: "border border-gray-300 px-6 py-3 rounded-lg hover:bg-gray-50 transition font-medium" %>
+    </div>
+  <% end %>
+
+  <div class="space-y-4">
+    <% @challenges.each do |challenge| %>
+      <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6 hover:shadow-md transition">
+        <div class="flex justify-between items-start">
+          <div>
+            <h2 class="text-lg font-semibold text-gray-900"><%= challenge.title %></h2>
+            <p class="text-sm text-gray-600 mt-1"><%= challenge.description %></p>
+            <div class="flex gap-4 mt-2 text-sm text-gray-500">
+              <span><%= challenge.sport&.capitalize %></span>
+              <span><%= challenge.target_value %> <%= challenge.target_unit %></span>
+              <span><%= challenge.challenge_type&.capitalize %></span>
+            </div>
+          </div>
+          <% if user_signed_in? %>
+            <% participation = current_user.challenge_participations.find_by(challenge_id: challenge.id) %>
+            <% if participation %>
+              <%= link_to "View", challenge_path(challenge), class: "bg-gray-100 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-200 transition font-medium" %>
+            <% else %>
+              <%= link_to "Join", challenge_path(challenge), class: "bg-[#FC4C02] text-white px-4 py-2 rounded-lg hover:bg-[#e04402] transition font-medium" %>
+            <% end %>
+          <% end %>
+        </div>
+      </div>
+    <% end %>
+  </div>
+
+  <% if @challenges.empty? %>
+    <p class="text-gray-500 py-8">No challenges yet. Run <code class="bg-gray-100 px-2 py-1 rounded">bin/rails db:seed</code> to add sample challenges.</p>
+  <% end %>
+</div>
