@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_03_15_215633) do
+ActiveRecord::Schema[8.1].define(version: 2026_03_22_182250) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -48,6 +48,10 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_15_215633) do
     t.text "description"
     t.string "icon"
     t.string "name"
+    t.integer "points", default: 0, null: false
+    t.decimal "threshold_distance", precision: 10, scale: 2
+    t.decimal "threshold_value", precision: 10, scale: 2
+    t.string "title"
     t.datetime "updated_at", null: false
   end
 
@@ -130,6 +134,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_15_215633) do
     t.bigint "challenge_id"
     t.datetime "created_at", null: false
     t.datetime "earned_at"
+    t.decimal "earned_value", precision: 10, scale: 4
     t.datetime "updated_at", null: false
     t.bigint "user_id", null: false
     t.index ["badge_id"], name: "index_user_badges_on_badge_id"

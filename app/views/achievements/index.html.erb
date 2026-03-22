@@ -1,0 +1,115 @@
+<% content_for :title, "Achievements — Broken Wheels" %>
+
+<div class="pt-8" data-controller="modal">
+
+  <h1 class="text-2xl font-bold text-gray-900 mb-2">Achievements</h1>
+  <p class="text-gray-500 text-sm mb-6">Track your running milestones. Keep rolling.</p>
+
+  <%# Stats bar %>
+  <div class="grid grid-cols-3 gap-4 mb-10">
+    <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-4 text-center">
+      <p class="text-2xl font-bold text-[#FC4C02]"><%= @total_points %></p>
+      <p class="text-xs text-gray-500 mt-1">Total Points</p>
+    </div>
+    <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-4 text-center">
+      <p class="text-2xl font-bold text-gray-900"><%= @earned_count %></p>
+      <p class="text-xs text-gray-500 mt-1">Badges Earned</p>
+    </div>
+    <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-4 text-center">
+      <p class="text-2xl font-bold text-gray-400"><%= @total_count - @earned_count %></p>
+      <p class="text-xs text-gray-500 mt-1">Still Locked</p>
+    </div>
+  </div>
+
+  <%# Workout Count %>
+  <%= render "achievements/section",
+    title: "Workout Count",
+    subtitle: "Every run counts. Stack them up.",
+    icon: "fa-solid fa-dumbbell",
+    badges: @workout_count_badges,
+    earned_map: @earned_map, progress_map: @progress_map %>
+
+  <%# Personal Records %>
+  <%= render "achievements/section",
+    title: "Personal Records",
+    subtitle: "First time crossing a new distance.",
+    icon: "fa-solid fa-flag-checkered",
+    badges: @distance_pr_badges,
+    earned_map: @earned_map, progress_map: @progress_map %>
+
+  <%# Distance Milestones %>
+  <%= render "achievements/section",
+    title: "Distance Milestones",
+    subtitle: "How many times have you crushed each distance?",
+    icon: "fa-solid fa-road",
+    badges: @distance_count_badges,
+    earned_map: @earned_map,
+    progress_map: @progress_map,
+    group_by_distance: true %>
+
+  <%# Streak %>
+  <%= render "achievements/section",
+    title: "Consistency Streaks",
+    subtitle: "Consecutive weeks without missing a run.",
+    icon: "fa-solid fa-fire",
+    badges: @streak_badges,
+    earned_map: @earned_map, progress_map: @progress_map %>
+
+  <%# Pace %>
+  <%= render "achievements/section",
+    title: "Pace Achievements",
+    subtitle: "Speed is earned. One km at a time.",
+    icon: "fa-solid fa-bolt",
+    badges: @pace_badges,
+    earned_map: @earned_map,
+    progress_map: @progress_map,
+    group_by_distance: true %>
+
+  <%# Modal %>
+  <div data-modal-target="overlay"
+       class="hidden fixed inset-0 z-[80] bg-black/50 flex items-center justify-center p-4"
+       data-action="click->modal#closeOnBackdrop">
+    <div class="bg-white rounded-2xl shadow-xl w-full max-w-sm p-6 text-center">
+
+      <div class="text-6xl mb-3" data-modal-target="icon"></div>
+
+      <p class="text-xl font-bold text-gray-900 mb-1" data-modal-target="name"></p>
+      <p class="text-sm font-semibold text-[#FC4C02] mb-4" data-modal-target="title"></p>
+
+      <p class="text-sm text-gray-600 mb-5 leading-relaxed" data-modal-target="description"></p>
+
+      <div class="bg-gray-50 rounded-lg px-4 py-2 inline-block mb-5">
+        <p class="text-base font-bold text-gray-900" data-modal-target="points"></p>
+      </div>
+
+      <%# Earned state %>
+      <div data-modal-target="earnedSection" class="hidden mb-5">
+        <div class="flex items-center justify-center gap-2 text-green-600">
+          <i class="fa-solid fa-circle-check"></i>
+          <span class="text-sm font-medium">Earned on <span data-modal-target="earnedAt"></span></span>
+        </div>
+      </div>
+
+      <%# Locked state + progress %>
+      <div data-modal-target="lockedSection" class="hidden mb-5">
+        <div class="flex items-center justify-center gap-2 text-gray-400 mb-3">
+          <i class="fa-solid fa-lock"></i>
+          <span class="text-sm">Not yet unlocked</span>
+        </div>
+        <%# Progress bar (hidden for pace kind) %>
+        <div data-modal-target="progressBarSection" class="mb-2">
+          <div class="w-full bg-gray-200 rounded-full h-2">
+            <div data-modal-target="progressBar" class="bg-[#FC4C02] h-2 rounded-full transition-all" style="width: 0%"></div>
+          </div>
+        </div>
+        <p class="text-xs text-gray-500" data-modal-target="progressLabel"></p>
+      </div>
+
+      <button data-action="click->modal#close"
+              class="w-full bg-[#FC4C02] text-white py-2 rounded-lg hover:bg-[#e04402] transition font-medium cursor-pointer">
+        Close
+      </button>
+    </div>
+  </div>
+
+</div>

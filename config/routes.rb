@@ -13,6 +13,7 @@ Rails.application.routes.draw do
   patch "profile", to: "profiles#update"
   put "profile", to: "profiles#update"
 
+  get "achievements", to: "achievements#index", as: :achievements
   resources :workouts, only: [:index, :create]
   resources :challenges, only: [:index, :show] do
     member do

@@ -14,7 +14,9 @@ class WorkoutsController < ApplicationController
     workout = current_user.workouts.build(workout_params.merge(provider: "manual"))
     if workout.save
       update_participation_progress(workout)
-      redirect_to workouts_path, notice: "Workout added!"
+      newly_earned = AchievementChecker.new(current_user).check_all!
+      notice = newly_earned.any? ? "Workout added! You unlocked #{newly_earned.size} new achievement(s) 🏅" : "Workout added!"
+      redirect_to workouts_path, notice: notice
     else
       redirect_to workouts_path, alert: workout.errors.full_messages.join(", ")
     end

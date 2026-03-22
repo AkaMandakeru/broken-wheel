@@ -7,7 +7,7 @@
             <i class="fa-solid fa-bars text-xl"></i>
           </button>
           <%= link_to root_path, class: "text-xl font-bold text-[#FC4C02] hover:text-[#e04402] transition" do %>
-            Sports Communities
+            Broken Wheels
           <% end %>
         </div>
 
@@ -18,6 +18,9 @@
             <% end %>
             <%= link_to workouts_path, class: "text-gray-700 hover:text-[#FC4C02] transition flex items-center gap-2" do %>
               <i class="fa-solid fa-dumbbell"></i> Workouts
+            <% end %>
+            <%= link_to achievements_path, class: "text-gray-700 hover:text-[#FC4C02] transition flex items-center gap-2" do %>
+              <i class="fa-solid fa-medal"></i> Achievements
             <% end %>
             <%= link_to clubs_path, class: "text-gray-700 hover:text-[#FC4C02] transition flex items-center gap-2" do %>
               <i class="fa-solid fa-users"></i> Clubs
@@ -54,6 +57,9 @@
           <% end %>
           <%= link_to workouts_path, class: "flex items-center gap-3 px-4 py-3 rounded-lg text-gray-700 hover:bg-gray-100 hover:text-[#FC4C02] transition", data: { action: "click->sidebar#close" } do %>
             <i class="fa-solid fa-dumbbell w-5"></i> Workouts
+          <% end %>
+          <%= link_to achievements_path, class: "flex items-center gap-3 px-4 py-3 rounded-lg text-gray-700 hover:bg-gray-100 hover:text-[#FC4C02] transition", data: { action: "click->sidebar#close" } do %>
+            <i class="fa-solid fa-medal w-5"></i> Achievements
           <% end %>
           <%= link_to clubs_path, class: "flex items-center gap-3 px-4 py-3 rounded-lg text-gray-700 hover:bg-gray-100 hover:text-[#FC4C02] transition", data: { action: "click->sidebar#close" } do %>
             <i class="fa-solid fa-users w-5"></i> Clubs
