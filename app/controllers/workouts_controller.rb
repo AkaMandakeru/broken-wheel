@@ -25,7 +25,7 @@ class WorkoutsController < ApplicationController
   private
 
   def workout_params
-    params.require(:workout).permit(:sport, :distance_km, :duration_minutes, :workout_date, :challenge_participation_id)
+    params.require(:workout).permit(:sport, :distance_km_input, :distance_m_input, :duration_hours_input, :duration_minutes_input, :duration_seconds_input, :workout_date, :challenge_participation_id)
   end
 
   def update_participation_progress(workout)

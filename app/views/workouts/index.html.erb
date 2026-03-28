@@ -34,12 +34,19 @@
         <%= f.date_field :workout_date, value: Date.current, class: "w-full rounded-lg border-gray-300 shadow-sm focus:border-[#FC4C02] focus:ring-[#FC4C02] text-base sm:text-sm py-3 px-4" %>
       </div>
       <div>
-        <%= f.label :distance_km, "Distance (km)", class: "block text-sm font-medium text-gray-700 mb-1" %>
-        <%= f.number_field :distance_km, step: 0.1, class: "w-full rounded-lg border-gray-300 shadow-sm focus:border-[#FC4C02] focus:ring-[#FC4C02] text-base sm:text-sm py-3 px-4", placeholder: "e.g. 5.2" %>
+        <label class="block text-sm font-medium text-gray-700 mb-1">Distance</label>
+        <div class="flex space-x-2">
+          <%= f.number_field :distance_km_input, min: 0, class: "w-full rounded-lg border-gray-300 shadow-sm focus:border-[#FC4C02] focus:ring-[#FC4C02] text-base sm:text-sm py-3 px-4", placeholder: "km" %>
+          <%= f.number_field :distance_m_input, min: 0, max: 999, class: "w-full rounded-lg border-gray-300 shadow-sm focus:border-[#FC4C02] focus:ring-[#FC4C02] text-base sm:text-sm py-3 px-4", placeholder: "m" %>
+        </div>
       </div>
       <div>
-        <%= f.label :duration_minutes, "Duration (minutes)", class: "block text-sm font-medium text-gray-700 mb-1" %>
-        <%= f.number_field :duration_minutes, class: "w-full rounded-lg border-gray-300 shadow-sm focus:border-[#FC4C02] focus:ring-[#FC4C02] text-base sm:text-sm py-3 px-4", placeholder: "e.g. 30" %>
+        <label class="block text-sm font-medium text-gray-700 mb-1">Duration</label>
+        <div class="flex space-x-2">
+          <%= f.number_field :duration_hours_input, min: 0, class: "w-full rounded-lg border-gray-300 shadow-sm focus:border-[#FC4C02] focus:ring-[#FC4C02] text-base sm:text-sm py-3 px-4", placeholder: "hrs" %>
+          <%= f.number_field :duration_minutes_input, min: 0, max: 59, class: "w-full rounded-lg border-gray-300 shadow-sm focus:border-[#FC4C02] focus:ring-[#FC4C02] text-base sm:text-sm py-3 px-4", placeholder: "min" %>
+          <%= f.number_field :duration_seconds_input, min: 0, max: 59, class: "w-full rounded-lg border-gray-300 shadow-sm focus:border-[#FC4C02] focus:ring-[#FC4C02] text-base sm:text-sm py-3 px-4", placeholder: "sec" %>
+        </div>
       </div>
       <div>
         <%= f.label :challenge_participation_id, "Count toward challenge", class: "block text-sm font-medium text-gray-700 mb-1" %>
@@ -61,6 +68,7 @@
             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Sport</th>
             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Distance</th>
             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Duration</th>
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Pace</th>
           </tr>
         </thead>
         <tbody class="divide-y divide-gray-200">
@@ -70,6 +78,16 @@
               <td class="px-6 py-4 text-sm text-gray-700"><%= w.sport&.capitalize %></td>
               <td class="px-6 py-4 text-sm text-gray-700"><%= w.distance_km %> km</td>
               <td class="px-6 py-4 text-sm text-gray-700"><%= w.duration_minutes %> min</td>
+              <td class="px-6 py-4 text-sm text-gray-700">
+                <% if w.provider == "manual" && w.distance_km.to_f > 0 && w.duration_minutes.to_f > 0 %>
+                  <% pace = w.duration_minutes.to_f / w.distance_km.to_f %>
+                  <% pace_min = pace.floor %>
+                  <% pace_sec = ((pace - pace_min) * 60).round %>
+                  <%= format("%d:%02d /km", pace_min, pace_sec) %>
+                <% else %>
+                  -
+                <% end %>
+              </td>
             </tr>
           <% end %>
         </tbody>
