@@ -1,15 +1,26 @@
 <% if resource.errors.any? %>
-  <div id="error_explanation" data-turbo-temporary>
-    <h2>
-      <%= I18n.t("errors.messages.not_saved",
-                 count: resource.errors.count,
-                 resource: resource.class.model_name.human.downcase)
-       %>
-    </h2>
-    <ul>
-      <% resource.errors.full_messages.each do |message| %>
-        <li><%= message %></li>
-      <% end %>
-    </ul>
+  <div id="error_explanation" data-turbo-temporary class="rounded-xl border border-red-200 bg-red-50 p-4 dark:border-red-800 dark:bg-red-900/20">
+    <div class="grid grid-cols-[auto_1fr] gap-2 items-start">
+      <div class="flex items-center h-full">
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 18 18" class="text-red-500 dark:text-red-400">
+          <g fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" stroke="currentColor">
+            <circle cx="9" cy="9" r="7.25"></circle>
+            <path d="M9 5.75V9.25"></path>
+            <path d="M9 12.5C8.448 12.5 8 12.05 8 11.5C8 10.95 8.448 10.5 9 10.5C9.552 10.5 10 10.95 10 11.5C10 12.05 9.552 12.5 9 12.5Z" fill="currentColor" stroke="none"></path>
+          </g>
+        </svg>
+      </div>
+      <h3 class="text-sm font-medium text-red-800 dark:text-red-200">
+        <%= I18n.t("errors.messages.not_saved",
+                   count: resource.errors.count,
+                   resource: resource.class.model_name.human.downcase) %>
+      </h3>
+      <div></div>
+      <ul class="text-sm text-red-700 dark:text-red-300 list-disc list-inside space-y-0.5">
+        <% resource.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
   </div>
 <% end %>

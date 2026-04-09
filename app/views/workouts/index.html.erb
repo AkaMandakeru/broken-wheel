@@ -23,37 +23,37 @@
   </div>
 
   <h2 class="text-lg font-semibold text-gray-900 mb-4">Add workout</h2>
-  <%= form_with model: Workout.new, url: workouts_path, local: true, html: { class: "bg-white rounded-lg shadow-sm border border-gray-200 p-6 mb-8 max-w-md" } do |f| %>
-    <div class="space-y-4">
-      <div>
-        <%= f.label :sport, class: "block text-sm font-medium text-gray-700 mb-1" %>
-        <%= f.select :sport, [["Run", "run"], ["Bike", "bike"]], { include_blank: "Select sport" }, class: "w-full rounded-lg border-gray-300 shadow-sm focus:border-[#FC4C02] focus:ring-[#FC4C02] text-base sm:text-sm py-3 px-4" %>
+  <%= form_with model: Workout.new, url: workouts_path, local: true, html: { class: "bg-white dark:bg-neutral-800 border border-black/10 dark:border-white/10 rounded-xl shadow-sm p-6 mb-8 max-w-md" } do |f| %>
+    <div class="space-y-5">
+      <div class="relative gap-y-1.5">
+        <%= f.label :sport, class: "form-label" %>
+        <%= f.select :sport, [["Run", "run"], ["Bike", "bike"]], { include_blank: "Select sport" }, class: "form-control" %>
       </div>
-      <div>
-        <%= f.label :workout_date, class: "block text-sm font-medium text-gray-700 mb-1" %>
-        <%= f.date_field :workout_date, value: Date.current, class: "w-full rounded-lg border-gray-300 shadow-sm focus:border-[#FC4C02] focus:ring-[#FC4C02] text-base sm:text-sm py-3 px-4" %>
+      <div class="relative gap-y-1.5">
+        <%= f.label :workout_date, class: "form-label" %>
+        <%= f.date_field :workout_date, value: Date.current, class: "form-control" %>
       </div>
-      <div>
-        <label class="block text-sm font-medium text-gray-700 mb-1">Distance</label>
-        <div class="flex space-x-2">
-          <%= f.number_field :distance_km_input, min: 0, class: "w-full rounded-lg border-gray-300 shadow-sm focus:border-[#FC4C02] focus:ring-[#FC4C02] text-base sm:text-sm py-3 px-4", placeholder: "km" %>
-          <%= f.number_field :distance_m_input, min: 0, max: 999, class: "w-full rounded-lg border-gray-300 shadow-sm focus:border-[#FC4C02] focus:ring-[#FC4C02] text-base sm:text-sm py-3 px-4", placeholder: "m" %>
+      <div class="relative gap-y-1.5">
+        <label class="form-label">Distance</label>
+        <div class="flex gap-2">
+          <%= f.number_field :distance_km_input, min: 0, class: "form-control", placeholder: "km" %>
+          <%= f.number_field :distance_m_input, min: 0, max: 999, class: "form-control", placeholder: "m" %>
         </div>
       </div>
-      <div>
-        <label class="block text-sm font-medium text-gray-700 mb-1">Duration</label>
-        <div class="flex space-x-2">
-          <%= f.number_field :duration_hours_input, min: 0, class: "w-full rounded-lg border-gray-300 shadow-sm focus:border-[#FC4C02] focus:ring-[#FC4C02] text-base sm:text-sm py-3 px-4", placeholder: "hrs" %>
-          <%= f.number_field :duration_minutes_input, min: 0, max: 59, class: "w-full rounded-lg border-gray-300 shadow-sm focus:border-[#FC4C02] focus:ring-[#FC4C02] text-base sm:text-sm py-3 px-4", placeholder: "min" %>
-          <%= f.number_field :duration_seconds_input, min: 0, max: 59, class: "w-full rounded-lg border-gray-300 shadow-sm focus:border-[#FC4C02] focus:ring-[#FC4C02] text-base sm:text-sm py-3 px-4", placeholder: "sec" %>
+      <div class="relative gap-y-1.5">
+        <label class="form-label">Duration</label>
+        <div class="flex gap-2">
+          <%= f.number_field :duration_hours_input, min: 0, class: "form-control", placeholder: "hrs" %>
+          <%= f.number_field :duration_minutes_input, min: 0, max: 59, class: "form-control", placeholder: "min" %>
+          <%= f.number_field :duration_seconds_input, min: 0, max: 59, class: "form-control", placeholder: "sec" %>
         </div>
       </div>
-      <div>
-        <%= f.label :challenge_participation_id, "Count toward challenge", class: "block text-sm font-medium text-gray-700 mb-1" %>
-        <%= f.collection_select :challenge_participation_id, @participations || [], :id, ->(p) { p.challenge.title }, { include_blank: "None" }, class: "w-full rounded-lg border-gray-300 shadow-sm focus:border-[#FC4C02] focus:ring-[#FC4C02] text-base sm:text-sm py-3 px-4" %>
+      <div class="relative gap-y-1.5">
+        <%= f.label :challenge_participation_id, "Count toward challenge", class: "form-label" %>
+        <%= f.collection_select :challenge_participation_id, @participations || [], :id, ->(p) { p.challenge.title }, { include_blank: "None" }, class: "form-control" %>
       </div>
-      <div>
-        <%= f.submit "Add workout", class: "bg-[#FC4C02] text-white px-6 py-2 rounded-lg hover:bg-[#e04402] transition font-medium cursor-pointer" %>
+      <div class="pt-2">
+        <%= f.submit "Add workout", class: "btn-primary w-full" %>
       </div>
     </div>
   <% end %>

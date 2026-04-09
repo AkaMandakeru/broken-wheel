@@ -12,3 +12,26 @@
 @utility translate-x-0 {
   translate: 0 0;
 }
+
+/* Rails Blocks - form input base class */
+@layer components {
+  .form-control {
+    @apply block w-full rounded-lg bg-white border-0 px-3 py-2 text-base text-neutral-900 shadow-sm ring-1 ring-inset ring-neutral-300 placeholder:text-neutral-500 focus:outline-none focus:ring-2 focus:ring-neutral-600 dark:bg-neutral-700 dark:text-white dark:placeholder-neutral-300 dark:ring-neutral-600 dark:focus:ring-neutral-500;
+  }
+
+  .btn-primary {
+    @apply flex items-center justify-center gap-1.5 rounded-lg border border-neutral-400/30 bg-neutral-800 px-3.5 py-2 text-sm font-medium whitespace-nowrap text-white shadow-sm transition-all duration-100 ease-in-out select-none hover:bg-neutral-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-neutral-600 disabled:cursor-not-allowed disabled:opacity-50 dark:bg-white dark:text-neutral-800 dark:hover:bg-neutral-100 dark:focus-visible:outline-neutral-200 cursor-pointer;
+  }
+
+  .btn-secondary {
+    @apply flex items-center justify-center gap-1.5 rounded-lg border border-black/10 bg-white/90 px-3.5 py-2 text-sm font-medium whitespace-nowrap text-neutral-800 shadow-sm transition-all duration-100 ease-in-out select-none hover:bg-neutral-50 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-neutral-600 disabled:cursor-not-allowed disabled:opacity-50 dark:border-white/10 dark:bg-neutral-700/50 dark:text-neutral-50 dark:hover:bg-neutral-700/75 dark:focus-visible:outline-neutral-200 cursor-pointer;
+  }
+
+  .btn-danger {
+    @apply flex items-center justify-center gap-1.5 rounded-lg border border-red-400/30 bg-red-600 px-3.5 py-2 text-sm font-medium whitespace-nowrap text-white shadow-sm transition-all duration-100 ease-in-out select-none hover:bg-red-700 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-red-600 disabled:cursor-not-allowed disabled:opacity-50 cursor-pointer;
+  }
+
+  .form-label {
+    @apply block text-sm font-medium text-neutral-800 dark:text-neutral-200 mb-1.5;
+  }
+}

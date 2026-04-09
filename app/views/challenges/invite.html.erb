@@ -6,8 +6,8 @@
   <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6 mb-6">
     <p class="text-gray-600 mb-4">Share this link with friends to invite them to join the challenge:</p>
     <div class="flex gap-2">
-      <input type="text" value="<%= challenge_url(@challenge) %>" readonly class="flex-1 rounded-lg border-gray-300 px-4 py-2 bg-gray-50 text-sm" id="invite-link">
-      <button type="button" onclick="navigator.clipboard.writeText(document.getElementById('invite-link').value); alert('Copied!');" class="bg-[#FC4C02] text-white px-4 py-2 rounded-lg hover:bg-[#e04402] transition font-medium">
+      <input type="text" value="<%= challenge_url(@challenge) %>" readonly class="form-control flex-1" id="invite-link">
+      <button type="button" onclick="navigator.clipboard.writeText(document.getElementById('invite-link').value); alert('Copied!');" class="btn-primary">
         Copy
       </button>
     </div>

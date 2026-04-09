@@ -1,75 +1,77 @@
 <div class="pt-8">
   <h1 class="text-2xl font-bold text-gray-900 mb-6">Profile</h1>
 
-  <%= form_with model: @user, url: profile_path, method: :patch, local: true, html: { class: "space-y-4 max-w-xl" } do |f| %>
-    <%= render "shared/error_messages", resource: @user %>
+  <div class="bg-white dark:bg-neutral-800 border border-black/10 dark:border-white/10 rounded-xl shadow-sm p-6 sm:p-8 max-w-xl">
+    <%= form_with model: @user, url: profile_path, method: :patch, local: true, html: { class: "space-y-5" } do |f| %>
+      <%= render "shared/error_messages", resource: @user %>
 
-    <div class="flex items-center gap-4 mb-6" data-controller="image-preview">
-      <div class="w-24 h-24 rounded-full overflow-hidden bg-gray-200 flex items-center justify-center shrink-0 relative">
-        <img data-image-preview-target="preview" src="" alt="Preview" class="hidden absolute inset-0 w-full h-full object-cover">
-        <span data-image-preview-target="placeholder" class="text-gray-500 text-2xl <%= 'hidden' if @user.avatar.attached? %>"><%= @user.first_name&.first || "?" %></span>
-        <% if @user.avatar.attached? %>
-          <%= image_tag url_for(@user.avatar), class: "w-full h-full object-cover", data: { image_preview_target: "current" } %>
-        <% end %>
+      <div class="flex items-center gap-4 mb-2" data-controller="image-preview">
+        <div class="w-24 h-24 rounded-full overflow-hidden bg-neutral-200 dark:bg-neutral-700 flex items-center justify-center shrink-0 relative">
+          <img data-image-preview-target="preview" src="" alt="Preview" class="hidden absolute inset-0 w-full h-full object-cover">
+          <span data-image-preview-target="placeholder" class="text-neutral-500 text-2xl <%= 'hidden' if @user.avatar.attached? %>"><%= @user.first_name&.first || "?" %></span>
+          <% if @user.avatar.attached? %>
+            <%= image_tag url_for(@user.avatar), class: "w-full h-full object-cover", data: { image_preview_target: "current" } %>
+          <% end %>
+        </div>
+        <div>
+          <%= f.label :avatar, "Profile picture", class: "form-label" %>
+          <%= f.file_field :avatar, accept: "image/*", class: "text-sm text-neutral-700 dark:text-neutral-300", data: { image_preview_target: "input", action: "change->image-preview#preview" } %>
+        </div>
       </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div class="relative gap-y-1.5">
+          <%= f.label :first_name, class: "form-label" %>
+          <%= f.text_field :first_name, class: "form-control" %>
+        </div>
+        <div class="relative gap-y-1.5">
+          <%= f.label :last_name, class: "form-label" %>
+          <%= f.text_field :last_name, class: "form-control" %>
+        </div>
+      </div>
+
+      <div class="relative gap-y-1.5">
+        <%= f.label :nickname, class: "form-label" %>
+        <%= f.text_field :nickname, class: "form-control", placeholder: "Optional" %>
+      </div>
+
+      <div class="relative gap-y-1.5">
+        <%= f.label :document, class: "form-label" %>
+        <%= f.text_field :document, class: "form-control", placeholder: "Optional" %>
+      </div>
+
+      <div class="relative gap-y-1.5">
+        <%= f.label :phone, class: "form-label" %>
+        <%= f.telephone_field :phone, class: "form-control", placeholder: "Optional" %>
+      </div>
+
+      <div class="relative gap-y-1.5">
+        <%= f.label :blood_type, class: "form-label" %>
+        <%= f.text_field :blood_type, class: "form-control", placeholder: "Optional" %>
+      </div>
+
+      <div class="relative gap-y-1.5">
+        <%= f.label :address, class: "form-label" %>
+        <%= f.text_area :address, rows: 2, class: "form-control", placeholder: "Optional" %>
+      </div>
+
       <div>
-        <%= f.label :avatar, "Profile picture", class: "block text-sm font-medium text-gray-700 mb-1" %>
-        <%= f.file_field :avatar, accept: "image/*", class: "text-sm", data: { image_preview_target: "input", action: "change->image-preview#preview" } %>
+        <p class="form-label">Sports</p>
+        <div class="flex gap-4">
+          <% %w[run bike soccer].each do |sport| %>
+            <label class="flex items-center gap-2 text-sm text-neutral-700 dark:text-neutral-300">
+              <%= check_box_tag "user[sports][]", sport, Array(@user.sports).include?(sport), class: "rounded border-neutral-300 text-neutral-800 focus:ring-neutral-600" %>
+              <span><%= sport.capitalize %></span>
+            </label>
+          <% end %>
+        </div>
       </div>
-    </div>
 
-    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-      <div>
-        <%= f.label :first_name, class: "block text-sm font-medium text-gray-700 mb-1" %>
-        <%= f.text_field :first_name, class: "w-full rounded-lg border-gray-300 shadow-sm focus:border-[#FC4C02] focus:ring-[#FC4C02]" %>
+      <div class="pt-2">
+        <%= f.submit "Update profile", class: "btn-primary w-full sm:w-auto" %>
       </div>
-      <div>
-        <%= f.label :last_name, class: "block text-sm font-medium text-gray-700 mb-1" %>
-        <%= f.text_field :last_name, class: "w-full rounded-lg border-gray-300 shadow-sm focus:border-[#FC4C02] focus:ring-[#FC4C02]" %>
-      </div>
-    </div>
-
-    <div>
-      <%= f.label :nickname, class: "block text-sm font-medium text-gray-700 mb-1" %>
-      <%= f.text_field :nickname, class: "w-full rounded-lg border-gray-300 shadow-sm focus:border-[#FC4C02] focus:ring-[#FC4C02]", placeholder: "Optional" %>
-    </div>
-
-    <div>
-      <%= f.label :document, class: "block text-sm font-medium text-gray-700 mb-1" %>
-      <%= f.text_field :document, class: "w-full rounded-lg border-gray-300 shadow-sm focus:border-[#FC4C02] focus:ring-[#FC4C02]", placeholder: "Optional" %>
-    </div>
-
-    <div>
-      <%= f.label :phone, class: "block text-sm font-medium text-gray-700 mb-1" %>
-      <%= f.telephone_field :phone, class: "w-full rounded-lg border-gray-300 shadow-sm focus:border-[#FC4C02] focus:ring-[#FC4C02]", placeholder: "Optional" %>
-    </div>
-
-    <div>
-      <%= f.label :blood_type, class: "block text-sm font-medium text-gray-700 mb-1" %>
-      <%= f.text_field :blood_type, class: "w-full rounded-lg border-gray-300 shadow-sm focus:border-[#FC4C02] focus:ring-[#FC4C02]", placeholder: "Optional" %>
-    </div>
-
-    <div>
-      <%= f.label :address, class: "block text-sm font-medium text-gray-700 mb-1" %>
-      <%= f.text_area :address, rows: 2, class: "w-full rounded-lg border-gray-300 shadow-sm focus:border-[#FC4C02] focus:ring-[#FC4C02]", placeholder: "Optional" %>
-    </div>
-
-    <div>
-      <p class="block text-sm font-medium text-gray-700 mb-2">Sports</p>
-      <div class="flex gap-4">
-        <% %w[run bike soccer].each do |sport| %>
-          <label class="flex items-center gap-2">
-            <%= check_box_tag "user[sports][]", sport, Array(@user.sports).include?(sport), class: "rounded border-gray-300 text-[#FC4C02] focus:ring-[#FC4C02]" %>
-            <span><%= sport.capitalize %></span>
-          </label>
-        <% end %>
-      </div>
-    </div>
-
-    <div class="pt-4">
-      <%= f.submit "Update profile", class: "bg-[#FC4C02] text-white px-6 py-2 rounded-lg hover:bg-[#e04402] transition font-medium cursor-pointer" %>
-    </div>
-  <% end %>
+    <% end %>
+  </div>
 
   <div class="mt-12">
     <h2 class="text-lg font-semibold text-gray-900 mb-4">Connected apps</h2>
