@@ -93,7 +93,34 @@
           <% end %>
           <%= link_to profile_path, class: "flex items-center gap-3 px-4 py-3 rounded-lg text-gray-700 hover:bg-gray-100 hover:text-[#FC4C02] transition", data: { action: "click->sidebar#close" } do %>
             <i class="fa-solid fa-user w-5"></i> <%= t('shared.nav.profile') %>
-          <% end %>  
+          <% end %> 
+        
+        <%# Mobile Language Selector %>
+        <div class="relative" id="mobile-language-selector">
+          <button type="button" onclick="toggleMobileSelector()" class="flex items-center gap-3 w-full text-left px-4 py-3 rounded-lg text-gray-700 hover:bg-gray-100 hover:text-[#FC4C02] transition">
+            <i class="fa-solid fa-globe w-5"></i>
+            <span class="flex-1" id="mobile-locale-display"><%= I18n.locale.to_s.upcase %></span>
+            <i class="fa-solid fa-chevron-down w-4 text-xs transition-transform" id="mobile-selector-arrow"></i>
+          </button>
+          
+          <div id="mobile-selector-menu" class="hidden absolute bottom-full left-0 right-0 mb-2 bg-white rounded-lg shadow-lg border border-gray-200 overflow-hidden z-50">
+            <%= link_to switch_locale_path(locale: :en), class: "flex items-center gap-3 px-4 py-3 text-gray-700 hover:bg-gray-100 transition #{I18n.locale == :en ? 'bg-gray-100 text-[#FC4C02]' : ''}", data: { action: "click->sidebar#close" } do %>
+              <i class="fa-solid fa-flag w-5"></i>
+              <span><%= t('shared.nav.language_english') %></span>
+              <% if I18n.locale == :en %>
+                <i class="fa-solid fa-check w-4 text-[#FC4C02]"></i>
+              <% end %>
+            <% end %>
+            <%= link_to switch_locale_path(locale: :pt), class: "flex items-center gap-3 px-4 py-3 text-gray-700 hover:bg-gray-100 transition #{I18n.locale == :pt ? 'bg-gray-100 text-[#FC4C02]' : ''}", data: { action: "click->sidebar#close" } do %>
+              <i class="fa-solid fa-flag w-5"></i>
+              <span><%= t('shared.nav.language_portuguese') %></span>
+              <% if I18n.locale == :pt %>
+                <i class="fa-solid fa-check w-4 text-[#FC4C02]"></i>
+              <% end %>
+            <% end %>
+          </div>
+        </div>
+        
         <hr class="my-4 border-gray-200">   
         <% else %>
           <%= link_to new_user_session_path, class: "flex items-center gap-3 px-4 py-3 rounded-lg text-gray-700 hover:bg-gray-100 hover:text-[#FC4C02] transition", data: { action: "click->sidebar#close" } do %>
@@ -122,14 +149,37 @@
     }
   }
   
-  // Close dropdown when clicking outside
-  document.addEventListener('click', function(event) {
-    const dropdown = document.getElementById('language-dropdown');
-    if (!dropdown.contains(event.target)) {
-      const menu = document.getElementById('dropdown-menu');
-      const arrow = document.getElementById('dropdown-arrow');
+  function toggleMobileSelector() {
+    const menu = document.getElementById('mobile-selector-menu');
+    const arrow = document.getElementById('mobile-selector-arrow');
+    
+    if (menu.classList.contains('hidden')) {
+      menu.classList.remove('hidden');
+      arrow.style.transform = 'rotate(180deg)';
+    } else {
       menu.classList.add('hidden');
       arrow.style.transform = 'rotate(0deg)';
+    }
+  }
+  
+  // Close dropdown when clicking outside
+  document.addEventListener('click', function(event) {
+    // Desktop dropdown
+    const desktopDropdown = document.getElementById('language-dropdown');
+    if (desktopDropdown && !desktopDropdown.contains(event.target)) {
+      const menu = document.getElementById('dropdown-menu');
+      const arrow = document.getElementById('dropdown-arrow');
+      if (menu) menu.classList.add('hidden');
+      if (arrow) arrow.style.transform = 'rotate(0deg)';
+    }
+    
+    // Mobile selector dropdown
+    const mobileSelector = document.getElementById('mobile-language-selector');
+    if (mobileSelector && !mobileSelector.contains(event.target)) {
+      const mobileMenu = document.getElementById('mobile-selector-menu');
+      const mobileArrow = document.getElementById('mobile-selector-arrow');
+      if (mobileMenu) mobileMenu.classList.add('hidden');
+      if (mobileArrow) mobileArrow.style.transform = 'rotate(0deg)';
     }
   });
 </script>

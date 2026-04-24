@@ -75,10 +75,9 @@ en:
       to_add_sample: "to add sample challenges."
     show:
       back_to_challenge: "← Back to challenge"
-      timeline: "Timeline — %{title}"
+      timeline: "Timeline"
       share_workout: "Share your workout, thoughts..."
       post: "Post"
-      workout_info: "Workout: %{sport} — %{distance} km, %{duration} min"
       ago: "ago"
       target: "Target"
       join_challenge: "Join challenge"
@@ -89,8 +88,10 @@ en:
     invite:
       invite_friends: "Invite Friends"
       share_challenge: "Share this challenge with friends"
+      share_via_social: "Share via email, WhatsApp, or Instagram."
       copy_link: "Copy Link"
       invite_sent: "Invite sent successfully!"
+      copied: "Link copied!"
 
   # Clubs
   clubs:
@@ -106,6 +107,9 @@ en:
       no_clubs: "No clubs yet. Create one!"
       join: "Join"
       view: "View"
+      name: "Name"
+      sport: "Sport"
+      description: "Description"
     show:
       members: "Members"
       activities: "Activities"
@@ -231,7 +235,6 @@ en:
       completed: "Completed"
       remaining: "Remaining"
     footer:
-      copyright: "© %{year} Broken Wheels. All rights reserved."
       about: "About"
       contact: "Contact"
       privacy: "Privacy"
@@ -242,8 +245,9 @@ en:
     index:
       share_workout: "Share your workout, thoughts..."
       post: "Post"
-      workout_info: "Workout: %{sport} — %{distance} km, %{duration} min"
       ago: "ago"
+      add_comment: "Add a comment..."
+      comment: "Comment"
 
   # Workouts
   workouts:
@@ -263,6 +267,7 @@ en:
       none: "None"
       recent_workouts: "Recent workouts"
       date: "Date"
+      workout_date: "Workout date"
       sport: "Sport"
       distance: "Distance"
       duration: "Duration"

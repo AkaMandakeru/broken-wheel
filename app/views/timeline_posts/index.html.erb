@@ -40,7 +40,7 @@
         <% end %>
         <% if post.workout %>
           <div class="mt-4 p-3 bg-gray-50 rounded-lg text-sm text-gray-600">
-            <%= t('timeline_posts.index.workout_info', sport: post.workout.sport, distance: post.workout.distance_km, duration: post.workout.duration_minutes) %>
+            Workout: <%= post.workout.sport %> — <%= post.workout.distance_km %> km, <%= post.workout.duration_minutes %> min
           </div>
         <% end %>
 
@@ -52,8 +52,8 @@
             </div>
           <% end %>
           <%= form_with model: TimelinePostComment.new, url: challenge_timeline_post_comments_path(@challenge, post), local: true, html: { class: "flex gap-2 mt-2" } do |cf| %>
-            <%= cf.text_field :content, placeholder: "Add a comment...", class: "form-control flex-1" %>
-            <%= cf.submit "Comment", class: "btn-secondary" %>
+            <%= cf.text_field :content, placeholder: t('timeline_posts.index.add_comment'), class: "form-control flex-1" %>
+            <%= cf.submit t('timeline_posts.index.comment'), class: "btn-secondary" %>
           <% end %>
         </div>
       </div>

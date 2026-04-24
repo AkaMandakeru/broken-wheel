@@ -1,5 +1,7 @@
 <div class="pt-8">
-  <%= link_to "<- <%= t('common.buttons.back') %>", challenges_path, class: "text-[#FC4C02] hover:underline mb-6 inline-block" %>
+  <%= link_to challenges_path, class: "text-[#FC4C02] hover:underline mb-6 inline-block" do %>
+    <%= t('common.buttons.back') %>
+  <% end %>
 
   <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6 mb-6">
     <h1 class="text-2xl font-bold text-gray-900"><%= @challenge.title %></h1>
@@ -12,7 +14,9 @@
 
     <div class="flex gap-4 mt-6">
       <% if @participation %>
-        <%= link_to t('challenges.show.timeline'), challenge_timeline_posts_path(@challenge), class: "text-[#FC4C02] hover:underline font-medium" %>
+        <%= link_to challenge_timeline_posts_path(@challenge), class: "text-[#FC4C02] hover:underline font-medium" do %>
+          <%= t('challenges.show.timeline') %>
+        <% end %>
         <%= link_to t('challenges.invite.invite_friends'), invite_challenge_path(@challenge), class: "text-[#FC4C02] hover:underline font-medium" %>
       <% else %>
         <%= button_to t('challenges.show.join_challenge'), join_challenge_path(@challenge), method: :post, class: "bg-[#FC4C02] text-white px-6 py-2 rounded-lg hover:bg-[#e04402] transition font-medium cursor-pointer" %>

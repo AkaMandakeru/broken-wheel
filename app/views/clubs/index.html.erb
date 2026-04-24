@@ -11,15 +11,15 @@
     <%= form_with model: Club.new, url: clubs_path, local: true do |f| %>
       <div class="space-y-5">
         <div class="relative gap-y-1.5">
-          <%= f.label :name, class: "form-label" %>
+          <%= f.label :name, t('clubs.index.name'), class: "form-label" %>
           <%= f.text_field :name, class: "form-control", required: true %>
         </div>
         <div class="relative gap-y-1.5">
-          <%= f.label :sport, class: "form-label" %>
+          <%= f.label :sport, t('clubs.index.sport'), class: "form-label" %>
           <%= f.select :sport, [[t('clubs.index.run'), "run"], [t('clubs.index.bike'), "bike"], [t('clubs.index.soccer'), "soccer"]], { include_blank: t('clubs.index.select_sport') }, class: "form-control" %>
         </div>
         <div class="relative gap-y-1.5">
-          <%= f.label :description, class: "form-label" %>
+          <%= f.label :description, t('clubs.index.description'), class: "form-label" %>
           <%= f.text_area :description, rows: 3, class: "form-control" %>
         </div>
         <div class="pt-2">

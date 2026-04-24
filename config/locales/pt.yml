@@ -46,11 +46,10 @@ pt:
       no_challenges: "Nenhum desafio ainda. Execute"
       to_add_sample: "para adicionar desafios de exemplo."
     show:
-      back_to_challenge: "← Voltar ao desafio"
-      timeline: "Linha do Tempo — %{title}"
+      back_to_challenge: "Voltar ao desafio"
+      timeline: "Linha do Tempo"
       share_workout: "Compartilhe seu treino, pensamentos..."
       post: "Publicar"
-      workout_info: "Treino: %{sport} — %{distance} km, %{duration} min"
       ago: "atrás"
       target: "Meta"
       join_challenge: "Participar do desafio"
@@ -61,8 +60,10 @@ pt:
     invite:
       invite_friends: "Convidar Amigos"
       share_challenge: "Compartilhe este desafio com amigos"
+      share_via_social: "Compartilhe via email, WhatsApp, ou Instagram."
       copy_link: "Copiar Link"
       invite_sent: "Convite enviado com sucesso!"
+      copied: "Link copiado!"
 
   # Clubs (Clubes)
   clubs:
@@ -78,6 +79,9 @@ pt:
       no_clubs: "Nenhum clube ainda. Crie um!"
       join: "Entrar"
       view: "Ver"
+      name: "Nome"
+      sport: "Esporte"
+      description: "Descrição"
     show:
       members: "Membros"
       activities: "Atividades"
@@ -203,7 +207,6 @@ pt:
       completed: "Concluído"
       remaining: "Restante"
     footer:
-      copyright: "© %{year} Broken Wheels. Todos os direitos reservados."
       about: "Sobre"
       contact: "Contato"
       privacy: "Privacidade"
@@ -214,8 +217,9 @@ pt:
     index:
       share_workout: "Compartilhe seu treino, pensamentos..."
       post: "Publicar"
-      workout_info: "Treino: %{sport} — %{distance} km, %{duration} min"
       ago: "atrás"
+      add_comment: "Adicione um comentário..."
+      comment: "Comentar"
 
   # Workouts (Treinos)
   workouts:
@@ -236,6 +240,7 @@ pt:
       none: "Nenhum"
       recent_workouts: "Treinos recentes"
       date: "Data"
+      workout_date: "Data do treino"
       sport: "Esporte"
       distance: "Distância"
       duration: "Duração"
