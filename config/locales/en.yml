@@ -28,4 +28,270 @@
 #       enabled: "ON"
 
 en:
-  hello: "Hello world"
+  # Achievements
+  achievements:
+    index:
+      title: "Achievements — Broken Wheels"
+      heading: "Achievements"
+      subtitle: "Track your running milestones. Keep rolling."
+      total_points: "Total Points"
+      badges_earned: "Badges Earned"
+      still_locked: "Still Locked"
+      close: "Close"
+      earned_on: "Earned on"
+      not_yet_unlocked: "Not yet unlocked"
+    sections:
+      workout_count:
+        title: "Workout Count"
+        subtitle: "Every run counts. Stack them up."
+      personal_records:
+        title: "Personal Records"
+        subtitle: "First time crossing a new distance."
+      distance_milestones:
+        title: "Distance Milestones"
+        subtitle: "How many times have you crushed each distance?"
+      consistency_streaks:
+        title: "Consistency Streaks"
+        subtitle: "Consecutive weeks without missing a run."
+      pace_achievements:
+        title: "Pace Achievements"
+        subtitle: "Speed is earned. One km at a time."
+    badge_card:
+      points: "pts"
+    section:
+      earned: "earned"
+
+  # Challenges
+  challenges:
+    index:
+      title: "Challenges"
+      browse_signed_in: "Browse and join challenges to compete with friends."
+      browse_guest: "Join challenges, track your workouts, and compete with friends. Sign up to get started."
+      sign_up: "Sign up"
+      log_in: "Log in"
+      view: "View"
+      join: "Join"
+      no_challenges: "No challenges yet. Run"
+      to_add_sample: "to add sample challenges."
+    show:
+      back_to_challenge: "← Back to challenge"
+      timeline: "Timeline — %{title}"
+      share_workout: "Share your workout, thoughts..."
+      post: "Post"
+      workout_info: "Workout: %{sport} — %{distance} km, %{duration} min"
+      ago: "ago"
+      target: "Target"
+      join_challenge: "Join challenge"
+      ranking: "Ranking"
+      rank: "#"
+      participant: "Participant"
+      progress: "Progress"
+    invite:
+      invite_friends: "Invite Friends"
+      share_challenge: "Share this challenge with friends"
+      copy_link: "Copy Link"
+      invite_sent: "Invite sent successfully!"
+
+  # Clubs
+  clubs:
+    index:
+      title: "Communities & Clubs"
+      create_club: "Create Club"
+      run: "Run"
+      bike: "Bike"
+      soccer: "Soccer"
+      select_sport: "Select sport"
+      members: "members"
+      subtitle: "Join clubs and train with others"
+      no_clubs: "No clubs yet. Create one!"
+      join: "Join"
+      view: "View"
+    show:
+      members: "Members"
+      activities: "Activities"
+      join_club: "Join Club"
+      leave_club: "Leave Club"
+      leave_confirm: "Are you sure?"
+
+  # Devise
+  devise:
+    sessions:
+      new:
+        title: "Log in"
+        email: "Email"
+        password: "Password"
+        remember_me: "Remember me"
+        submit: "Log in"
+    registrations:
+      new:
+        title: "Sign up"
+        first_name: "First name"
+        last_name: "Last name"
+        email: "Email"
+        password: "Password"
+        characters_minimum: "characters minimum"
+        password_confirmation: "Password confirmation"
+        submit: "Sign up"
+      edit:
+        title: "Edit Profile"
+        email: "Email"
+        password: "Password"
+        password_confirmation: "Password confirmation"
+        current_password: "Current password"
+        submit: "Update"
+        cancel_account: "Cancel my account"
+        unhappy: "Unhappy?"
+        back: "Back"
+    passwords:
+      new:
+        title: "Forgot your password?"
+        email: "Email"
+        submit: "Send me reset password instructions"
+      edit:
+        title: "Change your password"
+        new_password: "New password"
+        confirm_new_password: "Confirm new password"
+        submit: "Change my password"
+    confirmations:
+      new:
+        title: "Resend confirmation instructions"
+        email: "Email"
+        submit: "Resend confirmation instructions"
+    unlocks:
+      new:
+        title: "Resend unlock instructions"
+        email: "Email"
+        submit: "Resend unlock instructions"
+    mailer:
+      confirmation_instructions:
+        subject: "Confirmation instructions"
+      reset_password_instructions:
+        subject: "Reset password instructions"
+      unlock_instructions:
+        subject: "Unlock instructions"
+      email_changed:
+        subject: "Email Changed"
+      password_change:
+        subject: "Password Changed"
+    shared:
+      links:
+        log_in: "Log in"
+        sign_up: "Sign up"
+        forgot_password: "Forgot your password?"
+        confirmation_instructions: "Didn't receive confirmation instructions?"
+        unlock_instructions: "Didn't receive unlock instructions?"
+        sign_in_with: "Sign in with %{provider}"
+      error_messages:
+        errors: "errors prohibited this %{resource} from being saved:"
+        error: "error"
+
+  # Profiles
+  profiles:
+    show:
+      title: "Profile"
+      profile_picture: "Profile picture"
+      optional: "Optional"
+      sports: "Sports"
+      update_profile: "Update profile"
+      connected_apps: "Connected apps"
+      connect_apps_description: "Connect Strava, Garmin and more. Coming soon."
+      badges_achievements: "Badges & Achievements"
+      no_badges_yet: "Complete challenges to earn badges. None yet!"
+      edit_profile: "Edit Profile"
+      personal_info: "Personal Information"
+      name: "Name"
+      nickname: "Nickname"
+      email: "Email"
+      document: "Document"
+      phone: "Phone"
+      blood_type: "Blood type"
+      address: "Address"
+      member_since: "Member since"
+      statistics: "Statistics"
+      total_workouts: "Total Workouts"
+      total_distance: "Total Distance"
+      recent_activities: "Recent Activities"
+
+  # Shared
+  shared:
+    nav:
+      home: "Home"
+      challenges: "Challenges"
+      workouts: "Workouts"
+      achievements: "Achievements"
+      clubs: "Clubs"
+      profile: "Profile"
+      log_out: "Log out"
+      sign_up: "Sign up"
+      log_in: "Log in"
+      language_english: "English"
+      language_portuguese: "Português"
+    progress_bar:
+      progress: "Progress"
+      completed: "Completed"
+      remaining: "Remaining"
+    footer:
+      copyright: "© %{year} Broken Wheels. All rights reserved."
+      about: "About"
+      contact: "Contact"
+      privacy: "Privacy"
+      terms: "Terms"
+
+  # Timeline Posts
+  timeline_posts:
+    index:
+      share_workout: "Share your workout, thoughts..."
+      post: "Post"
+      workout_info: "Workout: %{sport} — %{distance} km, %{duration} min"
+      ago: "ago"
+
+  # Workouts
+  workouts:
+    index:
+      title: "Workouts"
+      days_active: "Days active"
+      active_challenges: "Active challenges"
+      no_active_challenges: "No active challenges."
+      join_challenge: "Join a challenge"
+      add_workout: "Add workout"
+      run: "Run"
+      bike: "Bike"
+      select_sport: "Select sport"
+      distance: "Distance"
+      duration: "Duration"
+      count_toward_challenge: "Count toward challenge"
+      none: "None"
+      recent_workouts: "Recent workouts"
+      date: "Date"
+      sport: "Sport"
+      distance: "Distance"
+      duration: "Duration"
+      pace: "Pace"
+      no_workouts: "No workouts yet. Add one above!"
+      edit: "Edit"
+      delete: "Delete"
+
+  # Common
+  common:
+    buttons:
+      save: "Save"
+      cancel: "Cancel"
+      delete: "Delete"
+      edit: "Edit"
+      update: "Update"
+      create: "Create"
+      back: "Back"
+      next: "Next"
+      previous: "Previous"
+      submit: "Submit"
+      close: "Close"
+    messages:
+      success: "Success!"
+      error: "Error!"
+      warning: "Warning!"
+      info: "Info"
+    validation:
+      required: "This field is required"
+      invalid_email: "Please enter a valid email"
+      password_mismatch: "Passwords don't match"
+      min_length: "Must be at least %{count} characters"

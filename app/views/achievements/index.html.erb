@@ -1,46 +1,46 @@
-<% content_for :title, "Achievements — Broken Wheels" %>
+<% content_for :title, t('achievements.index.title') %>
 
 <div class="pt-8" data-controller="modal">
 
-  <h1 class="text-2xl font-bold text-gray-900 mb-2">Achievements</h1>
-  <p class="text-gray-500 text-sm mb-6">Track your running milestones. Keep rolling.</p>
+  <h1 class="text-2xl font-bold text-gray-900 mb-2"><%= t('achievements.index.heading') %></h1>
+  <p class="text-gray-500 text-sm mb-6"><%= t('achievements.index.subtitle') %></p>
 
   <%# Stats bar %>
   <div class="grid grid-cols-3 gap-4 mb-10">
     <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-4 text-center">
       <p class="text-2xl font-bold text-[#FC4C02]"><%= @total_points %></p>
-      <p class="text-xs text-gray-500 mt-1">Total Points</p>
+      <p class="text-xs text-gray-500 mt-1"><%= t('achievements.index.total_points') %></p>
     </div>
     <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-4 text-center">
       <p class="text-2xl font-bold text-gray-900"><%= @earned_count %></p>
-      <p class="text-xs text-gray-500 mt-1">Badges Earned</p>
+      <p class="text-xs text-gray-500 mt-1"><%= t('achievements.index.badges_earned') %></p>
     </div>
     <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-4 text-center">
       <p class="text-2xl font-bold text-gray-400"><%= @total_count - @earned_count %></p>
-      <p class="text-xs text-gray-500 mt-1">Still Locked</p>
+      <p class="text-xs text-gray-500 mt-1"><%= t('achievements.index.still_locked') %></p>
     </div>
   </div>
 
   <%# Workout Count %>
   <%= render "achievements/section",
-    title: "Workout Count",
-    subtitle: "Every run counts. Stack them up.",
+    title: t('achievements.sections.workout_count.title'),
+    subtitle: t('achievements.sections.workout_count.subtitle'),
     icon: "fa-solid fa-dumbbell",
     badges: @workout_count_badges,
     earned_map: @earned_map, progress_map: @progress_map %>
 
   <%# Personal Records %>
   <%= render "achievements/section",
-    title: "Personal Records",
-    subtitle: "First time crossing a new distance.",
+    title: t('achievements.sections.personal_records.title'),
+    subtitle: t('achievements.sections.personal_records.subtitle'),
     icon: "fa-solid fa-flag-checkered",
     badges: @distance_pr_badges,
     earned_map: @earned_map, progress_map: @progress_map %>
 
   <%# Distance Milestones %>
   <%= render "achievements/section",
-    title: "Distance Milestones",
-    subtitle: "How many times have you crushed each distance?",
+    title: t('achievements.sections.distance_milestones.title'),
+    subtitle: t('achievements.sections.distance_milestones.subtitle'),
     icon: "fa-solid fa-road",
     badges: @distance_count_badges,
     earned_map: @earned_map,
@@ -49,16 +49,16 @@
 
   <%# Streak %>
   <%= render "achievements/section",
-    title: "Consistency Streaks",
-    subtitle: "Consecutive weeks without missing a run.",
+    title: t('achievements.sections.consistency_streaks.title'),
+    subtitle: t('achievements.sections.consistency_streaks.subtitle'),
     icon: "fa-solid fa-fire",
     badges: @streak_badges,
     earned_map: @earned_map, progress_map: @progress_map %>
 
   <%# Pace %>
   <%= render "achievements/section",
-    title: "Pace Achievements",
-    subtitle: "Speed is earned. One km at a time.",
+    title: t('achievements.sections.pace_achievements.title'),
+    subtitle: t('achievements.sections.pace_achievements.subtitle'),
     icon: "fa-solid fa-bolt",
     badges: @pace_badges,
     earned_map: @earned_map,
@@ -86,7 +86,7 @@
       <div data-modal-target="earnedSection" class="hidden mb-5">
         <div class="flex items-center justify-center gap-2 text-green-600">
           <i class="fa-solid fa-circle-check"></i>
-          <span class="text-sm font-medium">Earned on <span data-modal-target="earnedAt"></span></span>
+          <span class="text-sm font-medium"><%= t('achievements.index.earned_on') %> <span data-modal-target="earnedAt"></span></span>
         </div>
       </div>
 
@@ -94,7 +94,7 @@
       <div data-modal-target="lockedSection" class="hidden mb-5">
         <div class="flex items-center justify-center gap-2 text-gray-400 mb-3">
           <i class="fa-solid fa-lock"></i>
-          <span class="text-sm">Not yet unlocked</span>
+          <span class="text-sm"><%= t('achievements.index.not_yet_unlocked') %></span>
         </div>
         <%# Progress bar (hidden for pace kind) %>
         <div data-modal-target="progressBarSection" class="mb-2">

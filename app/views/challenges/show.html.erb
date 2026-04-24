@@ -1,21 +1,21 @@
 <div class="pt-8">
-  <%= link_to "← Back to challenges", challenges_path, class: "text-[#FC4C02] hover:underline mb-6 inline-block" %>
+  <%= link_to "<- <%= t('common.buttons.back') %>", challenges_path, class: "text-[#FC4C02] hover:underline mb-6 inline-block" %>
 
   <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6 mb-6">
     <h1 class="text-2xl font-bold text-gray-900"><%= @challenge.title %></h1>
     <p class="text-gray-600 mt-2"><%= @challenge.description %></p>
     <div class="flex gap-4 mt-4 text-sm text-gray-500">
       <span><%= @challenge.sport&.capitalize %></span>
-      <span>Target: <%= @challenge.target_value %> <%= @challenge.target_unit %></span>
+      <span><%= t('challenges.show.target') %>: <%= @challenge.target_value %> <%= @challenge.target_unit %></span>
       <span><%= @challenge.starts_at&.strftime("%b %d") %> - <%= @challenge.ends_at&.strftime("%b %d, %Y") %></span>
     </div>
 
     <div class="flex gap-4 mt-6">
       <% if @participation %>
-        <%= link_to "Timeline", challenge_timeline_posts_path(@challenge), class: "text-[#FC4C02] hover:underline font-medium" %>
-        <%= link_to "Invite friends", invite_challenge_path(@challenge), class: "text-[#FC4C02] hover:underline font-medium" %>
+        <%= link_to t('challenges.show.timeline'), challenge_timeline_posts_path(@challenge), class: "text-[#FC4C02] hover:underline font-medium" %>
+        <%= link_to t('challenges.invite.invite_friends'), invite_challenge_path(@challenge), class: "text-[#FC4C02] hover:underline font-medium" %>
       <% else %>
-        <%= button_to "Join challenge", join_challenge_path(@challenge), method: :post, class: "bg-[#FC4C02] text-white px-6 py-2 rounded-lg hover:bg-[#e04402] transition font-medium cursor-pointer" %>
+        <%= button_to t('challenges.show.join_challenge'), join_challenge_path(@challenge), method: :post, class: "bg-[#FC4C02] text-white px-6 py-2 rounded-lg hover:bg-[#e04402] transition font-medium cursor-pointer" %>
       <% end %>
     </div>
   </div>
@@ -24,14 +24,14 @@
     <%= render "shared/progress_bar", participation: @participation, challenge: @challenge %>
 
     <div class="mt-8">
-      <h2 class="text-lg font-semibold text-gray-900 mb-4">Ranking</h2>
+      <h2 class="text-lg font-semibold text-gray-900 mb-4"><%= t('challenges.show.ranking') %></h2>
       <div class="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
         <table class="min-w-full divide-y divide-gray-200">
           <thead class="bg-gray-50">
             <tr>
-              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">#</th>
-              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Participant</th>
-              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Progress</th>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase"><%= t('challenges.show.rank') %></th>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase"><%= t('challenges.show.participant') %></th>
+              <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase"><%= t('challenges.show.progress') %></th>
             </tr>
           </thead>
           <tbody class="divide-y divide-gray-200">

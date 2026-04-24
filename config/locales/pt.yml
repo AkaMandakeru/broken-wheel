@@ -1,0 +1,271 @@
+pt:
+
+  # Achievements (Conquistas)
+  achievements:
+    index:
+      title: "Conquistas — Broken Wheels"
+      heading: "Conquistas"
+      subtitle: "Acompanhe suas maratonas. Continue pedalando."
+      total_points: "Pontos Totais"
+      badges_earned: "Medalhas Conquistadas"
+      still_locked: "Ainda Bloqueadas"
+      close: "Fechar"
+      earned_on: "Conquistada em"
+      not_yet_unlocked: "Ainda não desbloqueada"
+    sections:
+      workout_count:
+        title: "Contagem de Treinos"
+        subtitle: "Cada corrida conta. Acumule-as."
+      personal_records:
+        title: "Recordes Pessoais"
+        subtitle: "Primeira vez superando uma nova distância."
+      distance_milestones:
+        title: "Marcos de Distância"
+        subtitle: "Quantas vezes você dominou cada distância?"
+      consistency_streaks:
+        title: "Sequências de Consistência"
+        subtitle: "Semanas consecutivas sem perder uma corrida."
+      pace_achievements:
+        title: "Conquistas de Ritmo"
+        subtitle: "Velocidade é conquistada. Um km de cada vez."
+    badge_card:
+      points: "pontos"
+    section:
+      earned: "conquistadas"
+
+  # Challenges (Desafios)
+  challenges:
+    index:
+      title: "Desafios"
+      browse_signed_in: "Navegue e participe de desafios para competir com amigos."
+      browse_guest: "Participe de desafios, acompanhe seus treinos e compita com amigos. Cadastre-se para começar."
+      sign_up: "Cadastrar-se"
+      log_in: "Entrar"
+      view: "Ver"
+      join: "Participar"
+      no_challenges: "Nenhum desafio ainda. Execute"
+      to_add_sample: "para adicionar desafios de exemplo."
+    show:
+      back_to_challenge: "← Voltar ao desafio"
+      timeline: "Linha do Tempo — %{title}"
+      share_workout: "Compartilhe seu treino, pensamentos..."
+      post: "Publicar"
+      workout_info: "Treino: %{sport} — %{distance} km, %{duration} min"
+      ago: "atrás"
+      target: "Meta"
+      join_challenge: "Participar do desafio"
+      ranking: "Classificação"
+      rank: "#"
+      participant: "Participante"
+      progress: "Progresso"
+    invite:
+      invite_friends: "Convidar Amigos"
+      share_challenge: "Compartilhe este desafio com amigos"
+      copy_link: "Copiar Link"
+      invite_sent: "Convite enviado com sucesso!"
+
+  # Clubs (Clubes)
+  clubs:
+    index:
+      title: "Comunidades e Clubes"
+      create_club: "Criar Clube"
+      run: "Corrida"
+      bike: "Bicicleta"
+      soccer: "Futebol"
+      select_sport: "Selecione o esporte"
+      members: "membros"
+      subtitle: "Junte-se a clubes e treine com outras pessoas"
+      no_clubs: "Nenhum clube ainda. Crie um!"
+      join: "Entrar"
+      view: "Ver"
+    show:
+      members: "Membros"
+      activities: "Atividades"
+      join_club: "Entrar no Clube"
+      leave_club: "Sair do Clube"
+      leave_confirm: "Tem certeza?"
+
+  # Devise (Autenticação)
+  devise:
+    sessions:
+      new:
+        title: "Entrar"
+        email: "E-mail"
+        password: "Senha"
+        remember_me: "Lembrar-me"
+        submit: "Entrar"
+    registrations:
+      new:
+        title: "Cadastrar-se"
+        first_name: "Nome"
+        last_name: "Sobrenome"
+        email: "E-mail"
+        password: "Senha"
+        characters_minimum: "caracteres mínimos"
+        password_confirmation: "Confirmar senha"
+        submit: "Cadastrar-se"
+      edit:
+        title: "Editar Perfil"
+        email: "E-mail"
+        password: "Senha"
+        password_confirmation: "Confirmar senha"
+        current_password: "Senha atual"
+        submit: "Atualizar"
+        cancel_account: "Cancelar minha conta"
+        unhappy: "Insatisfeito?"
+        back: "Voltar"
+    passwords:
+      new:
+        title: "Esqueceu sua senha?"
+        email: "E-mail"
+        submit: "Enviar instruções de redefinição de senha"
+      edit:
+        title: "Alterar sua senha"
+        new_password: "Nova senha"
+        confirm_new_password: "Confirmar nova senha"
+        submit: "Alterar minha senha"
+    confirmations:
+      new:
+        title: "Reenviar instruções de confirmação"
+        email: "E-mail"
+        submit: "Reenviar instruções de confirmação"
+    unlocks:
+      new:
+        title: "Reenviar instruções de desbloqueio"
+        email: "E-mail"
+        submit: "Reenviar instruções de desbloqueio"
+    mailer:
+      confirmation_instructions:
+        subject: "Instruções de confirmação"
+      reset_password_instructions:
+        subject: "Instruções de redefinição de senha"
+      unlock_instructions:
+        subject: "Instruções de desbloqueio"
+      email_changed:
+        subject: "E-mail Alterado"
+      password_change:
+        subject: "Senha Alterada"
+    shared:
+      links:
+        log_in: "Entrar"
+        sign_up: "Cadastrar-se"
+        forgot_password: "Esqueceu sua senha?"
+        confirmation_instructions: "Não recebeu instruções de confirmação?"
+        unlock_instructions: "Não recebeu instruções de desbloqueio?"
+        sign_in_with: "Entrar com %{provider}"
+      error_messages:
+        errors: "erros impediram que este %{resource} fosse salvo:"
+        error: "erro"
+
+  # Profiles (Perfis)
+  profiles:
+    show:
+      title: "Perfil"
+      profile_picture: "Foto de perfil"
+      optional: "Opcional"
+      sports: "Esportes"
+      update_profile: "Atualizar perfil"
+      connected_apps: "Aplicativos conectados"
+      connect_apps_description: "Conecte Strava, Garmin e mais. Em breve."
+      badges_achievements: "Medalhas e Conquistas"
+      no_badges_yet: "Complete desafios para conquistar medalhas. Nenhuma ainda!"
+      edit_profile: "Editar Perfil"
+      personal_info: "Informações Pessoais"
+      name: "Nome"
+      nickname: "Apelido"
+      email: "E-mail"
+      document: "Documento"
+      phone: "Telefone"
+      blood_type: "Tipo sanguíneo"
+      address: "Endereço"
+      member_since: "Membro desde"
+      statistics: "Estatísticas"
+      total_workouts: "Total de Treinos"
+      total_distance: "Distância Total"
+      recent_activities: "Atividades Recentes"
+
+  # Shared (Compartilhado)
+  shared:
+    nav:
+      home: "Início"
+      challenges: "Desafios"
+      workouts: "Treinos"
+      achievements: "Conquistas"
+      clubs: "Clubes"
+      profile: "Perfil"
+      log_out: "Sair"
+      sign_up: "Cadastrar-se"
+      log_in: "Entrar"
+      language_english: "English"
+      language_portuguese: "Português"
+    progress_bar:
+      progress: "Progresso"
+      completed: "Concluído"
+      remaining: "Restante"
+    footer:
+      copyright: "© %{year} Broken Wheels. Todos os direitos reservados."
+      about: "Sobre"
+      contact: "Contato"
+      privacy: "Privacidade"
+      terms: "Termos"
+
+  # Timeline Posts (Publicações na Linha do Tempo)
+  timeline_posts:
+    index:
+      share_workout: "Compartilhe seu treino, pensamentos..."
+      post: "Publicar"
+      workout_info: "Treino: %{sport} — %{distance} km, %{duration} min"
+      ago: "atrás"
+
+  # Workouts (Treinos)
+  workouts:
+    index:
+      title: "Treinos"
+      days_active: "Dias ativos"
+      active_challenges: "Desafios ativos"
+      no_active_challenges: "Nenhum desafio ativo."
+      join_challenge: "Participar de um desafio"
+      add_workout: "Adicionar treino"
+      run: "Corrida"
+      bike: "Bicicleta"
+      soccer: "Futebol"
+      select_sport: "Selecione o esporte"
+      distance: "Distância"
+      duration: "Duração"
+      count_toward_challenge: "Contar para desafio"
+      none: "Nenhum"
+      recent_workouts: "Treinos recentes"
+      date: "Data"
+      sport: "Esporte"
+      distance: "Distância"
+      duration: "Duração"
+      pace: "Ritmo"
+      no_workouts: "Nenhum treino ainda. Adicione um acima!"
+      edit: "Editar"
+      delete: "Excluir"
+
+  # Common (Comum)
+  common:
+    buttons:
+      save: "Salvar"
+      cancel: "Cancelar"
+      delete: "Excluir"
+      edit: "Editar"
+      update: "Atualizar"
+      create: "Criar"
+      back: "Voltar"
+      next: "Próximo"
+      previous: "Anterior"
+      submit: "Enviar"
+      close: "Fechar"
+    messages:
+      success: "Sucesso!"
+      error: "Erro!"
+      warning: "Aviso!"
+      info: "Informação"
+    validation:
+      required: "Este campo é obrigatório"
+      invalid_email: "Por favor, insira um e-mail válido"
+      password_mismatch: "As senhas não coincidem"
+      min_length: "Deve ter pelo menos %{count} caracteres"
+  

@@ -1,5 +1,5 @@
 <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-  <h2 class="text-lg font-semibold text-gray-900 mb-4"><%= local_assigns[:title] || "Your progress" %></h2>
+  <h2 class="text-lg font-semibold text-gray-900 mb-4"><%= local_assigns[:title] || t('shared.progress_bar.progress') %></h2>
   <% target = challenge.target_value.to_f %>
   <% progress = participation.progress_value.to_f %>
   <% percent = target.positive? ? [100, (progress / target * 100).round].min : 0 %>

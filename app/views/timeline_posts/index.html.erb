@@ -1,14 +1,14 @@
 <div class="pt-8">
-  <%= link_to "← Back to challenge", challenge_path(@challenge), class: "text-[#FC4C02] hover:underline mb-6 inline-block" %>
+  <%= link_to t('challenges.show.back_to_challenge'), challenge_path(@challenge), class: "text-[#FC4C02] hover:underline mb-6 inline-block" %>
 
-  <h1 class="text-2xl font-bold text-gray-900 mb-6">Timeline — <%= @challenge.title %></h1>
+  <h1 class="text-2xl font-bold text-gray-900 mb-6"><%= t('challenges.show.timeline', title: @challenge.title) %></h1>
 
   <%= form_with model: @timeline_post, url: challenge_timeline_posts_path(@challenge), local: true, html: { class: "bg-white dark:bg-neutral-800 border border-black/10 dark:border-white/10 rounded-xl shadow-sm p-6 mb-8", data: { controller: "image-preview", image_preview_multiple_value: "true" } } do |f| %>
-    <%= f.text_area :content, rows: 3, placeholder: "Share your workout, thoughts...", class: "form-control mb-4" %>
+    <%= f.text_area :content, rows: 3, placeholder: t('timeline_posts.index.share_workout'), class: "form-control mb-4" %>
     <div class="flex flex-col gap-4">
       <div class="flex flex-wrap gap-4 items-center justify-between">
         <%= f.file_field :images, multiple: true, accept: "image/*", class: "text-sm text-neutral-700 dark:text-neutral-300", data: { image_preview_target: "input", action: "change->image-preview#preview" } %>
-        <%= f.submit "Post", class: "btn-primary" %>
+        <%= f.submit t('timeline_posts.index.post'), class: "btn-primary" %>
       </div>
       <div data-image-preview-target="container" class="flex flex-wrap gap-2"></div>
     </div>
@@ -27,7 +27,7 @@
           <% end %>
           <div>
             <p class="font-medium text-gray-900"><%= post.user.first_name %> <%= post.user.last_name %></p>
-            <p class="text-sm text-gray-500"><%= time_ago_in_words(post.created_at) %> ago</p>
+            <p class="text-sm text-gray-500"><%= time_ago_in_words(post.created_at) %> <%= t('timeline_posts.index.ago') %></p>
           </div>
         </div>
         <p class="text-gray-700 whitespace-pre-wrap"><%= post.content %></p>
@@ -40,7 +40,7 @@
         <% end %>
         <% if post.workout %>
           <div class="mt-4 p-3 bg-gray-50 rounded-lg text-sm text-gray-600">
-            Workout: <%= post.workout.sport %> — <%= post.workout.distance_km %> km, <%= post.workout.duration_minutes %> min
+            <%= t('timeline_posts.index.workout_info', sport: post.workout.sport, distance: post.workout.distance_km, duration: post.workout.duration_minutes) %>
           </div>
         <% end %>
 

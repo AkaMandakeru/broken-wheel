@@ -1,9 +1,9 @@
 <div class="pt-8">
-  <h1 class="text-2xl font-bold text-gray-900 mb-6">Communities & Clubs</h1>
+  <h1 class="text-2xl font-bold text-gray-900 mb-6"><%= t('clubs.index.title') %></h1>
 
   <div class="mb-8">
     <button type="button" onclick="document.getElementById('new-club-form').classList.toggle('hidden')" class="btn-primary">
-      Create Club
+      <%= t('clubs.index.create_club') %>
     </button>
   </div>
 
@@ -16,14 +16,14 @@
         </div>
         <div class="relative gap-y-1.5">
           <%= f.label :sport, class: "form-label" %>
-          <%= f.select :sport, [["Run", "run"], ["Bike", "bike"], ["Soccer", "soccer"]], { include_blank: "Select sport" }, class: "form-control" %>
+          <%= f.select :sport, [[t('clubs.index.run'), "run"], [t('clubs.index.bike'), "bike"], [t('clubs.index.soccer'), "soccer"]], { include_blank: t('clubs.index.select_sport') }, class: "form-control" %>
         </div>
         <div class="relative gap-y-1.5">
           <%= f.label :description, class: "form-label" %>
           <%= f.text_area :description, rows: 3, class: "form-control" %>
         </div>
         <div class="pt-2">
-          <%= f.submit "Create", class: "btn-primary w-full" %>
+          <%= f.submit t('common.buttons.create'), class: "btn-primary w-full" %>
         </div>
       </div>
     <% end %>
@@ -37,20 +37,20 @@
           <p class="text-sm text-gray-600 mt-1"><%= club.description %></p>
           <div class="flex gap-4 mt-2 text-sm text-gray-500">
             <span><%= club.sport&.capitalize %></span>
-            <span><%= club.member_count %> members</span>
+            <span><%= club.member_count %> <%= t('clubs.index.members') %></span>
           </div>
         </div>
         <% membership = current_user.club_memberships.find_by(club: club) %>
         <% if membership %>
-          <%= link_to "View", club_path(club), class: "text-[#FC4C02] hover:underline font-medium" %>
+          <%= link_to t('clubs.index.view'), club_path(club), class: "text-[#FC4C02] hover:underline font-medium" %>
         <% else %>
-          <%= button_to "Join", join_club_path(club), method: :post, class: "btn-primary" %>
+          <%= button_to t('clubs.index.join'), join_club_path(club), method: :post, class: "btn-primary" %>
         <% end %>
       </div>
     <% end %>
   </div>
 
   <% if @clubs.empty? %>
-    <p class="text-gray-500 py-8">No clubs yet. Create one!</p>
+    <p class="text-gray-500 py-8"><%= t('clubs.index.no_clubs') %></p>
   <% end %>
 </div>

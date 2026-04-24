@@ -31,4 +31,6 @@ Rails.application.routes.draw do
       delete :leave
     end
   end
+
+  get '/switch_locale/:locale', to: 'locales#switch', as: :switch_locale
 end
