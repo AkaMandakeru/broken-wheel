@@ -1,28 +1,28 @@
 <div class="max-w-md mx-auto py-12">
   <div class="bg-white dark:bg-neutral-800 border border-black/10 dark:border-white/10 rounded-xl shadow-sm overflow-hidden">
     <div class="px-6 py-8 sm:p-8">
-      <h2 class="text-2xl font-bold text-neutral-900 dark:text-white mb-6">Log in</h2>
+      <h2 class="text-2xl font-bold text-neutral-900 dark:text-white mb-6"><%= t('devise.sessions.new.title') %></h2>
 
       <%= form_for(resource, as: resource_name, url: session_path(resource_name), html: { class: "space-y-5" }) do |f| %>
         <div class="relative gap-y-1.5">
-          <%= f.label :email, class: "form-label" %>
+          <%= f.label :email, t('devise.sessions.new.email'), class: "form-label" %>
           <%= f.email_field :email, autofocus: true, autocomplete: "email", class: "form-control", placeholder: "you@example.com" %>
         </div>
 
         <div class="relative gap-y-1.5">
-          <%= f.label :password, class: "form-label" %>
+          <%= f.label :password, t('devise.sessions.new.password'), class: "form-label" %>
           <%= f.password_field :password, autocomplete: "current-password", class: "form-control", placeholder: "Enter your password..." %>
         </div>
 
         <% if devise_mapping.rememberable? %>
           <div class="flex items-center gap-2">
             <%= f.check_box :remember_me, class: "rounded border-neutral-300 text-neutral-800 focus:ring-neutral-600" %>
-            <%= f.label :remember_me, class: "text-sm text-neutral-700 dark:text-neutral-300" %>
+            <%= f.label :remember_me, t('devise.sessions.new.remember_me'), class: "text-sm text-neutral-700 dark:text-neutral-300" %>
           </div>
         <% end %>
 
         <div class="pt-2">
-          <%= f.submit "Log in", class: "btn-primary w-full" %>
+          <%= f.submit t('devise.sessions.new.submit'), class: "btn-primary w-full" %>
         </div>
       <% end %>
 

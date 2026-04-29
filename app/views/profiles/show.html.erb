@@ -1,5 +1,5 @@
 <div class="pt-8">
-  <h1 class="text-2xl font-bold text-gray-900 mb-6">Profile</h1>
+  <h1 class="text-2xl font-bold text-gray-900 mb-6"><%= t('profiles.show.title') %></h1>
 
   <div class="bg-white dark:bg-neutral-800 border border-black/10 dark:border-white/10 rounded-xl shadow-sm p-6 sm:p-8 max-w-xl">
     <%= form_with model: @user, url: profile_path, method: :patch, local: true, html: { class: "space-y-5" } do |f| %>
@@ -14,72 +14,72 @@
           <% end %>
         </div>
         <div>
-          <%= f.label :avatar, "Profile picture", class: "form-label" %>
+          <%= f.label :avatar, t('profiles.show.profile_picture'), class: "form-label" %>
           <%= f.file_field :avatar, accept: "image/*", class: "text-sm text-neutral-700 dark:text-neutral-300", data: { image_preview_target: "input", action: "change->image-preview#preview" } %>
         </div>
       </div>
 
       <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <div class="relative gap-y-1.5">
-          <%= f.label :first_name, class: "form-label" %>
+          <%= f.label :first_name, t("devise.registrations.new.first_name"), class: "form-label" %>
           <%= f.text_field :first_name, class: "form-control" %>
         </div>
         <div class="relative gap-y-1.5">
-          <%= f.label :last_name, class: "form-label" %>
+          <%= f.label :last_name, t("devise.registrations.new.last_name"), class: "form-label" %>
           <%= f.text_field :last_name, class: "form-control" %>
         </div>
       </div>
 
       <div class="relative gap-y-1.5">
-        <%= f.label :nickname, class: "form-label" %>
-        <%= f.text_field :nickname, class: "form-control", placeholder: "Optional" %>
+        <%= f.label :nickname, t("profiles.show.nickname"), class: "form-label" %>
+        <%= f.text_field :nickname, class: "form-control", placeholder: t('profiles.show.optional') %>
       </div>
 
       <div class="relative gap-y-1.5">
-        <%= f.label :document, class: "form-label" %>
-        <%= f.text_field :document, class: "form-control", placeholder: "Optional" %>
+        <%= f.label :document, t("profiles.show.document"), class: "form-label" %>
+        <%= f.text_field :document, class: "form-control", placeholder: t('profiles.show.optional') %>
       </div>
 
       <div class="relative gap-y-1.5">
-        <%= f.label :phone, class: "form-label" %>
-        <%= f.telephone_field :phone, class: "form-control", placeholder: "Optional" %>
+        <%= f.label :phone, t("profiles.show.phone"), class: "form-label" %>
+        <%= f.telephone_field :phone, class: "form-control", placeholder: t('profiles.show.optional') %>
       </div>
 
       <div class="relative gap-y-1.5">
-        <%= f.label :blood_type, class: "form-label" %>
-        <%= f.text_field :blood_type, class: "form-control", placeholder: "Optional" %>
+        <%= f.label :blood_type, t("profiles.show.blood_type"), class: "form-label" %>
+        <%= f.text_field :blood_type, class: "form-control", placeholder: t('profiles.show.optional') %>
       </div>
 
       <div class="relative gap-y-1.5">
-        <%= f.label :address, class: "form-label" %>
-        <%= f.text_area :address, rows: 2, class: "form-control", placeholder: "Optional" %>
+        <%= f.label :address, t("profiles.show.address"), class: "form-label" %>
+        <%= f.text_area :address, rows: 2, class: "form-control", placeholder: t('profiles.show.optional') %>
       </div>
 
       <div>
-        <p class="form-label">Sports</p>
+        <p class="form-label"><%= t('profiles.show.sports') %></p>
         <div class="flex gap-4">
           <% %w[run bike soccer].each do |sport| %>
             <label class="flex items-center gap-2 text-sm text-neutral-700 dark:text-neutral-300">
               <%= check_box_tag "user[sports][]", sport, Array(@user.sports).include?(sport), class: "rounded border-neutral-300 text-neutral-800 focus:ring-neutral-600" %>
-              <span><%= sport.capitalize %></span>
+              <span><%= t("workouts.index.#{sport}") %></span>
             </label>
           <% end %>
         </div>
       </div>
 
       <div class="pt-2">
-        <%= f.submit "Update profile", class: "btn-primary w-full sm:w-auto" %>
+        <%= f.submit t('profiles.show.update_profile'), class: "btn-primary w-full sm:w-auto" %>
       </div>
     <% end %>
   </div>
 
   <div class="mt-12">
-    <h2 class="text-lg font-semibold text-gray-900 mb-4">Connected apps</h2>
-    <p class="text-gray-600 text-sm">Connect Strava, Garmin and more. Coming soon.</p>
+    <h2 class="text-lg font-semibold text-gray-900 mb-4"><%= t('profiles.show.connected_apps') %></h2>
+    <p class="text-gray-600 text-sm"><%= t('profiles.show.connect_apps_description') %></p>
   </div>
 
   <div class="mt-12">
-    <h2 class="text-lg font-semibold text-gray-900 mb-4">Badges & Achievements</h2>
+    <h2 class="text-lg font-semibold text-gray-900 mb-4"><%= t('profiles.show.badges_achievements') %></h2>
     <% if @user.user_badges.any? %>
       <div class="flex flex-wrap gap-4">
         <% @user.user_badges.includes(:badge, :challenge).each do |ub| %>
@@ -91,7 +91,7 @@
         <% end %>
       </div>
     <% else %>
-      <p class="text-gray-600 text-sm">Complete challenges to earn badges. None yet!</p>
+      <p class="text-gray-600 text-sm"><%= t('profiles.show.no_badges_yet') %></p>
     <% end %>
   </div>
 </div>

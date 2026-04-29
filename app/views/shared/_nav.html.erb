@@ -14,29 +14,56 @@
         <div class="hidden md:flex items-center gap-4">
           <% if user_signed_in? %>
             <%= link_to challenges_path, class: "text-gray-700 hover:text-[#FC4C02] transition flex items-center gap-2" do %>
-              <i class="fa-solid fa-trophy"></i> Challenges
+              <i class="fa-solid fa-trophy"></i> <%= t('shared.nav.challenges') %>
             <% end %>
             <%= link_to workouts_path, class: "text-gray-700 hover:text-[#FC4C02] transition flex items-center gap-2" do %>
-              <i class="fa-solid fa-dumbbell"></i> Workouts
+              <i class="fa-solid fa-dumbbell"></i> <%= t('shared.nav.workouts') %>
             <% end %>
             <%= link_to achievements_path, class: "text-gray-700 hover:text-[#FC4C02] transition flex items-center gap-2" do %>
-              <i class="fa-solid fa-medal"></i> Achievements
+              <i class="fa-solid fa-medal"></i> <%= t('shared.nav.achievements') %>
             <% end %>
             <%= link_to clubs_path, class: "text-gray-700 hover:text-[#FC4C02] transition flex items-center gap-2" do %>
-              <i class="fa-solid fa-users"></i> Clubs
+              <i class="fa-solid fa-users"></i> <%= t('shared.nav.clubs') %>
             <% end %>
             <%= link_to profile_path, class: "text-gray-700 hover:text-[#FC4C02] transition flex items-center gap-2" do %>
-              <i class="fa-solid fa-user"></i> Profile
+              <i class="fa-solid fa-user"></i> <%= t('shared.nav.profile') %>
             <% end %>
+               
+          <%# Language Selector %>
+          <div class="relative" id="language-dropdown">
+            <button type="button" onclick="toggleDropdown()" class="flex items-center gap-3 w-full text-left px-4 py-3 rounded-lg text-gray-700 hover:bg-gray-100 hover:text-[#FC4C02] transition">
+              <i class="fa-solid fa-globe w-5"></i>
+              <span class="flex-1" id="current-locale"><%= I18n.locale.to_s.upcase %></span>
+              <i class="fa-solid fa-chevron-down w-4 text-xs transition-transform" id="dropdown-arrow"></i>
+            </button>
+            
+            <div id="dropdown-menu" class="hidden absolute bottom-full left-0 right-0 mb-2 bg-white rounded-lg shadow-lg border border-gray-200 overflow-hidden z-50">
+              <%= link_to switch_locale_path(locale: :en), class: "flex items-center gap-3 px-4 py-3 text-gray-700 hover:bg-gray-100 transition #{I18n.locale == :en ? 'bg-gray-100 text-[#FC4C02]' : ''}" do %>
+                <i class="fa-solid fa-flag w-5"></i>
+                <span><%= t('shared.nav.language_english') %></span>
+                <% if I18n.locale == :en %>
+                  <i class="fa-solid fa-check w-4 text-[#FC4C02]"></i>
+                <% end %>
+              <% end %>
+              <%= link_to switch_locale_path(locale: :pt), class: "flex items-center gap-3 px-4 py-3 text-gray-700 hover:bg-gray-100 transition #{I18n.locale == :pt ? 'bg-gray-100 text-[#FC4C02]' : ''}" do %>
+                <i class="fa-solid fa-flag w-5"></i>
+                <span><%= t('shared.nav.language_portuguese') %></span>
+                <% if I18n.locale == :pt %>
+                  <i class="fa-solid fa-check w-4 text-[#FC4C02]"></i>
+                <% end %>
+              <% end %>
+            </div>
+          </div>
+
             <%= button_to destroy_user_session_path, method: :delete, class: "text-gray-700 hover:text-[#FC4C02] transition flex items-center gap-2" do %>
-              <i class="fa-solid fa-right-from-bracket"></i> Log out
+              <i class="fa-solid fa-right-from-bracket"></i> <%= t('shared.nav.log_out') %>
             <% end %>
           <% else %>
             <%= link_to new_user_session_path, class: "text-gray-700 hover:text-[#FC4C02] transition flex items-center gap-2" do %>
-              <i class="fa-solid fa-right-to-bracket"></i> Log in
+              <i class="fa-solid fa-right-to-bracket"></i> <%= t('shared.nav.log_in') %>
             <% end %>
             <%= link_to new_user_registration_path, class: "bg-[#FC4C02] text-white px-4 py-2 rounded-lg hover:bg-[#e04402] transition font-medium flex items-center gap-2" do %>
-              <i class="fa-solid fa-user-plus"></i> Sign up
+              <i class="fa-solid fa-user-plus"></i> <%= t('shared.nav.sign_up') %>
             <% end %>
           <% end %>
         </div>
@@ -53,33 +80,106 @@
       <div class="flex-1 overflow-y-auto px-4 py-4 space-y-1">
         <% if user_signed_in? %>
           <%= link_to challenges_path, class: "flex items-center gap-3 px-4 py-3 rounded-lg text-gray-700 hover:bg-gray-100 hover:text-[#FC4C02] transition", data: { action: "click->sidebar#close" } do %>
-            <i class="fa-solid fa-trophy w-5"></i> Challenges
+            <i class="fa-solid fa-trophy w-5"></i> <%= t('shared.nav.challenges') %>
           <% end %>
           <%= link_to workouts_path, class: "flex items-center gap-3 px-4 py-3 rounded-lg text-gray-700 hover:bg-gray-100 hover:text-[#FC4C02] transition", data: { action: "click->sidebar#close" } do %>
-            <i class="fa-solid fa-dumbbell w-5"></i> Workouts
+            <i class="fa-solid fa-dumbbell w-5"></i> <%= t('shared.nav.workouts') %>
           <% end %>
           <%= link_to achievements_path, class: "flex items-center gap-3 px-4 py-3 rounded-lg text-gray-700 hover:bg-gray-100 hover:text-[#FC4C02] transition", data: { action: "click->sidebar#close" } do %>
-            <i class="fa-solid fa-medal w-5"></i> Achievements
+            <i class="fa-solid fa-medal w-5"></i> <%= t('shared.nav.achievements') %>
           <% end %>
           <%= link_to clubs_path, class: "flex items-center gap-3 px-4 py-3 rounded-lg text-gray-700 hover:bg-gray-100 hover:text-[#FC4C02] transition", data: { action: "click->sidebar#close" } do %>
-            <i class="fa-solid fa-users w-5"></i> Clubs
+            <i class="fa-solid fa-users w-5"></i> <%= t('shared.nav.clubs') %>
           <% end %>
           <%= link_to profile_path, class: "flex items-center gap-3 px-4 py-3 rounded-lg text-gray-700 hover:bg-gray-100 hover:text-[#FC4C02] transition", data: { action: "click->sidebar#close" } do %>
-            <i class="fa-solid fa-user w-5"></i> Profile
-          <% end %>
-          <hr class="my-4 border-gray-200">
-          <%= button_to destroy_user_session_path, method: :delete, class: "flex items-center gap-3 w-full text-left px-4 py-3 rounded-lg text-gray-700 hover:bg-gray-100 hover:text-[#FC4C02] transition", data: { action: "click->sidebar#close" } do %>
-            <i class="fa-solid fa-right-from-bracket w-5"></i> Log out
-          <% end %>
+            <i class="fa-solid fa-user w-5"></i> <%= t('shared.nav.profile') %>
+          <% end %> 
+        
+        <%# Mobile Language Selector %>
+        <div class="relative" id="mobile-language-selector">
+          <button type="button" onclick="toggleMobileSelector()" class="flex items-center gap-3 w-full text-left px-4 py-3 rounded-lg text-gray-700 hover:bg-gray-100 hover:text-[#FC4C02] transition">
+            <i class="fa-solid fa-globe w-5"></i>
+            <span class="flex-1" id="mobile-locale-display"><%= I18n.locale.to_s.upcase %></span>
+            <i class="fa-solid fa-chevron-down w-4 text-xs transition-transform" id="mobile-selector-arrow"></i>
+          </button>
+          
+          <div id="mobile-selector-menu" class="hidden absolute bottom-full left-0 right-0 mb-2 bg-white rounded-lg shadow-lg border border-gray-200 overflow-hidden z-50">
+            <%= link_to switch_locale_path(locale: :en), class: "flex items-center gap-3 px-4 py-3 text-gray-700 hover:bg-gray-100 transition #{I18n.locale == :en ? 'bg-gray-100 text-[#FC4C02]' : ''}", data: { action: "click->sidebar#close" } do %>
+              <i class="fa-solid fa-flag w-5"></i>
+              <span><%= t('shared.nav.language_english') %></span>
+              <% if I18n.locale == :en %>
+                <i class="fa-solid fa-check w-4 text-[#FC4C02]"></i>
+              <% end %>
+            <% end %>
+            <%= link_to switch_locale_path(locale: :pt), class: "flex items-center gap-3 px-4 py-3 text-gray-700 hover:bg-gray-100 transition #{I18n.locale == :pt ? 'bg-gray-100 text-[#FC4C02]' : ''}", data: { action: "click->sidebar#close" } do %>
+              <i class="fa-solid fa-flag w-5"></i>
+              <span><%= t('shared.nav.language_portuguese') %></span>
+              <% if I18n.locale == :pt %>
+                <i class="fa-solid fa-check w-4 text-[#FC4C02]"></i>
+              <% end %>
+            <% end %>
+          </div>
+        </div>
+        
+        <hr class="my-4 border-gray-200">   
         <% else %>
           <%= link_to new_user_session_path, class: "flex items-center gap-3 px-4 py-3 rounded-lg text-gray-700 hover:bg-gray-100 hover:text-[#FC4C02] transition", data: { action: "click->sidebar#close" } do %>
-            <i class="fa-solid fa-right-to-bracket w-5"></i> Log in
+            <i class="fa-solid fa-right-to-bracket w-5"></i> <%= t('shared.nav.log_in') %>
           <% end %>
           <%= link_to new_user_registration_path, class: "flex items-center gap-3 px-4 py-3 rounded-lg bg-[#FC4C02] text-white hover:bg-[#e04402] transition text-center font-medium", data: { action: "click->sidebar#close" } do %>
-            <i class="fa-solid fa-user-plus w-5"></i> Sign up
+            <i class="fa-solid fa-user-plus w-5"></i> <%= t('shared.nav.sign_up') %>
           <% end %>
         <% end %>
       </div>
     </div>
   </aside>
-</div>
+</div>     
+<script>
+  // Toggle language dropdown
+  function toggleDropdown() {
+    const menu = document.getElementById('dropdown-menu');
+    const arrow = document.getElementById('dropdown-arrow');
+    
+    if (menu.classList.contains('hidden')) {
+      menu.classList.remove('hidden');
+      arrow.style.transform = 'rotate(180deg)';
+    } else {
+      menu.classList.add('hidden');
+      arrow.style.transform = 'rotate(0deg)';
+    }
+  }
+  
+  function toggleMobileSelector() {
+    const menu = document.getElementById('mobile-selector-menu');
+    const arrow = document.getElementById('mobile-selector-arrow');
+    
+    if (menu.classList.contains('hidden')) {
+      menu.classList.remove('hidden');
+      arrow.style.transform = 'rotate(180deg)';
+    } else {
+      menu.classList.add('hidden');
+      arrow.style.transform = 'rotate(0deg)';
+    }
+  }
+  
+  // Close dropdown when clicking outside
+  document.addEventListener('click', function(event) {
+    // Desktop dropdown
+    const desktopDropdown = document.getElementById('language-dropdown');
+    if (desktopDropdown && !desktopDropdown.contains(event.target)) {
+      const menu = document.getElementById('dropdown-menu');
+      const arrow = document.getElementById('dropdown-arrow');
+      if (menu) menu.classList.add('hidden');
+      if (arrow) arrow.style.transform = 'rotate(0deg)';
+    }
+    
+    // Mobile selector dropdown
+    const mobileSelector = document.getElementById('mobile-language-selector');
+    if (mobileSelector && !mobileSelector.contains(event.target)) {
+      const mobileMenu = document.getElementById('mobile-selector-menu');
+      const mobileArrow = document.getElementById('mobile-selector-arrow');
+      if (mobileMenu) mobileMenu.classList.add('hidden');
+      if (mobileArrow) mobileArrow.style.transform = 'rotate(0deg)';
+    }
+  });
+</script>

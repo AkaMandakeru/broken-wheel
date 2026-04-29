@@ -1,47 +1,47 @@
 <div class="pt-8">
-  <h1 class="text-2xl font-bold text-gray-900 mb-6">Workouts</h1>
+  <h1 class="text-2xl font-bold text-gray-900 mb-6"><%= t('workouts.index.title') %></h1>
 
   <div class="grid grid-cols-2 gap-4 mb-8">
     <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
-      <p class="text-sm text-gray-500">Workouts</p>
+      <p class="text-sm text-gray-500"><%= t('workouts.index.title') %></p>
       <p class="text-2xl font-bold text-gray-900"><%= @workout_count %></p>
     </div>
     <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-4">
-      <p class="text-sm text-gray-500">Days active</p>
+      <p class="text-sm text-gray-500"><%= t('workouts.index.days_active') %></p>
       <p class="text-2xl font-bold text-gray-900"><%= @unique_days %></p>
     </div>
   </div>
 
-  <h2 class="text-lg font-semibold text-gray-900 mb-4">Active challenges</h2>
+  <h2 class="text-lg font-semibold text-gray-900 mb-4"><%= t('workouts.index.active_challenges') %></h2>
   <div class="space-y-4 mb-8">
     <% @participations.each do |participation| %>
       <%= render "shared/progress_bar", participation: participation, challenge: participation.challenge, title: participation.challenge.title %>
     <% end %>
     <% if @participations.empty? %>
-      <p class="text-gray-500">No active challenges. <%= link_to "Join a challenge", challenges_path, class: "text-[#FC4C02] hover:underline" %>.</p>
+      <p class="text-gray-500"><%= t('workouts.index.no_active_challenges') %> <%= link_to t('workouts.index.join_challenge'), challenges_path, class: "text-[#FC4C02] hover:underline" %>.</p>
     <% end %>
   </div>
 
-  <h2 class="text-lg font-semibold text-gray-900 mb-4">Add workout</h2>
+  <h2 class="text-lg font-semibold text-gray-900 mb-4"><%= t('workouts.index.add_workout') %></h2>
   <%= form_with model: Workout.new, url: workouts_path, local: true, html: { class: "bg-white dark:bg-neutral-800 border border-black/10 dark:border-white/10 rounded-xl shadow-sm p-6 mb-8 max-w-md" } do |f| %>
     <div class="space-y-5">
       <div class="relative gap-y-1.5">
-        <%= f.label :sport, class: "form-label" %>
-        <%= f.select :sport, [["Run", "run"], ["Bike", "bike"]], { include_blank: "Select sport" }, class: "form-control" %>
+        <%= f.label :sport, t('workouts.index.sport'), class: "form-label" %>
+        <%= f.select :sport, [[t('workouts.index.run'), "run"], [t('workouts.index.bike'), "bike"]], { include_blank: t('workouts.index.select_sport') }, class: "form-control" %>
       </div>
       <div class="relative gap-y-1.5">
-        <%= f.label :workout_date, class: "form-label" %>
+        <%= f.label :workout_date, t('workouts.index.workout_date'), class: "form-label" %>
         <%= f.date_field :workout_date, value: Date.current, class: "form-control" %>
       </div>
       <div class="relative gap-y-1.5">
-        <label class="form-label">Distance</label>
+        <label class="form-label"><%= t('workouts.index.distance') %></label>
         <div class="flex gap-2">
           <%= f.number_field :distance_km_input, min: 0, class: "form-control", placeholder: "km" %>
           <%= f.number_field :distance_m_input, min: 0, max: 999, class: "form-control", placeholder: "m" %>
         </div>
       </div>
       <div class="relative gap-y-1.5">
-        <label class="form-label">Duration</label>
+        <label class="form-label"><%= t('workouts.index.duration') %></label>
         <div class="flex gap-2">
           <%= f.number_field :duration_hours_input, min: 0, class: "form-control", placeholder: "hrs" %>
           <%= f.number_field :duration_minutes_input, min: 0, max: 59, class: "form-control", placeholder: "min" %>
@@ -49,26 +49,26 @@
         </div>
       </div>
       <div class="relative gap-y-1.5">
-        <%= f.label :challenge_participation_id, "Count toward challenge", class: "form-label" %>
-        <%= f.collection_select :challenge_participation_id, @participations || [], :id, ->(p) { p.challenge.title }, { include_blank: "None" }, class: "form-control" %>
+        <%= f.label :challenge_participation_id, t('workouts.index.count_toward_challenge'), class: "form-label" %>
+        <%= f.collection_select :challenge_participation_id, @participations || [], :id, ->(p) { p.challenge.title }, { include_blank: t('workouts.index.none') }, class: "form-control" %>
       </div>
       <div class="pt-2">
-        <%= f.submit "Add workout", class: "btn-primary w-full" %>
+        <%= f.submit t('workouts.index.add_workout'), class: "btn-primary w-full" %>
       </div>
     </div>
   <% end %>
 
-  <h2 class="text-lg font-semibold text-gray-900 mb-4">Recent workouts</h2>
+  <h2 class="text-lg font-semibold text-gray-900 mb-4"><%= t('workouts.index.recent_workouts') %></h2>
   <div class="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
     <% if @workouts.any? %>
       <table class="min-w-full divide-y divide-gray-200">
         <thead class="bg-gray-50">
           <tr>
-            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Date</th>
-            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Sport</th>
-            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Distance</th>
-            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Duration</th>
-            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Pace</th>
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase"><%= t('workouts.index.date') %></th>
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase"><%= t('workouts.index.sport') %></th>
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase"><%= t('workouts.index.distance') %></th>
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase"><%= t('workouts.index.duration') %></th>
+            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase"><%= t('workouts.index.pace') %></th>
           </tr>
         </thead>
         <tbody class="divide-y divide-gray-200">
@@ -93,7 +93,7 @@
         </tbody>
       </table>
     <% else %>
-      <p class="p-6 text-gray-500">No workouts yet. Add one above!</p>
+      <p class="p-6 text-gray-500"><%= t('workouts.index.no_workouts') %></p>
     <% end %>
   </div>
 </div>
