@@ -19,9 +19,9 @@
             <h2 class="text-lg font-semibold text-gray-900"><%= challenge.title %></h2>
             <p class="text-sm text-gray-600 mt-1"><%= challenge.description %></p>
             <div class="flex gap-4 mt-2 text-sm text-gray-500">
-              <span><%= challenge.sport&.capitalize %></span>
+              <span><%= t("enums.sports.#{challenge.sport}", default: challenge.sport&.capitalize.to_s) %></span>
               <span><%= challenge.target_value %> <%= challenge.target_unit %></span>
-              <span><%= challenge.challenge_type&.capitalize %></span>
+              <span><%= t("enums.challenge_types.#{challenge.challenge_type}", default: challenge.challenge_type&.capitalize.to_s) %></span>
             </div>
           </div>
           <% if user_signed_in? %>

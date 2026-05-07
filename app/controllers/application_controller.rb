@@ -7,8 +7,7 @@ class ApplicationController < ActionController::Base
   stale_when_importmap_changes
 
   def set_locale
-    locale = session[:locale] || params[:locale] || I18n.default_locale
-    I18n.locale = locale
-    Rails.logger.info "Set locale to: #{I18n.locale}, session: #{session[:locale]}, params: #{params[:locale]}"
+    requested = (params[:locale] || session[:locale] || I18n.default_locale).to_sym
+    I18n.locale = I18n.available_locales.include?(requested) ? requested : I18n.default_locale
   end
 end

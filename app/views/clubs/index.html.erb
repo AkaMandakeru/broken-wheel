@@ -16,7 +16,7 @@
         </div>
         <div class="relative gap-y-1.5">
           <%= f.label :sport, t('clubs.index.sport'), class: "form-label" %>
-          <%= f.select :sport, [[t('clubs.index.run'), "run"], [t('clubs.index.bike'), "bike"], [t('clubs.index.soccer'), "soccer"]], { include_blank: t('clubs.index.select_sport') }, class: "form-control" %>
+          <%= f.select :sport, [[t('enums.sports.run'), "run"], [t('enums.sports.bike'), "bike"], [t('enums.sports.soccer'), "soccer"]], { include_blank: t('clubs.index.select_sport') }, class: "form-control" %>
         </div>
         <div class="relative gap-y-1.5">
           <%= f.label :description, t('clubs.index.description'), class: "form-label" %>
@@ -36,7 +36,7 @@
           <h2 class="text-lg font-semibold text-gray-900"><%= club.name %></h2>
           <p class="text-sm text-gray-600 mt-1"><%= club.description %></p>
           <div class="flex gap-4 mt-2 text-sm text-gray-500">
-            <span><%= club.sport&.capitalize %></span>
+            <span><%= t("enums.sports.#{club.sport}", default: club.sport&.capitalize.to_s) %></span>
             <span><%= club.member_count %> <%= t('clubs.index.members') %></span>
           </div>
         </div>

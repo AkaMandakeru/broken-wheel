@@ -15,16 +15,14 @@ class ChallengesController < ApplicationController
 
   def join
     if current_user.challenge_participations.exists?(challenge_id: @challenge.id)
-      redirect_to challenge_path(@challenge), alert: "You already joined this challenge."
+      redirect_to challenge_path(@challenge), alert: t("flashes.challenges.already_joined")
       return
     end
 
     participation = current_user.challenge_participations.create!(challenge: @challenge)
 
     if @challenge.challenge_type == "weekly"
-      start_date = Date.current.beginning_of_week(:monday)
-      end_date = Date.current.end_of_week(:monday)
-      workouts = current_user.workouts.where(workout_date: start_date..end_date)
+      workouts = current_user.workouts.where(workout_date: Challenge.current_week_window)
     elsif @challenge.challenge_type == "monthly"
       start_date = Date.current.beginning_of_month
       end_date = start_date + 29.days
@@ -38,29 +36,15 @@ class ChallengesController < ApplicationController
 
     if workouts_to_assign.any?
       workouts_to_assign.update_all(challenge_participation_id: participation.id)
-
-      progress = @challenge.target_unit == "km" ? participation.workouts.sum(:distance_km) : (participation.workouts.sum(:duration_minutes).to_f / 60)
-      participation.update(progress_value: progress)
-
-      if progress >= @challenge.target_value.to_f
-        participation.update(completed_at: Time.current)
-        badge = Badge.find_or_create_by!(name: "Completed: #{@challenge.title}") do |b|
-          b.icon = "🏆"
-          b.description = "Completed #{@challenge.title}"
-          b.badge_type = "challenge_completion"
-        end
-        unless current_user.user_badges.exists?(badge: badge, challenge: @challenge)
-          current_user.user_badges.create!(badge: badge, challenge: @challenge, earned_at: Time.current)
-        end
-      end
+      RecomputeChallengeProgress.new(participation).call
     end
 
-    redirect_to challenge_path(@challenge), notice: "Joined challenge!"
+    redirect_to challenge_path(@challenge), notice: t("flashes.challenges.joined")
   end
 
   def invite
     @participation = current_user.challenge_participations.find_by(challenge_id: @challenge.id)
-    redirect_to challenge_path(@challenge), alert: "Join the challenge first to invite friends." unless @participation
+    redirect_to challenge_path(@challenge), alert: t("flashes.challenges.must_join_first") unless @participation
   end
 
   private
