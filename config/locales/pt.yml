@@ -70,9 +70,6 @@ pt:
     index:
       title: "Comunidades e Clubes"
       create_club: "Criar Clube"
-      run: "Corrida"
-      bike: "Bicicleta"
-      soccer: "Futebol"
       select_sport: "Selecione o esporte"
       members: "membros"
       subtitle: "Junte-se a clubes e treine com outras pessoas"
@@ -89,7 +86,7 @@ pt:
       leave_club: "Sair do Clube"
       leave_confirm: "Tem certeza?"
 
-  # Devise (Autenticação)
+  # Devise (Autenticação) — rótulos da UI e mensagens do framework
   devise:
     sessions:
       new:
@@ -98,6 +95,9 @@ pt:
         password: "Senha"
         remember_me: "Lembrar-me"
         submit: "Entrar"
+      signed_in: "Login efetuado com sucesso."
+      signed_out: "Logout efetuado com sucesso."
+      already_signed_out: "Logout efetuado com sucesso."
     registrations:
       new:
         title: "Cadastrar-se"
@@ -118,6 +118,14 @@ pt:
         cancel_account: "Cancelar minha conta"
         unhappy: "Insatisfeito?"
         back: "Voltar"
+      destroyed: "Tchau! Sua conta foi cancelada com sucesso. Esperamos te ver novamente em breve."
+      signed_up: "Bem-vindo! Você se cadastrou com sucesso."
+      signed_up_but_inactive: "Você se cadastrou com sucesso. Porém, não pudemos te conectar pois sua conta ainda não está ativa."
+      signed_up_but_locked: "Você se cadastrou com sucesso. Porém, não pudemos te conectar pois sua conta está bloqueada."
+      signed_up_but_unconfirmed: "Uma mensagem com um link de confirmação foi enviada para o seu e-mail. Por favor, abra o link para ativar sua conta."
+      update_needs_confirmation: "Você atualizou sua conta com sucesso, mas precisamos verificar seu novo endereço de e-mail. Por favor, verifique seu e-mail e siga o link de confirmação para confirmar seu novo endereço."
+      updated: "Sua conta foi atualizada com sucesso."
+      updated_but_not_signed_in: "Sua conta foi atualizada com sucesso, mas como sua senha foi alterada, você precisa entrar novamente."
     passwords:
       new:
         title: "Esqueceu sua senha?"
@@ -128,16 +136,27 @@ pt:
         new_password: "Nova senha"
         confirm_new_password: "Confirmar nova senha"
         submit: "Alterar minha senha"
+      no_token: "Você não pode acessar esta página sem ter vindo de um e-mail de redefinição de senha. Se você veio de um e-mail de redefinição, certifique-se de ter usado a URL completa fornecida."
+      send_instructions: "Você receberá um e-mail com instruções para redefinir sua senha em alguns minutos."
+      send_paranoid_instructions: "Se o seu endereço de e-mail existir em nosso banco de dados, você receberá um link de recuperação de senha em alguns minutos."
+      updated: "Sua senha foi alterada com sucesso. Você está agora conectado."
+      updated_not_active: "Sua senha foi alterada com sucesso."
     confirmations:
       new:
         title: "Reenviar instruções de confirmação"
         email: "E-mail"
         submit: "Reenviar instruções de confirmação"
+      confirmed: "Seu endereço de e-mail foi confirmado com sucesso."
+      send_instructions: "Você receberá um e-mail com instruções para confirmar seu endereço em alguns minutos."
+      send_paranoid_instructions: "Se o seu endereço de e-mail existir em nosso banco de dados, você receberá um e-mail com instruções para confirmá-lo em alguns minutos."
     unlocks:
       new:
         title: "Reenviar instruções de desbloqueio"
         email: "E-mail"
         submit: "Reenviar instruções de desbloqueio"
+      send_instructions: "Você receberá um e-mail com instruções para desbloquear sua conta em alguns minutos."
+      send_paranoid_instructions: "Se sua conta existir, você receberá um e-mail com instruções para desbloqueá-la em alguns minutos."
+      unlocked: "Sua conta foi desbloqueada com sucesso. Por favor, entre para continuar."
     mailer:
       confirmation_instructions:
         subject: "Instruções de confirmação"
@@ -149,6 +168,19 @@ pt:
         subject: "E-mail Alterado"
       password_change:
         subject: "Senha Alterada"
+    failure:
+      already_authenticated: "Você já está conectado."
+      inactive: "Sua conta ainda não foi ativada."
+      invalid: "%{authentication_keys} ou senha inválidos."
+      locked: "Sua conta está bloqueada."
+      last_attempt: "Você tem mais uma tentativa antes de sua conta ser bloqueada."
+      not_found_in_database: "%{authentication_keys} ou senha inválidos."
+      timeout: "Sua sessão expirou. Por favor, entre novamente para continuar."
+      unauthenticated: "Você precisa entrar ou se cadastrar antes de continuar."
+      unconfirmed: "Você precisa confirmar seu endereço de e-mail antes de continuar."
+    omniauth_callbacks:
+      failure: "Não foi possível autenticar você de %{kind} porque \"%{reason}\"."
+      success: "Autenticado com sucesso pela conta %{kind}."
     shared:
       links:
         log_in: "Entrar"
@@ -230,9 +262,6 @@ pt:
       no_active_challenges: "Nenhum desafio ativo."
       join_challenge: "Participar de um desafio"
       add_workout: "Adicionar treino"
-      run: "Corrida"
-      bike: "Bicicleta"
-      soccer: "Futebol"
       select_sport: "Selecione o esporte"
       distance: "Distância"
       duration: "Duração"
@@ -242,8 +271,6 @@ pt:
       date: "Data"
       workout_date: "Data do treino"
       sport: "Esporte"
-      distance: "Distância"
-      duration: "Duração"
       pace: "Ritmo"
       no_workouts: "Nenhum treino ainda. Adicione um acima!"
       edit: "Editar"
@@ -273,4 +300,50 @@ pt:
       invalid_email: "Por favor, insira um e-mail válido"
       password_mismatch: "As senhas não coincidem"
       min_length: "Deve ter pelo menos %{count} caracteres"
-  
+
+  # Enum value labels (rótulos para valores enum armazenados no banco)
+  enums:
+    sports:
+      run: "Corrida"
+      bike: "Bicicleta"
+      soccer: "Futebol"
+    challenge_types:
+      weekly: "Semanal"
+      monthly: "Mensal"
+
+  # Flash messages set by controllers
+  flashes:
+    challenges:
+      already_joined: "Você já está participando deste desafio."
+      joined: "Você entrou no desafio!"
+      must_join_first: "Participe do desafio primeiro para convidar amigos."
+    clubs:
+      created: "Clube criado!"
+      already_member: "Você já é membro."
+      joined: "Você entrou no clube!"
+      left: "Você saiu do clube."
+      not_member: "Você não é membro."
+    profiles:
+      updated: "Perfil atualizado com sucesso."
+    timeline_post_comments:
+      created: "Comentário adicionado!"
+    timeline_posts:
+      created: "Publicação compartilhada!"
+      must_join: "Participe do desafio para ver e publicar na linha do tempo."
+    workouts:
+      added: "Treino adicionado!"
+      added_with_achievements:
+        one: "Treino adicionado! Você desbloqueou 1 nova conquista 🏅"
+        other: "Treino adicionado! Você desbloqueou %{count} novas conquistas 🏅"
+
+  # Devise framework error messages (looked up at root errors.messages)
+  errors:
+    messages:
+      already_confirmed: "já foi confirmado, por favor tente entrar"
+      confirmation_period_expired: "precisa ser confirmado em %{period}, por favor solicite um novo"
+      expired: "expirou, por favor solicite um novo"
+      not_found: "não encontrado"
+      not_locked: "não estava bloqueado"
+      not_saved:
+        one: "1 erro impediu que este %{resource} fosse salvo:"
+        other: "%{count} erros impediram que este %{resource} fosse salvo:"

@@ -8,7 +8,7 @@ class TimelinePostCommentsController < ApplicationController
     @comment = @timeline_post.timeline_post_comments.build(comment_params)
     @comment.user = current_user
     if @comment.save
-      redirect_to challenge_timeline_posts_path(@timeline_post.challenge), notice: "Comment added!"
+      redirect_to challenge_timeline_posts_path(@timeline_post.challenge), notice: t("flashes.timeline_post_comments.created")
     else
       redirect_to challenge_timeline_posts_path(@timeline_post.challenge), alert: @comment.errors.full_messages.join(", ")
     end
