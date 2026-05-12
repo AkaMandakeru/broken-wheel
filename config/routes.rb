@@ -7,7 +7,7 @@ Rails.application.routes.draw do
     registrations: "users/registrations"
   }
 
-  root "challenges#index"
+  root "home#index"
 
   get "profile", to: "profiles#show"
   patch "profile", to: "profiles#update"

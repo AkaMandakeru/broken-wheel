@@ -220,6 +220,107 @@ pt:
       total_distance: "Distância Total"
       recent_activities: "Atividades Recentes"
 
+  # Home (página inicial)
+  home:
+    meta:
+      title: "Broken Wheels — Comunidade Fitness Gamificada"
+    hero:
+      badge: "Comunidade Fitness Gamificada"
+      headline_lead: "Transforme Cada Corrida em uma"
+      headline_accent: "Conquista"
+      subheadline: "Importe seus treinos do Strava e de outros provedores, participe de desafios diários e semanais, conquiste medalhas e junte-se a uma comunidade de atletas que vai além dos próprios limites."
+      cta_primary: "Comece sua jornada"
+      cta_secondary: "Ver demonstração"
+      cta_authenticated: "Ir para desafios"
+      stats:
+        athletes_value: "50K+"
+        athletes_label: "Atletas Ativos"
+        workouts_value: "1M+"
+        workouts_label: "Treinos Registrados"
+        challenges_value: "500+"
+        challenges_label: "Desafios Semanais"
+      badge_achievement: "Conquista Desbloqueada!"
+      badge_joined: "+234 entraram hoje"
+    features:
+      eyebrow: "Recursos"
+      title: "Tudo o que você precisa para evoluir no esporte"
+      subtitle: "Broken Wheels traz a gamificação para a sua jornada fitness. Importe, registre, compita e conquiste — tudo numa plataforma só."
+      items:
+        import:
+          title: "Importe de qualquer lugar"
+          body: "Sincronize seus treinos do Strava, Garmin, Apple Health e muito mais. Todos os seus dados em um só lugar."
+        achievements:
+          title: "Conquiste medalhas"
+          body: "Desbloqueie medalhas e troféus a cada marco. Do seu primeiro 5K ao seu centésimo treino."
+        challenges:
+          title: "Desafios diários e semanais"
+          body: "Participe de desafios cronometrados contra você mesmo e contra a comunidade. Novos desafios todo dia."
+        progress:
+          title: "Acompanhe seu progresso"
+          body: "Gráficos e insights mostram sua evolução com o tempo. Veja sua jornada acontecer."
+        communities:
+          title: "Entre em comunidades"
+          body: "Encontre sua turma. Junte-se a grupos por região, nível ou interesse. Treine acompanhado."
+        seasonal:
+          title: "Eventos sazonais"
+          body: "Participe de desafios sazonais especiais com recompensas exclusivas e metas coletivas."
+        goals:
+          title: "Metas pessoais"
+          body: "Defina alvos personalizados e deixe nosso sistema inteligente te ajudar a alcançar com orientação sob medida."
+        leaderboards:
+          title: "Rankings em tempo real"
+          body: "Veja sua posição entre amigos e na comunidade global. Suba no ranking toda semana."
+    challenges:
+      eyebrow: "Desafios"
+      title: "Vá além com desafios incríveis"
+      subtitle: "De sprints diários rápidos a eventos sazonais épicos, há sempre um novo desafio te esperando. Compita, conquiste recompensas e suba no ranking."
+      types:
+        daily:
+          title: "Desafios diários"
+          body: "Desafios novos a cada 24 horas"
+        weekly:
+          title: "Competições semanais"
+          body: "Desafios de 7 dias com recompensas maiores"
+        seasonal:
+          title: "Eventos sazonais"
+          body: "Desafios especiais com recompensas exclusivas"
+      participants: "participantes"
+      join: "Participar"
+      cards:
+        daily:
+          type: "Desafio Diário"
+          title: "Sprint Matinal"
+          body: "Complete uma corrida de 3km antes das 9h"
+          participants: "1.234"
+          reward: "50 XP"
+        weekly:
+          type: "Desafio Semanal"
+          title: "Guerreiro da Distância"
+          body: "Corra um total de 30km nesta semana"
+          participants: "5.678"
+          reward: "200 XP + Medalha"
+        seasonal:
+          type: "Desafio Sazonal"
+          title: "Onda de Verão"
+          body: "Complete 20 treinos ao ar livre neste mês"
+          participants: "12.345"
+          reward: "500 XP + Troféu"
+    cta:
+      title: "Pronto para transformar sua jornada fitness?"
+      body: "Junte-se a milhares de atletas que já evoluíram seus treinos com a Broken Wheels. Sua próxima conquista te espera."
+      button: "Comece grátis"
+      button_secondary: "Ver planos e preços"
+      disclaimer: "Sem spam, sem pegadinhas. Crie sua conta gratuita hoje."
+      benefits:
+        - "Grátis para começar, sem cartão de crédito"
+        - "Importe treinos sem limite"
+        - "Participe de desafios globais"
+        - "Conecte-se com atletas do mundo todo"
+
+  # PWA
+  pwa:
+    description: "Desafios de corrida, treinos e comunidade."
+
   # Shared (Compartilhado)
   shared:
     nav:
@@ -232,6 +333,13 @@ pt:
       log_out: "Sair"
       sign_up: "Cadastrar-se"
       log_in: "Entrar"
+      get_started: "Começar"
+      features: "Recursos"
+      community: "Comunidade"
+      contact: "Contato"
+      open_menu: "Abrir menu"
+      close_menu: "Fechar menu"
+      language: "Idioma"
       language_english: "English"
       language_portuguese: "Português"
     progress_bar:
@@ -243,6 +351,11 @@ pt:
       contact: "Contato"
       privacy: "Privacidade"
       terms: "Termos"
+      tagline: "A comunidade de corrida que transforma cada quilômetro em uma história."
+      contact_title: "Contato"
+      contact_email: "ola@brokenwheels.app"
+      links_title: "Links"
+      rights_reserved: "Todos os direitos reservados."
 
   # Timeline Posts (Publicações na Linha do Tempo)
   timeline_posts:

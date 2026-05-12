@@ -1,10 +1,10 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title><%= content_for(:title) || "Sports Communities" %></title>
+    <title><%= content_for(:title) || "Broken Wheels" %></title>
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="application-name" content="Sports Communities">
+    <meta name="application-name" content="Broken Wheels">
     <meta name="mobile-web-app-capable" content="yes">
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
@@ -33,7 +33,7 @@
     <%= javascript_importmap_tags %>
   </head>
 
-  <body class="min-h-screen bg-gray-50 pt-16">
+  <body class="min-h-screen bg-gray-50 pt-16 overflow-x-hidden">
     <%= render "shared/nav" %>
 
     <% if notice %>

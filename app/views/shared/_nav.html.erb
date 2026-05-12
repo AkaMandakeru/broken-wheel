@@ -1,185 +1,199 @@
 <div data-controller="sidebar">
-  <nav class="bg-white border-b border-gray-200 fixed top-0 left-0 right-0 z-50">
-    <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div class="flex justify-between h-16">
-        <div class="flex items-center gap-4">
-          <button type="button" data-action="click->sidebar#toggle" class="md:hidden p-2 -ml-2 text-gray-600 hover:text-[#FC4C02] focus:outline-none cursor-pointer touch-manipulation" aria-label="Open menu">
+  <nav class="fixed top-0 left-0 right-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-backdrop-filter:bg-background/60">
+    <div class="container mx-auto px-4 max-w-6xl">
+      <div class="flex h-16 items-center justify-between">
+        <%# Left: mobile toggle + brand %>
+        <div class="flex items-center gap-3">
+          <button type="button"
+                  data-action="click->sidebar#toggle"
+                  class="md:hidden p-2 -ml-2 text-foreground hover:text-primary focus:outline-none cursor-pointer touch-manipulation"
+                  aria-label="<%= t('shared.nav.open_menu') %>">
             <i class="fa-solid fa-bars text-xl"></i>
           </button>
-          <%= link_to root_path, class: "text-xl font-bold text-[#FC4C02] hover:text-[#e04402] transition" do %>
-            Broken Wheels
+          <%= link_to root_path, class: "flex items-center gap-3" do %>
+            <%= image_tag "logo.png", alt: "Broken Wheels", class: "h-10 w-10 md:h-12 md:w-12 object-contain" %>
+            <span class="text-xl font-bold text-foreground">Broken Wheels</span>
           <% end %>
         </div>
 
-        <div class="hidden md:flex items-center gap-4">
+        <%# Center: desktop nav links %>
+        <nav class="hidden md:flex items-center gap-8">
           <% if user_signed_in? %>
-            <%= link_to challenges_path, class: "text-gray-700 hover:text-[#FC4C02] transition flex items-center gap-2" do %>
+            <%= link_to challenges_path, class: "text-sm font-medium text-muted-foreground hover:text-primary transition-colors flex items-center gap-2" do %>
               <i class="fa-solid fa-trophy"></i> <%= t('shared.nav.challenges') %>
             <% end %>
-            <%= link_to workouts_path, class: "text-gray-700 hover:text-[#FC4C02] transition flex items-center gap-2" do %>
+            <%= link_to workouts_path, class: "text-sm font-medium text-muted-foreground hover:text-primary transition-colors flex items-center gap-2" do %>
               <i class="fa-solid fa-dumbbell"></i> <%= t('shared.nav.workouts') %>
             <% end %>
-            <%= link_to achievements_path, class: "text-gray-700 hover:text-[#FC4C02] transition flex items-center gap-2" do %>
+            <%= link_to achievements_path, class: "text-sm font-medium text-muted-foreground hover:text-primary transition-colors flex items-center gap-2" do %>
               <i class="fa-solid fa-medal"></i> <%= t('shared.nav.achievements') %>
             <% end %>
-            <%= link_to clubs_path, class: "text-gray-700 hover:text-[#FC4C02] transition flex items-center gap-2" do %>
+            <%= link_to clubs_path, class: "text-sm font-medium text-muted-foreground hover:text-primary transition-colors flex items-center gap-2" do %>
               <i class="fa-solid fa-users"></i> <%= t('shared.nav.clubs') %>
             <% end %>
-            <%= link_to profile_path, class: "text-gray-700 hover:text-[#FC4C02] transition flex items-center gap-2" do %>
+            <%= link_to profile_path, class: "text-sm font-medium text-muted-foreground hover:text-primary transition-colors flex items-center gap-2" do %>
               <i class="fa-solid fa-user"></i> <%= t('shared.nav.profile') %>
             <% end %>
-               
-          <%# Language Selector %>
+          <% else %>
+            <%= link_to t('shared.nav.features'),  root_path(anchor: 'features'),   class: "text-sm font-medium text-muted-foreground hover:text-primary transition-colors" %>
+            <%= link_to t('shared.nav.challenges'), root_path(anchor: 'challenges'), class: "text-sm font-medium text-muted-foreground hover:text-primary transition-colors" %>
+            <%= link_to t('shared.nav.community'), root_path(anchor: 'community'),  class: "text-sm font-medium text-muted-foreground hover:text-primary transition-colors" %>
+            <%= link_to t('shared.nav.contact'),   root_path(anchor: 'contact'),    class: "text-sm font-medium text-muted-foreground hover:text-primary transition-colors" %>
+          <% end %>
+        </nav>
+
+        <%# Right: language globe + auth CTAs (desktop) %>
+        <div class="hidden md:flex items-center gap-2">
+          <%# Language globe dropdown %>
           <div class="relative" id="language-dropdown">
-            <button type="button" onclick="toggleDropdown()" class="flex items-center gap-3 w-full text-left px-4 py-3 rounded-lg text-gray-700 hover:bg-gray-100 hover:text-[#FC4C02] transition">
-              <i class="fa-solid fa-globe w-5"></i>
-              <span class="flex-1" id="current-locale"><%= I18n.locale.to_s.upcase %></span>
-              <i class="fa-solid fa-chevron-down w-4 text-xs transition-transform" id="dropdown-arrow"></i>
+            <button type="button"
+                    onclick="toggleDropdown()"
+                    class="flex items-center gap-1 p-2 rounded-lg text-muted-foreground hover:text-primary hover:bg-muted transition-colors"
+                    aria-label="<%= t('shared.nav.language') %>">
+              <i class="fa-solid fa-globe text-lg"></i>
+              <span class="text-xs font-medium uppercase"><%= I18n.locale %></span>
             </button>
-            
-            <div id="dropdown-menu" class="hidden absolute bottom-full left-0 right-0 mb-2 bg-white rounded-lg shadow-lg border border-gray-200 overflow-hidden z-50">
-              <%= link_to switch_locale_path(locale: :en), class: "flex items-center gap-3 px-4 py-3 text-gray-700 hover:bg-gray-100 transition #{I18n.locale == :en ? 'bg-gray-100 text-[#FC4C02]' : ''}" do %>
-                <i class="fa-solid fa-flag w-5"></i>
-                <span><%= t('shared.nav.language_english') %></span>
+            <div id="dropdown-menu" class="hidden absolute top-full right-0 mt-2 w-48 bg-background border border-border rounded-lg shadow-lg overflow-hidden z-50">
+              <%= link_to switch_locale_path(locale: :en), class: "flex items-center gap-3 px-4 py-3 text-sm transition #{I18n.locale == :en ? 'bg-muted text-primary' : 'text-foreground hover:bg-muted'}" do %>
+                <span class="flex-1"><%= t('shared.nav.language_english') %></span>
                 <% if I18n.locale == :en %>
-                  <i class="fa-solid fa-check w-4 text-[#FC4C02]"></i>
+                  <i class="fa-solid fa-check text-primary text-xs"></i>
                 <% end %>
               <% end %>
-              <%= link_to switch_locale_path(locale: :pt), class: "flex items-center gap-3 px-4 py-3 text-gray-700 hover:bg-gray-100 transition #{I18n.locale == :pt ? 'bg-gray-100 text-[#FC4C02]' : ''}" do %>
-                <i class="fa-solid fa-flag w-5"></i>
-                <span><%= t('shared.nav.language_portuguese') %></span>
+              <%= link_to switch_locale_path(locale: :pt), class: "flex items-center gap-3 px-4 py-3 text-sm transition #{I18n.locale == :pt ? 'bg-muted text-primary' : 'text-foreground hover:bg-muted'}" do %>
+                <span class="flex-1"><%= t('shared.nav.language_portuguese') %></span>
                 <% if I18n.locale == :pt %>
-                  <i class="fa-solid fa-check w-4 text-[#FC4C02]"></i>
+                  <i class="fa-solid fa-check text-primary text-xs"></i>
                 <% end %>
               <% end %>
             </div>
           </div>
 
-            <%= button_to destroy_user_session_path, method: :delete, class: "text-gray-700 hover:text-[#FC4C02] transition flex items-center gap-2" do %>
+          <% if user_signed_in? %>
+            <%= button_to destroy_user_session_path, method: :delete, form_class: "inline", class: "text-sm font-medium text-foreground hover:text-primary transition-colors flex items-center gap-2 px-3 py-2 rounded-lg hover:bg-muted" do %>
               <i class="fa-solid fa-right-from-bracket"></i> <%= t('shared.nav.log_out') %>
             <% end %>
           <% else %>
-            <%= link_to new_user_session_path, class: "text-gray-700 hover:text-[#FC4C02] transition flex items-center gap-2" do %>
-              <i class="fa-solid fa-right-to-bracket"></i> <%= t('shared.nav.log_in') %>
-            <% end %>
-            <%= link_to new_user_registration_path, class: "bg-[#FC4C02] text-white px-4 py-2 rounded-lg hover:bg-[#e04402] transition font-medium flex items-center gap-2" do %>
-              <i class="fa-solid fa-user-plus"></i> <%= t('shared.nav.sign_up') %>
-            <% end %>
+            <%= link_to t('shared.nav.log_in'), new_user_session_path,
+                  class: "text-sm font-medium text-foreground hover:text-primary transition-colors px-4 py-2 rounded-lg hover:bg-muted" %>
+            <%= link_to t('shared.nav.get_started'), new_user_registration_path,
+                  class: "text-sm font-medium bg-primary text-primary-foreground hover:bg-primary-hover transition-colors px-4 py-2 rounded-lg" %>
           <% end %>
         </div>
       </div>
     </div>
   </nav>
 
-  <%# Sidebar overlay (mobile only) - starts hidden, shown when menu opens %>
-  <div data-sidebar-target="overlay" class="hidden fixed inset-0 z-[60] bg-black/50 md:hidden transition-opacity" data-action="click->sidebar#close" aria-hidden="true"></div>
+  <%# Sidebar overlay (mobile) %>
+  <div data-sidebar-target="overlay"
+       class="hidden fixed inset-0 z-60 bg-black/50 md:hidden transition-opacity"
+       data-action="click->sidebar#close"
+       aria-hidden="true"></div>
 
-  <%# Sidebar panel - starts off-screen left, slides in when opened %>
-  <aside data-sidebar-target="panel" class="fixed top-0 left-0 z-[70] h-full w-64 -translate-x-full transition-transform duration-300 ease-in-out md:hidden bg-white shadow-xl">
-    <div class="flex flex-col h-full pt-16">
-      <div class="flex-1 overflow-y-auto px-4 py-4 space-y-1">
+  <%# Sidebar panel (mobile) %>
+  <aside data-sidebar-target="panel"
+         class="fixed top-0 left-0 z-70 h-full w-72 -translate-x-full transition-transform duration-300 ease-in-out md:hidden bg-background border-r border-border shadow-xl">
+    <div class="flex flex-col h-full">
+      <%# Sidebar header %>
+      <div class="flex items-center justify-between h-16 px-4 border-b border-border">
+        <%= link_to root_path, class: "flex items-center gap-2", data: { action: "click->sidebar#close" } do %>
+          <%= image_tag "logo.png", alt: "Broken Wheels", class: "h-8 w-8 object-contain" %>
+          <span class="text-base font-bold text-foreground">Broken Wheels</span>
+        <% end %>
+        <button type="button"
+                data-action="click->sidebar#close"
+                class="p-2 text-muted-foreground hover:text-primary"
+                aria-label="<%= t('shared.nav.close_menu') %>">
+          <i class="fa-solid fa-xmark text-xl"></i>
+        </button>
+      </div>
+
+      <%# Sidebar content %>
+      <div class="flex-1 overflow-y-auto px-3 py-4 space-y-1">
         <% if user_signed_in? %>
-          <%= link_to challenges_path, class: "flex items-center gap-3 px-4 py-3 rounded-lg text-gray-700 hover:bg-gray-100 hover:text-[#FC4C02] transition", data: { action: "click->sidebar#close" } do %>
-            <i class="fa-solid fa-trophy w-5"></i> <%= t('shared.nav.challenges') %>
+          <%= link_to challenges_path, class: "flex items-center gap-3 px-4 py-3 rounded-lg text-foreground hover:bg-muted hover:text-primary transition", data: { action: "click->sidebar#close" } do %>
+            <i class="fa-solid fa-trophy w-5 text-muted-foreground"></i> <%= t('shared.nav.challenges') %>
           <% end %>
-          <%= link_to workouts_path, class: "flex items-center gap-3 px-4 py-3 rounded-lg text-gray-700 hover:bg-gray-100 hover:text-[#FC4C02] transition", data: { action: "click->sidebar#close" } do %>
-            <i class="fa-solid fa-dumbbell w-5"></i> <%= t('shared.nav.workouts') %>
+          <%= link_to workouts_path, class: "flex items-center gap-3 px-4 py-3 rounded-lg text-foreground hover:bg-muted hover:text-primary transition", data: { action: "click->sidebar#close" } do %>
+            <i class="fa-solid fa-dumbbell w-5 text-muted-foreground"></i> <%= t('shared.nav.workouts') %>
           <% end %>
-          <%= link_to achievements_path, class: "flex items-center gap-3 px-4 py-3 rounded-lg text-gray-700 hover:bg-gray-100 hover:text-[#FC4C02] transition", data: { action: "click->sidebar#close" } do %>
-            <i class="fa-solid fa-medal w-5"></i> <%= t('shared.nav.achievements') %>
+          <%= link_to achievements_path, class: "flex items-center gap-3 px-4 py-3 rounded-lg text-foreground hover:bg-muted hover:text-primary transition", data: { action: "click->sidebar#close" } do %>
+            <i class="fa-solid fa-medal w-5 text-muted-foreground"></i> <%= t('shared.nav.achievements') %>
           <% end %>
-          <%= link_to clubs_path, class: "flex items-center gap-3 px-4 py-3 rounded-lg text-gray-700 hover:bg-gray-100 hover:text-[#FC4C02] transition", data: { action: "click->sidebar#close" } do %>
-            <i class="fa-solid fa-users w-5"></i> <%= t('shared.nav.clubs') %>
+          <%= link_to clubs_path, class: "flex items-center gap-3 px-4 py-3 rounded-lg text-foreground hover:bg-muted hover:text-primary transition", data: { action: "click->sidebar#close" } do %>
+            <i class="fa-solid fa-users w-5 text-muted-foreground"></i> <%= t('shared.nav.clubs') %>
           <% end %>
-          <%= link_to profile_path, class: "flex items-center gap-3 px-4 py-3 rounded-lg text-gray-700 hover:bg-gray-100 hover:text-[#FC4C02] transition", data: { action: "click->sidebar#close" } do %>
-            <i class="fa-solid fa-user w-5"></i> <%= t('shared.nav.profile') %>
-          <% end %> 
-        
-        <%# Mobile Language Selector %>
-        <div class="relative" id="mobile-language-selector">
-          <button type="button" onclick="toggleMobileSelector()" class="flex items-center gap-3 w-full text-left px-4 py-3 rounded-lg text-gray-700 hover:bg-gray-100 hover:text-[#FC4C02] transition">
-            <i class="fa-solid fa-globe w-5"></i>
-            <span class="flex-1" id="mobile-locale-display"><%= I18n.locale.to_s.upcase %></span>
-            <i class="fa-solid fa-chevron-down w-4 text-xs transition-transform" id="mobile-selector-arrow"></i>
-          </button>
-          
-          <div id="mobile-selector-menu" class="hidden absolute bottom-full left-0 right-0 mb-2 bg-white rounded-lg shadow-lg border border-gray-200 overflow-hidden z-50">
-            <%= link_to switch_locale_path(locale: :en), class: "flex items-center gap-3 px-4 py-3 text-gray-700 hover:bg-gray-100 transition #{I18n.locale == :en ? 'bg-gray-100 text-[#FC4C02]' : ''}", data: { action: "click->sidebar#close" } do %>
-              <i class="fa-solid fa-flag w-5"></i>
-              <span><%= t('shared.nav.language_english') %></span>
-              <% if I18n.locale == :en %>
-                <i class="fa-solid fa-check w-4 text-[#FC4C02]"></i>
-              <% end %>
-            <% end %>
-            <%= link_to switch_locale_path(locale: :pt), class: "flex items-center gap-3 px-4 py-3 text-gray-700 hover:bg-gray-100 transition #{I18n.locale == :pt ? 'bg-gray-100 text-[#FC4C02]' : ''}", data: { action: "click->sidebar#close" } do %>
-              <i class="fa-solid fa-flag w-5"></i>
-              <span><%= t('shared.nav.language_portuguese') %></span>
-              <% if I18n.locale == :pt %>
-                <i class="fa-solid fa-check w-4 text-[#FC4C02]"></i>
-              <% end %>
-            <% end %>
-          </div>
-        </div>
-        
-        <hr class="my-4 border-gray-200">   
+          <%= link_to profile_path, class: "flex items-center gap-3 px-4 py-3 rounded-lg text-foreground hover:bg-muted hover:text-primary transition", data: { action: "click->sidebar#close" } do %>
+            <i class="fa-solid fa-user w-5 text-muted-foreground"></i> <%= t('shared.nav.profile') %>
+          <% end %>
         <% else %>
-          <%= link_to new_user_session_path, class: "flex items-center gap-3 px-4 py-3 rounded-lg text-gray-700 hover:bg-gray-100 hover:text-[#FC4C02] transition", data: { action: "click->sidebar#close" } do %>
-            <i class="fa-solid fa-right-to-bracket w-5"></i> <%= t('shared.nav.log_in') %>
+          <%= link_to root_path(anchor: 'features'), class: "flex items-center gap-3 px-4 py-3 rounded-lg text-foreground hover:bg-muted hover:text-primary transition", data: { action: "click->sidebar#close" } do %>
+            <i class="fa-solid fa-star w-5 text-muted-foreground"></i> <%= t('shared.nav.features') %>
           <% end %>
-          <%= link_to new_user_registration_path, class: "flex items-center gap-3 px-4 py-3 rounded-lg bg-[#FC4C02] text-white hover:bg-[#e04402] transition text-center font-medium", data: { action: "click->sidebar#close" } do %>
-            <i class="fa-solid fa-user-plus w-5"></i> <%= t('shared.nav.sign_up') %>
+          <%= link_to root_path(anchor: 'challenges'), class: "flex items-center gap-3 px-4 py-3 rounded-lg text-foreground hover:bg-muted hover:text-primary transition", data: { action: "click->sidebar#close" } do %>
+            <i class="fa-solid fa-trophy w-5 text-muted-foreground"></i> <%= t('shared.nav.challenges') %>
           <% end %>
+          <%= link_to root_path(anchor: 'community'), class: "flex items-center gap-3 px-4 py-3 rounded-lg text-foreground hover:bg-muted hover:text-primary transition", data: { action: "click->sidebar#close" } do %>
+            <i class="fa-solid fa-users w-5 text-muted-foreground"></i> <%= t('shared.nav.community') %>
+          <% end %>
+          <%= link_to root_path(anchor: 'contact'), class: "flex items-center gap-3 px-4 py-3 rounded-lg text-foreground hover:bg-muted hover:text-primary transition", data: { action: "click->sidebar#close" } do %>
+            <i class="fa-solid fa-envelope w-5 text-muted-foreground"></i> <%= t('shared.nav.contact') %>
+          <% end %>
+        <% end %>
+
+        <hr class="my-3 border-border">
+
+        <%# Language picker (flat list on mobile) %>
+        <div class="px-4 pt-1 pb-2 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+          <%= t('shared.nav.language') %>
+        </div>
+        <%= link_to switch_locale_path(locale: :en), class: "flex items-center gap-3 px-4 py-3 rounded-lg transition #{I18n.locale == :en ? 'bg-muted text-primary' : 'text-foreground hover:bg-muted hover:text-primary'}", data: { action: "click->sidebar#close" } do %>
+          <i class="fa-solid fa-globe w-5 text-muted-foreground"></i>
+          <span class="flex-1"><%= t('shared.nav.language_english') %></span>
+          <% if I18n.locale == :en %>
+            <i class="fa-solid fa-check text-primary text-xs"></i>
+          <% end %>
+        <% end %>
+        <%= link_to switch_locale_path(locale: :pt), class: "flex items-center gap-3 px-4 py-3 rounded-lg transition #{I18n.locale == :pt ? 'bg-muted text-primary' : 'text-foreground hover:bg-muted hover:text-primary'}", data: { action: "click->sidebar#close" } do %>
+          <i class="fa-solid fa-globe w-5 text-muted-foreground"></i>
+          <span class="flex-1"><%= t('shared.nav.language_portuguese') %></span>
+          <% if I18n.locale == :pt %>
+            <i class="fa-solid fa-check text-primary text-xs"></i>
+          <% end %>
+        <% end %>
+      </div>
+
+      <%# Sidebar footer: auth CTAs %>
+      <div class="border-t border-border p-4 space-y-2">
+        <% if user_signed_in? %>
+          <%= button_to destroy_user_session_path, method: :delete, form_class: "block", class: "flex items-center justify-center gap-2 w-full px-4 py-3 rounded-lg text-foreground hover:bg-muted hover:text-primary transition font-medium" do %>
+            <i class="fa-solid fa-right-from-bracket"></i> <%= t('shared.nav.log_out') %>
+          <% end %>
+        <% else %>
+          <%= link_to t('shared.nav.log_in'), new_user_session_path,
+                class: "flex items-center justify-center gap-2 w-full px-4 py-3 rounded-lg text-foreground border border-border hover:bg-muted transition font-medium",
+                data: { action: "click->sidebar#close" } %>
+          <%= link_to t('shared.nav.get_started'), new_user_registration_path,
+                class: "flex items-center justify-center gap-2 w-full px-4 py-3 rounded-lg bg-primary text-primary-foreground hover:bg-primary-hover transition font-medium",
+                data: { action: "click->sidebar#close" } %>
         <% end %>
       </div>
     </div>
   </aside>
-</div>     
+</div>
+
 <script>
-  // Toggle language dropdown
   function toggleDropdown() {
     const menu = document.getElementById('dropdown-menu');
-    const arrow = document.getElementById('dropdown-arrow');
-    
-    if (menu.classList.contains('hidden')) {
-      menu.classList.remove('hidden');
-      arrow.style.transform = 'rotate(180deg)';
-    } else {
-      menu.classList.add('hidden');
-      arrow.style.transform = 'rotate(0deg)';
-    }
+    if (!menu) return;
+    menu.classList.toggle('hidden');
   }
-  
-  function toggleMobileSelector() {
-    const menu = document.getElementById('mobile-selector-menu');
-    const arrow = document.getElementById('mobile-selector-arrow');
-    
-    if (menu.classList.contains('hidden')) {
-      menu.classList.remove('hidden');
-      arrow.style.transform = 'rotate(180deg)';
-    } else {
-      menu.classList.add('hidden');
-      arrow.style.transform = 'rotate(0deg)';
-    }
-  }
-  
-  // Close dropdown when clicking outside
-  document.addEventListener('click', function(event) {
-    // Desktop dropdown
+
+  document.addEventListener('click', function (event) {
     const desktopDropdown = document.getElementById('language-dropdown');
     if (desktopDropdown && !desktopDropdown.contains(event.target)) {
       const menu = document.getElementById('dropdown-menu');
-      const arrow = document.getElementById('dropdown-arrow');
       if (menu) menu.classList.add('hidden');
-      if (arrow) arrow.style.transform = 'rotate(0deg)';
-    }
-    
-    // Mobile selector dropdown
-    const mobileSelector = document.getElementById('mobile-language-selector');
-    if (mobileSelector && !mobileSelector.contains(event.target)) {
-      const mobileMenu = document.getElementById('mobile-selector-menu');
-      const mobileArrow = document.getElementById('mobile-selector-arrow');
-      if (mobileMenu) mobileMenu.classList.add('hidden');
-      if (mobileArrow) mobileArrow.style.transform = 'rotate(0deg)';
     }
   });
 </script>

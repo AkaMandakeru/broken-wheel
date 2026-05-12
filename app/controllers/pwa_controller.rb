@@ -6,9 +6,9 @@ class PwaController < ApplicationController
   def manifest
     response.headers["Cache-Control"] = "no-cache"
     render json: {
-      name: "Sports Communities",
-      short_name: "Sports",
-      description: "Sports challenges and communities",
+      name: "Broken Wheels",
+      short_name: "Broken Wheels",
+      description: I18n.t("pwa.description"),
       start_url: root_path,
       display: "standalone",
       background_color: "#ffffff",
