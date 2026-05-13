@@ -1,6 +1,4 @@
 class OauthController < ApplicationController
-  before_action :authenticate_user!
-
   def connect
     redirect_to strava_auth_url, allow_other_host: true
   end

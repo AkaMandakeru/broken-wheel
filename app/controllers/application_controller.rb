@@ -1,7 +1,7 @@
 require "ipaddr"
 
 class ApplicationController < ActionController::Base
-  skip_before_action :verify_authenticity_token # Remove this line when using the web version, not Bruno.
+
   # Only allow modern browsers supporting webp images, web push, badges, import maps, CSS nesting, and CSS :has.
   allow_browser versions: :modern
   before_action :set_locale
