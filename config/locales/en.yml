@@ -248,6 +248,107 @@ en:
       total_distance: "Total Distance"
       recent_activities: "Recent Activities"
 
+  # Home (landing page)
+  home:
+    meta:
+      title: "Broken Wheels — Gamified Fitness Community"
+    hero:
+      badge: "Gamified Fitness Community"
+      headline_lead: "Turn Every Run Into an"
+      headline_accent: "Achievement"
+      subheadline: "Import your workouts from Strava and other providers, compete in daily and weekly challenges, earn achievements, and join a community of athletes pushing their limits."
+      cta_primary: "Start Your Journey"
+      cta_secondary: "Watch Demo"
+      cta_authenticated: "Go to challenges"
+      stats:
+        athletes_value: "50K+"
+        athletes_label: "Active Athletes"
+        workouts_value: "1M+"
+        workouts_label: "Workouts Tracked"
+        challenges_value: "500+"
+        challenges_label: "Weekly Challenges"
+      badge_achievement: "Achievement Unlocked!"
+      badge_joined: "+234 joined today"
+    features:
+      eyebrow: "Features"
+      title: "Everything You Need to Level Up Your Fitness"
+      subtitle: "Broken Wheels brings gamification to your fitness journey. Import, track, compete, and achieve — all in one powerful platform."
+      items:
+        import:
+          title: "Import from Anywhere"
+          body: "Seamlessly sync your workouts from Strava, Garmin, Apple Health, and more. All your data in one place."
+        achievements:
+          title: "Earn Achievements"
+          body: "Unlock badges and trophies as you hit milestones. From your first 5K to your hundredth workout."
+        challenges:
+          title: "Daily & Weekly Challenges"
+          body: "Compete in time-limited challenges against yourself and the community. New challenges every day."
+        progress:
+          title: "Track Your Progress"
+          body: "Beautiful charts and insights show your improvement over time. See your journey unfold."
+        communities:
+          title: "Join Communities"
+          body: "Find your tribe. Join groups based on location, fitness level, or interests. Train together."
+        seasonal:
+          title: "Seasonal Events"
+          body: "Participate in special seasonal challenges with exclusive rewards and community-wide goals."
+        goals:
+          title: "Personal Goals"
+          body: "Set custom targets and let our smart system help you achieve them with personalized guidance."
+        leaderboards:
+          title: "Real-time Leaderboards"
+          body: "See where you stand among friends and the global community. Climb the ranks every week."
+    challenges:
+      eyebrow: "Challenges"
+      title: "Push Your Limits with Exciting Challenges"
+      subtitle: "From quick daily sprints to epic seasonal events, there's always a new challenge waiting for you. Compete, earn rewards, and climb the leaderboards."
+      types:
+        daily:
+          title: "Daily Challenges"
+          body: "Fresh challenges every 24 hours"
+        weekly:
+          title: "Weekly Competitions"
+          body: "7-day challenges with bigger rewards"
+        seasonal:
+          title: "Seasonal Events"
+          body: "Special challenges with exclusive rewards"
+      participants: "participants"
+      join: "Join"
+      cards:
+        daily:
+          type: "Daily Challenge"
+          title: "Morning Run Sprint"
+          body: "Complete a 3km run before 9 AM"
+          participants: "1,234"
+          reward: "50 XP"
+        weekly:
+          type: "Weekly Challenge"
+          title: "Distance Warrior"
+          body: "Run a total of 30km this week"
+          participants: "5,678"
+          reward: "200 XP + Badge"
+        seasonal:
+          type: "Seasonal Challenge"
+          title: "Summer Surge"
+          body: "Complete 20 outdoor workouts this month"
+          participants: "12,345"
+          reward: "500 XP + Trophy"
+    cta:
+      title: "Ready to Transform Your Fitness Journey?"
+      body: "Join thousands of athletes who have already leveled up their training with Broken Wheels. Your next achievement is waiting."
+      button: "Get Started Free"
+      button_secondary: "View Pricing Plans"
+      disclaimer: "No spam, no tricks. Start your free account today."
+      benefits:
+        - "Free to start, no credit card required"
+        - "Import unlimited workouts"
+        - "Join global challenges"
+        - "Connect with athletes worldwide"
+
+  # PWA
+  pwa:
+    description: "Running challenges, workouts and community."
+
   # Shared
   shared:
     nav:
@@ -259,7 +360,14 @@ en:
       profile: "Profile"
       log_out: "Log out"
       sign_up: "Sign up"
-      log_in: "Log in"
+      log_in: "Sign in"
+      get_started: "Get Started"
+      features: "Features"
+      community: "Community"
+      contact: "Contact"
+      open_menu: "Open menu"
+      close_menu: "Close menu"
+      language: "Language"
       language_english: "English"
       language_portuguese: "Português"
     progress_bar:
@@ -271,6 +379,11 @@ en:
       contact: "Contact"
       privacy: "Privacy"
       terms: "Terms"
+      tagline: "The running community that turns every kilometer into a story."
+      contact_title: "Contact"
+      contact_email: "hello@brokenwheels.app"
+      links_title: "Links"
+      rights_reserved: "All rights reserved."
 
   # Timeline Posts
   timeline_posts:
