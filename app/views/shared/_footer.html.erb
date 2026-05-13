@@ -1,3 +1,44 @@
-<footer class="mt-auto py-6 border-t border-gray-200 text-center text-gray-500 text-sm">
-  <p>Sports Communities &copy; <%= Date.current.year %></p>
+<footer class="mt-12 bg-gray-900 text-gray-300">
+  <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+      <div>
+        <div class="flex items-center gap-2 mb-3">
+          <%= image_tag "logo.png", alt: "Broken Wheels", class: "h-10 w-10 object-contain" %>
+          <span class="text-lg font-bold text-white">Broken Wheels</span>
+        </div>
+        <p class="text-sm text-gray-400"><%= t("shared.footer.tagline") %></p>
+      </div>
+
+      <div>
+        <h3 class="text-sm font-semibold text-white uppercase tracking-wider mb-3"><%= t("shared.footer.contact_title") %></h3>
+        <ul class="space-y-2 text-sm">
+          <li>
+            <a href="mailto:<%= t('shared.footer.contact_email') %>" class="hover:text-white transition flex items-center gap-2">
+              <i class="fa-solid fa-envelope w-4"></i>
+              <%= t("shared.footer.contact_email") %>
+            </a>
+          </li>
+          <li class="flex items-center gap-3 pt-1">
+            <a href="#" class="hover:text-white transition" aria-label="Instagram"><i class="fa-brands fa-instagram text-lg"></i></a>
+            <a href="#" class="hover:text-white transition" aria-label="Twitter"><i class="fa-brands fa-x-twitter text-lg"></i></a>
+            <a href="#" class="hover:text-white transition" aria-label="Strava"><i class="fa-brands fa-strava text-lg"></i></a>
+          </li>
+        </ul>
+      </div>
+
+      <div>
+        <h3 class="text-sm font-semibold text-white uppercase tracking-wider mb-3"><%= t("shared.footer.links_title") %></h3>
+        <ul class="space-y-2 text-sm">
+          <li><a href="#" class="hover:text-white transition"><%= t("shared.footer.about") %></a></li>
+          <li><a href="#" class="hover:text-white transition"><%= t("shared.footer.privacy") %></a></li>
+          <li><a href="#" class="hover:text-white transition"><%= t("shared.footer.terms") %></a></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="mt-8 pt-6 border-t border-gray-800 flex flex-col sm:flex-row justify-between items-center gap-2 text-xs text-gray-500">
+      <p>&copy; <%= Date.current.year %> Broken Wheels. <%= t("shared.footer.rights_reserved") %></p>
+      <p>Criado por <span class="text-white font-medium">MandakeruLabs</span></p>
+    </div>
+  </div>
 </footer>

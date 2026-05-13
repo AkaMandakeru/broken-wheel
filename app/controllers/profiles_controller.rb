@@ -12,7 +12,7 @@ class ProfilesController < ApplicationController
     params[:user] ||= {}
     params[:user][:sports] = params[:user][:sports] || []
     if @user.update(profile_params)
-      redirect_to profile_path, notice: "Profile updated successfully."
+      redirect_to profile_path, notice: t("flashes.profiles.updated")
     else
       render :show, status: :unprocessable_entity
     end

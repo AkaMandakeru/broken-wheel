@@ -27,7 +27,7 @@
     <div class="space-y-5">
       <div class="relative gap-y-1.5">
         <%= f.label :sport, t('workouts.index.sport'), class: "form-label" %>
-        <%= f.select :sport, [[t('workouts.index.run'), "run"], [t('workouts.index.bike'), "bike"]], { include_blank: t('workouts.index.select_sport') }, class: "form-control" %>
+        <%= f.select :sport, [[t('enums.sports.run'), "run"], [t('enums.sports.bike'), "bike"]], { include_blank: t('workouts.index.select_sport') }, class: "form-control" %>
       </div>
       <div class="relative gap-y-1.5">
         <%= f.label :workout_date, t('workouts.index.workout_date'), class: "form-label" %>
@@ -75,7 +75,7 @@
           <% @workouts.each do |w| %>
             <tr>
               <td class="px-6 py-4 text-sm text-gray-900"><%= w.workout_date.strftime("%b %d, %Y") %></td>
-              <td class="px-6 py-4 text-sm text-gray-700"><%= w.sport&.capitalize %></td>
+              <td class="px-6 py-4 text-sm text-gray-700"><%= t("enums.sports.#{w.sport}", default: w.sport&.capitalize.to_s) %></td>
               <td class="px-6 py-4 text-sm text-gray-700"><%= w.distance_km %> km</td>
               <td class="px-6 py-4 text-sm text-gray-700"><%= w.duration_minutes %> min</td>
               <td class="px-6 py-4 text-sm text-gray-700">

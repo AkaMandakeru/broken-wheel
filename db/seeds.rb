@@ -10,8 +10,9 @@ Challenge.find_or_create_by!(title: "Weekly Run 20km") do |c|
   c.sport = "run"
   c.target_value = 20
   c.target_unit = "km"
-  c.starts_at = Date.current.beginning_of_week
-  c.ends_at = Date.current.end_of_week
+  week = Challenge.current_week_window
+  c.starts_at = week.begin
+  c.ends_at = week.end
   c.status = "active"
 end
 

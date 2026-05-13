@@ -14,7 +14,7 @@ class TimelinePostsController < ApplicationController
     @timeline_post = @challenge.timeline_posts.build(timeline_post_params)
     @timeline_post.user = current_user
     if @timeline_post.save
-      redirect_to challenge_timeline_posts_path(@challenge), notice: "Post shared!"
+      redirect_to challenge_timeline_posts_path(@challenge), notice: t("flashes.timeline_posts.created")
     else
       @timeline_posts = @challenge.timeline_posts.includes(:user, :workout).order(created_at: :desc)
       render :index, status: :unprocessable_entity
@@ -30,7 +30,7 @@ class TimelinePostsController < ApplicationController
   def ensure_participant
     return if current_user.challenge_participations.exists?(challenge_id: @challenge.id)
 
-    redirect_to challenge_path(@challenge), alert: "Join the challenge to view and post on the timeline."
+    redirect_to challenge_path(@challenge), alert: t("flashes.timeline_posts.must_join")
   end
 
   def timeline_post_params
