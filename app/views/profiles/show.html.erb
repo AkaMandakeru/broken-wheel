@@ -76,6 +76,14 @@
   <div class="mt-12">
     <h2 class="text-lg font-semibold text-gray-900 mb-4"><%= t('profiles.show.connected_apps') %></h2>
     <p class="text-gray-600 text-sm"><%= t('profiles.show.connect_apps_description') %></p>
+
+    <div class="pt-2">
+      <% if current_user.connected_to_strava? %>
+        <%= button_to "Disconnect from Strava", disconnect_strava_path, method: :delete, class: "btn-primary" %>
+      <% else %>
+        <%= button_to "Connect to Strava", "/auth/strava", method: :post, class: "btn-primary" %>
+      <% end %>
+    </div>
   </div>
 
   <div class="mt-12">

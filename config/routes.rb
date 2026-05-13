@@ -13,6 +13,10 @@ Rails.application.routes.draw do
   patch "profile", to: "profiles#update"
   put "profile", to: "profiles#update"
 
+  get  "/auth/strava",          to: "oauth#connect",    as: :auth_strava
+  get  "/auth/strava/callback", to: "oauth#callback",   as: :auth_strava_callback
+  delete "/auth/strava",        to: "oauth#disconnect", as: :disconnect_strava
+
   get "achievements", to: "achievements#index", as: :achievements
   resources :workouts, only: [:index, :create]
   resources :challenges, only: [:index, :show] do
@@ -32,5 +36,5 @@ Rails.application.routes.draw do
     end
   end
 
-  get '/switch_locale/:locale', to: 'locales#switch', as: :switch_locale
+  get "/switch_locale/:locale", to: "locales#switch", as: :switch_locale
 end
