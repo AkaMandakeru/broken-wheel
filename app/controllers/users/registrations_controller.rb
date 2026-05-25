@@ -14,7 +14,9 @@ class Users::RegistrationsController < Devise::RegistrationsController
     devise_parameter_sanitizer.permit(:account_update, keys: [:first_name, :last_name, :nickname, :avatar])
   end
 
-  def after_sign_up_path_for(_resource)
+  def after_sign_up_path_for(resource)
+    Analytics.track(user: resource, event: "user_signed_up")
+    Analytics.identify(user: resource)
     challenges_path
   end
 end

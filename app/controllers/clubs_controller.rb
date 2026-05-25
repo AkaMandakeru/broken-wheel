@@ -34,6 +34,7 @@ class ClubsController < ApplicationController
     end
     @club.club_memberships.create!(user: current_user, role: "member")
     @club.increment!(:member_count)
+    Analytics.track(user: current_user, event: "club_joined", properties: { club_id: @club.id, club_name: @club.name, sport: @club.sport })
     redirect_to club_path(@club), notice: t("flashes.clubs.joined")
   end
 

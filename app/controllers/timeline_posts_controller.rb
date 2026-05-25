@@ -14,6 +14,7 @@ class TimelinePostsController < ApplicationController
     @timeline_post = @challenge.timeline_posts.build(timeline_post_params)
     @timeline_post.user = current_user
     if @timeline_post.save
+      Analytics.track(user: current_user, event: "post_created", properties: { challenge_id: @challenge.id })
       redirect_to challenge_timeline_posts_path(@challenge), notice: t("flashes.timeline_posts.created")
     else
       @timeline_posts = @challenge.timeline_posts.includes(:user, :workout).order(created_at: :desc)

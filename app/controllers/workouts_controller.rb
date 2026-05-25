@@ -44,10 +44,14 @@ class WorkoutsController < ApplicationController
     importer = Strava::ActivityImporter.new(current_user, client: service)
     imported = 0
 
+    Analytics.track(user: current_user, event: "workout_import_started", properties: { provider: "strava", requested_count: activity_ids.size })
+
     activity_ids.each do |strava_id|
       activity = service.activity(strava_id)
       imported += 1 if importer.import_one(activity)
     end
+
+    Analytics.track(user: current_user, event: "workout_import_completed", properties: { provider: "strava", imported_count: imported, requested_count: activity_ids.size })
 
     notice = t("flashes.workouts.strava_imported", count: imported)
     redirect_to workouts_path, notice: notice
@@ -56,6 +60,7 @@ class WorkoutsController < ApplicationController
   def create
     workout = current_user.workouts.build(workout_params.merge(provider: "manual"))
     if workout.save
+      Analytics.track(user: current_user, event: "workout_created_manually", properties: { sport: workout.sport, distance_km: workout.distance_km, duration_minutes: workout.duration_minutes })
       update_participation_progress(workout)
       newly_earned = AchievementChecker.new(current_user).check_all!
       notice = if newly_earned.any?

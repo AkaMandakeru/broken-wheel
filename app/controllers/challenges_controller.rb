@@ -21,6 +21,8 @@ class ChallengesController < ApplicationController
 
     participation = current_user.challenge_participations.create!(challenge: @challenge)
 
+    Analytics.track(user: current_user, event: "challenge_joined", properties: { challenge_id: @challenge.id, challenge_type: @challenge.challenge_type, sport: @challenge.sport })
+
     if @challenge.challenge_type == "weekly"
       workouts = current_user.workouts.where(workout_date: Challenge.current_week_window)
     elsif @challenge.challenge_type == "monthly"

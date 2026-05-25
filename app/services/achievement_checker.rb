@@ -100,7 +100,10 @@ class AchievementChecker
 
   def award!(badge)
     return nil if @user.user_badges.exists?(badge: badge)
-    @user.user_badges.create!(badge: badge, earned_at: Time.current)
+
+    user_badge = @user.user_badges.create!(badge: badge, earned_at: Time.current)
+    Analytics.track(user: @user, event: "badge_earned", properties: { badge_id: badge.id, badge_name: badge.name, badge_type: badge.badge_type })
+    user_badge
   end
 
   def calculate_max_streak
