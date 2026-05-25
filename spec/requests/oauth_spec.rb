@@ -60,7 +60,6 @@ RSpec.describe "Strava OAuth", type: :request do
         oauth_client = instance_double(Strava::OAuth::Client)
         allow(Strava::OAuth::Client).to receive(:new).and_return(oauth_client)
         allow(oauth_client).to receive(:oauth_token).with(code: "valid-code").and_return(token_response)
-        allow(SyncStravaActivitiesJob).to receive(:perform_later)
       end
 
       it "creates a strava token and redirects to profile" do
@@ -77,9 +76,9 @@ RSpec.describe "Strava OAuth", type: :request do
         expect(token.scope).to eq("read,activity:read_all")
       end
 
-      it "enqueues a sync job" do
+      it "does not auto-sync activities" do
         sign_in user
-        expect(SyncStravaActivitiesJob).to receive(:perform_later).with(user.id)
+        expect(SyncStravaActivitiesJob).not_to receive(:perform_later)
 
         get auth_strava_callback_path, params: { code: "valid-code" }
       end

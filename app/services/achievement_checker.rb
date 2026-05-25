@@ -107,7 +107,7 @@ class AchievementChecker
     dates = running_workouts
       .where.not(workout_date: nil)
       .pluck(:workout_date)
-      .map { |d| Date.commercial(d.year, d.cweek, 1) } # normalize to Monday of each week
+      .map { |d| d.beginning_of_week(:sunday) }
       .uniq
       .sort
 

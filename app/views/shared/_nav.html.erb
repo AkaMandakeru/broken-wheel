@@ -10,7 +10,7 @@
                   aria-label="<%= t('shared.nav.open_menu') %>">
             <i class="fa-solid fa-bars text-xl"></i>
           </button>
-          <%= link_to root_path, class: "flex items-center gap-3" do %>
+          <%= link_to (user_signed_in? ? challenges_path : root_path), class: "flex items-center gap-3" do %>
             <%= image_tag "logo.png", alt: "Broken Wheels", class: "h-10 w-10 md:h-12 md:w-12 object-contain" %>
             <span class="text-xl font-bold text-foreground">Broken Wheels</span>
           <% end %>
@@ -33,6 +33,15 @@
             <% end %>
             <%= link_to profile_path, class: "text-sm font-medium text-muted-foreground hover:text-primary transition-colors flex items-center gap-2" do %>
               <i class="fa-solid fa-user"></i> <%= t('shared.nav.profile') %>
+            <% end %>
+            <% if current_user.connected_to_strava? %>
+              <%= link_to integrations_path, class: "text-sm font-medium text-muted-foreground hover:text-primary transition-colors flex items-center gap-2" do %>
+                <i class="fa-solid fa-plug"></i> <%= t('shared.nav.apps') %>
+              <% end %>
+            <% else %>
+              <%= link_to integrations_path, class: "text-sm font-medium bg-[#FC4C02] text-white px-3 py-1.5 rounded-lg hover:bg-[#e04402] transition flex items-center gap-2" do %>
+                <i class="fa-solid fa-plug"></i> <%= t('shared.nav.connect_app') %>
+              <% end %>
             <% end %>
           <% else %>
             <%= link_to t('shared.nav.features'),  root_path(anchor: 'features'),   class: "text-sm font-medium text-muted-foreground hover:text-primary transition-colors" %>
@@ -96,7 +105,7 @@
     <div class="flex flex-col h-full">
       <%# Sidebar header %>
       <div class="flex items-center justify-between h-16 px-4 border-b border-border">
-        <%= link_to root_path, class: "flex items-center gap-2", data: { action: "click->sidebar#close" } do %>
+        <%= link_to (user_signed_in? ? challenges_path : root_path), class: "flex items-center gap-2", data: { action: "click->sidebar#close" } do %>
           <%= image_tag "logo.png", alt: "Broken Wheels", class: "h-8 w-8 object-contain" %>
           <span class="text-base font-bold text-foreground">Broken Wheels</span>
         <% end %>
@@ -125,6 +134,15 @@
           <% end %>
           <%= link_to profile_path, class: "flex items-center gap-3 px-4 py-3 rounded-lg text-foreground hover:bg-muted hover:text-primary transition", data: { action: "click->sidebar#close" } do %>
             <i class="fa-solid fa-user w-5 text-muted-foreground"></i> <%= t('shared.nav.profile') %>
+          <% end %>
+          <% if current_user.connected_to_strava? %>
+            <%= link_to integrations_path, class: "flex items-center gap-3 px-4 py-3 rounded-lg text-foreground hover:bg-muted hover:text-primary transition", data: { action: "click->sidebar#close" } do %>
+              <i class="fa-solid fa-plug w-5 text-muted-foreground"></i> <%= t('shared.nav.apps') %>
+            <% end %>
+          <% else %>
+            <%= link_to integrations_path, class: "flex items-center gap-3 px-4 py-3 rounded-lg bg-[#FC4C02] text-white hover:bg-[#e04402] transition font-medium", data: { action: "click->sidebar#close" } do %>
+              <i class="fa-solid fa-plug w-5"></i> <%= t('shared.nav.connect_app') %>
+            <% end %>
           <% end %>
         <% else %>
           <%= link_to root_path(anchor: 'features'), class: "flex items-center gap-3 px-4 py-3 rounded-lg text-foreground hover:bg-muted hover:text-primary transition", data: { action: "click->sidebar#close" } do %>

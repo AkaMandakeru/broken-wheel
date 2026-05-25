@@ -29,8 +29,6 @@ class OauthController < ApplicationController
       scope:         params[:scope].to_s
     )
 
-    SyncStravaActivitiesJob.perform_later(current_user.id)
-
     redirect_to profile_path, notice: t("flashes.strava.connected")
   rescue Strava::Errors::Fault => e
     Rails.logger.error("Strava OAuth token exchange failed: #{e.message}")

@@ -25,7 +25,7 @@ class ChallengesController < ApplicationController
       workouts = current_user.workouts.where(workout_date: Challenge.current_week_window)
     elsif @challenge.challenge_type == "monthly"
       start_date = Date.current.beginning_of_month
-      end_date = start_date + 29.days
+      end_date = Date.current.end_of_month
       workouts = current_user.workouts.where(workout_date: start_date..end_date)
     else
       workouts = current_user.workouts.none
@@ -39,7 +39,13 @@ class ChallengesController < ApplicationController
       RecomputeChallengeProgress.new(participation).call
     end
 
-    redirect_to challenge_path(@challenge), notice: t("flashes.challenges.joined")
+    notice = if current_user.connected_to_strava?
+                t("flashes.challenges.joined")
+              else
+                t("flashes.challenges.joined_connect_strava")
+              end
+
+    redirect_to challenge_path(@challenge), notice: notice
   end
 
   def invite

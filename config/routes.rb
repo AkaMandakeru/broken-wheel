@@ -18,6 +18,7 @@ Rails.application.routes.draw do
   delete "/auth/strava",          to: "oauth#disconnect", as: :disconnect_strava
 
   get "achievements", to: "achievements#index", as: :achievements
+  get "integrations", to: "integrations#index", as: :integrations
   resources :workouts, only: [:index, :create] do
     collection do
       get  :strava_activities

@@ -1,0 +1,75 @@
+<div class="pt-8">
+  <h1 class="text-2xl font-bold text-gray-900 mb-2"><%= t('integrations.index.title') %></h1>
+  <p class="text-gray-600 mb-8"><%= t('integrations.index.subtitle') %></p>
+
+  <div class="grid grid-cols-1 sm:grid-cols-2 gap-6 max-w-2xl">
+
+    <%# Strava — active integration %>
+    <div class="bg-white rounded shadow-sm border border-gray-200 p-6 flex flex-col items-center text-center">
+      <div class="w-14 h-14 rounded bg-orange-100 flex items-center justify-center mb-4">
+        <svg class="w-7 h-7 text-[#FC4C02]" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M15.387 17.944l-2.089-4.116h-3.065L15.387 24l5.15-10.172h-3.066m-7.008-5.599l2.836 5.598h4.172L10.463 0l-7 13.828h4.169"/>
+        </svg>
+      </div>
+      <h3 class="text-lg font-semibold text-gray-900 mb-1">Strava</h3>
+      <p class="text-sm text-gray-500 mb-4"><%= t('integrations.index.strava_description') %></p>
+
+      <% if @strava_connected %>
+        <span class="inline-flex items-center gap-1.5 rounded bg-green-100 px-3 py-1 text-sm font-medium text-green-700 mb-3">
+          <svg class="w-4 h-4" viewBox="0 0 20 20" fill="currentColor">
+            <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+          </svg>
+          <%= t('integrations.index.connected') %>
+        </span>
+        <%= button_to t('integrations.index.disconnect'), disconnect_strava_path, method: :delete, class: "text-sm text-red-600 hover:text-red-800 font-medium" %>
+      <% else %>
+        <%= button_to "/auth/strava", method: :post, class: "text-sm font-medium bg-[#FC4C02] text-white px-3 py-1.5 rounded-lg hover:bg-[#e04402] transition inline-flex items-center gap-2", data: { turbo: false } do %>
+          <%= t('integrations.index.connect') %>
+        <% end %>
+      <% end %>
+    </div>
+
+    <%# Garmin — coming soon %>
+    <div class="bg-white rounded shadow-sm border border-gray-200 p-6 flex flex-col items-center text-center opacity-60">
+      <div class="w-14 h-14 rounded bg-blue-100 flex items-center justify-center mb-4">
+        <svg class="w-7 h-7 text-blue-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+      <h3 class="text-lg font-semibold text-gray-900 mb-1">Garmin Connect</h3>
+      <p class="text-sm text-gray-500 mb-4"><%= t('integrations.index.garmin_description') %></p>
+      <span class="inline-flex items-center rounded bg-gray-100 px-3 py-1 text-sm font-medium text-gray-500">
+        <%= t('integrations.index.coming_soon') %>
+      </span>
+    </div>
+
+    <%# Adidas Running — coming soon %>
+    <div class="bg-white rounded shadow-sm border border-gray-200 p-6 flex flex-col items-center text-center opacity-60">
+      <div class="w-14 h-14 rounded bg-gray-100 flex items-center justify-center mb-4">
+        <svg class="w-7 h-7 text-gray-700" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M13 10V3L4 14h7v7l9-11h-7z" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+      <h3 class="text-lg font-semibold text-gray-900 mb-1">Adidas Running</h3>
+      <p class="text-sm text-gray-500 mb-4"><%= t('integrations.index.adidas_description') %></p>
+      <span class="inline-flex items-center rounded bg-gray-100 px-3 py-1 text-sm font-medium text-gray-500">
+        <%= t('integrations.index.coming_soon') %>
+      </span>
+    </div>
+
+    <%# Apple Health — coming soon %>
+    <div class="bg-white rounded shadow-sm border border-gray-200 p-6 flex flex-col items-center text-center opacity-60">
+      <div class="w-14 h-14 rounded bg-red-100 flex items-center justify-center mb-4">
+        <svg class="w-7 h-7 text-red-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+      <h3 class="text-lg font-semibold text-gray-900 mb-1">Apple Health</h3>
+      <p class="text-sm text-gray-500 mb-4"><%= t('integrations.index.apple_health_description') %></p>
+      <span class="inline-flex items-center rounded bg-gray-100 px-3 py-1 text-sm font-medium text-gray-500">
+        <%= t('integrations.index.coming_soon') %>
+      </span>
+    </div>
+
+  </div>
+</div>

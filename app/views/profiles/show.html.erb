@@ -75,15 +75,12 @@
 
   <div class="mt-12">
     <h2 class="text-lg font-semibold text-gray-900 mb-4"><%= t('profiles.show.connected_apps') %></h2>
-    <p class="text-gray-600 text-sm"><%= t('profiles.show.connect_apps_description') %></p>
+    <p class="text-gray-600 text-sm mb-3"><%= t('profiles.show.connect_apps_description') %></p>
 
-    <div class="pt-2">
-      <% if current_user.connected_to_strava? %>
-        <%= button_to t('profiles.show.disconnect_strava'), disconnect_strava_path, method: :delete, class: "btn-primary" %>
-      <% else %>
-        <%= button_to t('profiles.show.connect_strava'), "/auth/strava", method: :post, class: "btn-primary", data: { turbo: false } %>
-      <% end %>
-    </div>
+    <%= link_to integrations_path, class: "text-sm font-medium bg-[#FC4C02] text-white px-3 py-1.5 rounded-lg hover:bg-[#e04402] transition inline-flex items-center gap-2" do %>
+      <i class="fa-solid fa-plug"></i>
+      <%= t('profiles.show.manage_apps') %>
+    <% end %>
   </div>
 
   <div class="mt-12">

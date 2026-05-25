@@ -21,8 +21,8 @@ RSpec.describe ResetWeeklyChallengesJob, type: :job do
       sport: "run",
       target_value: 20,
       target_unit: "km",
-      starts_at: 2.weeks.ago.beginning_of_week(:monday),
-      ends_at: 2.weeks.ago.end_of_week(:monday),
+      starts_at: 2.weeks.ago.beginning_of_week(:sunday),
+      ends_at: 2.weeks.ago.end_of_week(:sunday),
       status: "active"
     )
   end
@@ -74,8 +74,8 @@ RSpec.describe ResetWeeklyChallengesJob, type: :job do
     described_class.new.perform
 
     weekly_challenge.reload
-    expect(weekly_challenge.starts_at.to_date).to eq(Date.current.beginning_of_week(:monday))
-    expect(weekly_challenge.ends_at.to_date).to eq(Date.current.end_of_week(:monday))
+    expect(weekly_challenge.starts_at.to_date).to eq(Date.current.beginning_of_week(:sunday))
+    expect(weekly_challenge.ends_at.to_date).to eq(Date.current.end_of_week(:sunday))
   end
 
   it "clears participation progress for weekly challenges" do

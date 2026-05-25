@@ -1,12 +1,12 @@
 # frozen_string_literal: true
 
 # Resets every active weekly challenge at the start of a new week:
-#   - Rolls `starts_at` / `ends_at` to the current Mon–Sun window.
+#   - Rolls `starts_at` / `ends_at` to the current Sun–Sat window.
 #   - Zeroes each participation's `progress_value` and clears `completed_at`.
 #   - Detaches workouts previously counted, since progress is recomputed from
 #     `participation.workouts` when users log new workouts for the week.
 #
-# Scheduled via config/recurring.yml to run every Monday at 00:00.
+# Scheduled via config/recurring.yml to run every Sunday at 11:59 PM.
 class ResetWeeklyChallengesJob < ApplicationJob
   queue_as :default
 

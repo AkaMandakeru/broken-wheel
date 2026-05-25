@@ -233,6 +233,7 @@ en:
       connect_apps_description: "Connect Strava, Garmin and more. Coming soon."
       connect_strava: "Connect to Strava"
       disconnect_strava: "Disconnect from Strava"
+      manage_apps: "Manage Connected Apps"
       badges_achievements: "Badges & Achievements"
       no_badges_yet: "Complete challenges to earn badges. None yet!"
       edit_profile: "Edit Profile"
@@ -369,6 +370,8 @@ en:
       contact: "Contact"
       open_menu: "Open menu"
       close_menu: "Close menu"
+      connect_app: "Connect App"
+      apps: "Apps"
       language: "Language"
       language_english: "English"
       language_portuguese: "Português"
@@ -427,6 +430,20 @@ en:
       edit: "Edit"
       delete: "Delete"
 
+  # Integrations
+  integrations:
+    index:
+      title: "Connect Workout Apps"
+      subtitle: "Import your workouts from your favorite fitness apps."
+      strava_description: "Sync runs, rides, and activities from Strava."
+      garmin_description: "Import workouts from Garmin watches and devices."
+      adidas_description: "Sync your runs and training sessions from Adidas Running."
+      apple_health_description: "Import health and workout data from Apple Health."
+      connect: "Connect"
+      disconnect: "Disconnect"
+      connected: "Connected"
+      coming_soon: "Coming Soon"
+
   # Common
   common:
     buttons:
@@ -467,6 +484,7 @@ en:
     challenges:
       already_joined: "You already joined this challenge."
       joined: "Joined challenge!"
+      joined_connect_strava: "Joined challenge! Connect Strava in your profile to import workouts automatically."
       must_join_first: "Join the challenge first to invite friends."
     clubs:
       created: "Club created!"

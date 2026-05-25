@@ -58,6 +58,10 @@ class ApplicationController < ActionController::Base
     I18n.available_locales.include?(symbol) ? symbol : nil
   end
 
+  def after_sign_in_path_for(resource)
+    stored_location_for(resource) || challenges_path
+  end
+
   def private_or_loopback?(ip)
     addr = IPAddr.new(ip)
     addr.loopback? || addr.private?

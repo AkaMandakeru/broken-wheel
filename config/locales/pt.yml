@@ -205,6 +205,7 @@ pt:
       connect_apps_description: "Conecte Strava, Garmin e mais. Em breve."
       connect_strava: "Conectar ao Strava"
       disconnect_strava: "Desconectar do Strava"
+      manage_apps: "Gerenciar Apps Conectados"
       badges_achievements: "Medalhas e Conquistas"
       no_badges_yet: "Complete desafios para conquistar medalhas. Nenhuma ainda!"
       edit_profile: "Editar Perfil"
@@ -341,6 +342,8 @@ pt:
       contact: "Contato"
       open_menu: "Abrir menu"
       close_menu: "Fechar menu"
+      connect_app: "Conectar App"
+      apps: "Apps"
       language: "Idioma"
       language_english: "English"
       language_portuguese: "Português"
@@ -399,6 +402,20 @@ pt:
       edit: "Editar"
       delete: "Excluir"
 
+  # Integrations (Integrações)
+  integrations:
+    index:
+      title: "Conectar Apps de Treino"
+      subtitle: "Importe seus treinos dos seus apps de fitness favoritos."
+      strava_description: "Sincronize corridas, pedaladas e atividades do Strava."
+      garmin_description: "Importe treinos de relógios e dispositivos Garmin."
+      adidas_description: "Sincronize corridas e sessões de treino do Adidas Running."
+      apple_health_description: "Importe dados de saúde e treinos do Apple Health."
+      connect: "Conectar"
+      disconnect: "Desconectar"
+      connected: "Conectado"
+      coming_soon: "Em Breve"
+
   # Common (Comum)
   common:
     buttons:
@@ -439,6 +456,7 @@ pt:
     challenges:
       already_joined: "Você já está participando deste desafio."
       joined: "Você entrou no desafio!"
+      joined_connect_strava: "Você entrou no desafio! Conecte o Strava no seu perfil para importar treinos automaticamente."
       must_join_first: "Participe do desafio primeiro para convidar amigos."
     clubs:
       created: "Clube criado!"

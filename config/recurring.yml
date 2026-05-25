@@ -16,4 +16,4 @@ production:
   reset_weekly_challenges:
     class: ResetWeeklyChallengesJob
     queue: default
-    schedule: every Monday at 0am
+    schedule: every Sunday at 11:59pm
