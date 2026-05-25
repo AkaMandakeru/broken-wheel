@@ -49,11 +49,17 @@ gem "devise"
 # Tailwind CSS for Strava-inspired UI
 gem "tailwindcss-rails"
 
+# IP geolocation for locale detection
+gem "geocoder"
+
 # Load .env in development/test
 gem "dotenv-rails", groups: [:development, :test]
 
-# IP geolocation for automatic locale detection
-gem "geocoder"
+# OAuth authentication
+gem "multi_json"
+gem "strava-ruby-client"
+gem "omniauth-rails_csrf_protection"
+gem "httparty"
 
 group :development, :test do
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem

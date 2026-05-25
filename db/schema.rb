@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_03_22_182250) do
+ActiveRecord::Schema[8.1].define(version: 2026_05_19_180353) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -106,6 +106,18 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_22_182250) do
     t.index ["created_by_id"], name: "index_clubs_on_created_by_id"
   end
 
+  create_table "strava_tokens", force: :cascade do |t|
+    t.string "access_token"
+    t.bigint "athlete_id"
+    t.datetime "created_at", null: false
+    t.integer "expires_at"
+    t.string "refresh_token"
+    t.string "scope"
+    t.datetime "updated_at", null: false
+    t.bigint "user_id", null: false
+    t.index ["user_id"], name: "index_strava_tokens_on_user_id"
+  end
+
   create_table "timeline_post_comments", force: :cascade do |t|
     t.text "content"
     t.datetime "created_at", null: false
@@ -185,6 +197,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_22_182250) do
     t.bigint "user_id", null: false
     t.date "workout_date"
     t.index ["challenge_participation_id"], name: "index_workouts_on_challenge_participation_id"
+    t.index ["user_id", "provider", "external_id"], name: "index_workouts_on_user_provider_external_id", unique: true, where: "((provider IS NOT NULL) AND (external_id IS NOT NULL))"
     t.index ["user_id"], name: "index_workouts_on_user_id"
   end
 
@@ -196,6 +209,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_03_22_182250) do
   add_foreign_key "club_memberships", "clubs"
   add_foreign_key "club_memberships", "users"
   add_foreign_key "clubs", "users", column: "created_by_id"
+  add_foreign_key "strava_tokens", "users"
   add_foreign_key "timeline_post_comments", "timeline_posts"
   add_foreign_key "timeline_post_comments", "users"
   add_foreign_key "timeline_posts", "challenges"

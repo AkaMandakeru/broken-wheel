@@ -231,6 +231,8 @@ en:
       update_profile: "Update profile"
       connected_apps: "Connected apps"
       connect_apps_description: "Connect Strava, Garmin and more. Coming soon."
+      connect_strava: "Connect to Strava"
+      disconnect_strava: "Disconnect from Strava"
       badges_achievements: "Badges & Achievements"
       no_badges_yet: "Complete challenges to earn badges. None yet!"
       edit_profile: "Edit Profile"
@@ -414,6 +416,14 @@ en:
       sport: "Sport"
       pace: "Pace"
       no_workouts: "No workouts yet. Add one above!"
+      browse_strava: "Browse Strava Activities"
+      source: "Source"
+    strava_activities:
+      title: "Strava Activities"
+      back: "Back to Workouts"
+      import_selected: "Import Selected"
+      already_imported: "Imported"
+      no_activities: "No activities found on Strava."
       edit: "Edit"
       delete: "Delete"
 
@@ -466,6 +476,10 @@ en:
       not_member: "Not a member."
     profiles:
       updated: "Profile updated successfully."
+    strava:
+      connected: "Strava connected successfully!"
+      disconnected: "Strava disconnected."
+      connect_failed: "We couldn't connect to Strava. Please try again."
     timeline_post_comments:
       created: "Comment added!"
     timeline_posts:
@@ -476,6 +490,14 @@ en:
       added_with_achievements:
         one: "Workout added! You unlocked 1 new achievement 🏅"
         other: "Workout added! You unlocked %{count} new achievements 🏅"
+      strava_not_connected: "Connect to Strava first from your profile."
+      strava_auth_failed: "Strava authorization failed. Please reconnect from your profile."
+      strava_rate_limited: "Strava rate limit reached. Please try again in a few minutes."
+      strava_sync_failed: "Something went wrong syncing from Strava. Please try again."
+      no_activities_selected: "Select at least one activity to import."
+      strava_imported:
+        one: "1 workout imported from Strava!"
+        other: "%{count} workouts imported from Strava!"
 
   # Devise framework error messages (looked up at root errors.messages)
   errors:

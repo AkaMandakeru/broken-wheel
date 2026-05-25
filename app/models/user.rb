@@ -1,5 +1,6 @@
 class User < ApplicationRecord
   has_one_attached :avatar
+  has_one :strava_token, dependent: :destroy
 
   has_many :challenge_participations
   has_many :workouts
@@ -13,4 +14,8 @@ class User < ApplicationRecord
          :lockable, :timeoutable
 
   validates :first_name, :last_name, presence: true
+
+  def connected_to_strava?
+    strava_token.present? && strava_token.refresh_token.present?
+  end
 end

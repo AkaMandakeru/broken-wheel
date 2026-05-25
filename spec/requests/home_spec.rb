@@ -11,12 +11,14 @@ RSpec.describe "Home", type: :request do
 
     it "renders the hero headline in English" do
       get root_path, params: { locale: "en" }
-      expect(response.body).to include(I18n.t("home.hero.headline", locale: :en))
+      expect(response.body).to include(I18n.t("home.hero.headline_lead", locale: :en))
+      expect(response.body).to include(I18n.t("home.hero.headline_accent", locale: :en))
     end
 
     it "renders the hero headline in Portuguese" do
       get root_path, params: { locale: "pt" }
-      expect(response.body).to include(I18n.t("home.hero.headline", locale: :pt))
+      expect(response.body).to include(I18n.t("home.hero.headline_lead", locale: :pt))
+      expect(response.body).to include(I18n.t("home.hero.headline_accent", locale: :pt))
     end
 
     it "shows the sign-up CTA for guests" do
@@ -29,18 +31,17 @@ RSpec.describe "Home", type: :request do
       expect(response.body).to include("MandakeruLabs")
     end
 
-    it "renders all four feature cards" do
+    it "renders the feature cards" do
       get root_path, params: { locale: "en" }
-      %w[challenges tracking achievements clubs].each do |key|
-        expected = ERB::Util.html_escape(I18n.t("home.features.#{key}.title", locale: :en))
+      %w[import achievements challenges progress].each do |key|
+        expected = ERB::Util.html_escape(I18n.t("home.features.items.#{key}.title", locale: :en))
         expect(response.body).to include(expected)
       end
     end
 
-    it "renders the testimonials section" do
+    it "renders the features section title" do
       get root_path, params: { locale: "en" }
-      expect(response.body).to include(I18n.t("home.testimonials.title", locale: :en))
-      expect(response.body).to include("Mariana Souza")
+      expect(response.body).to include(I18n.t("home.features.title", locale: :en))
     end
   end
 end

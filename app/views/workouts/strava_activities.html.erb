@@ -1,0 +1,94 @@
+<div class="pt-8">
+  <div class="flex items-center justify-between mb-6">
+    <h1 class="text-2xl font-bold text-gray-900"><%= t('workouts.strava_activities.title') %></h1>
+    <%= link_to t('workouts.strava_activities.back'), workouts_path, class: "text-sm text-gray-500 hover:text-gray-700" %>
+  </div>
+
+  <% if @activities.any? %>
+    <%= form_with url: import_strava_workouts_path, method: :post, local: true, data: { turbo: false }, html: { class: "space-y-4" } do %>
+      <div class="flex justify-end mb-4">
+        <button type="submit" class="btn-primary inline-flex items-center gap-2">
+          <svg class="w-4 h-4" viewBox="0 0 20 20" fill="currentColor">
+            <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+          </svg>
+          <%= t('workouts.strava_activities.import_selected') %>
+        </button>
+      </div>
+
+      <div class="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
+        <table class="min-w-full divide-y divide-gray-200">
+          <thead class="bg-gray-50">
+            <tr>
+              <th class="px-4 py-3 w-10"></th>
+              <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase"><%= t('workouts.index.date') %></th>
+              <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase"><%= t('workouts.index.sport') %></th>
+              <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase"><%= t('workouts.index.distance') %></th>
+              <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase"><%= t('workouts.index.duration') %></th>
+              <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase"><%= t('workouts.index.source') %></th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-gray-200">
+            <% @activities.each do |activity| %>
+              <% imported = @imported_ids.include?(activity.id.to_s) %>
+              <tr class="<%= 'bg-gray-50 opacity-60' if imported %>">
+                <td class="px-4 py-4">
+                  <% if imported %>
+                    <span class="text-green-500" title="<%= t('workouts.strava_activities.already_imported') %>">
+                      <svg class="w-5 h-5" viewBox="0 0 20 20" fill="currentColor">
+                        <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+                      </svg>
+                    </span>
+                  <% else %>
+                    <input type="checkbox" name="activity_ids[]" value="<%= activity.id %>"
+                           class="rounded border-gray-300 text-orange-600 focus:ring-orange-500">
+                  <% end %>
+                </td>
+                <td class="px-4 py-4 text-sm text-gray-900">
+                  <%= (activity.start_date_local || activity.start_date)&.strftime("%b %d, %Y") %>
+                </td>
+                <td class="px-4 py-4 text-sm text-gray-700">
+                  <%= activity.sport_type %>
+                  <span class="text-gray-400 text-xs ml-1"><%= activity.name %></span>
+                </td>
+                <td class="px-4 py-4 text-sm text-gray-700">
+                  <%= (activity.distance.to_f / 1000).round(2) %> km
+                </td>
+                <td class="px-4 py-4 text-sm text-gray-700">
+                  <% total_sec = activity.moving_time.to_i %>
+                  <% hours = total_sec / 3600 %>
+                  <% mins = (total_sec % 3600) / 60 %>
+                  <% secs = total_sec % 60 %>
+                  <% if hours > 0 %>
+                    <%= format("%dh %02dm", hours, mins) %>
+                  <% else %>
+                    <%= format("%dm %02ds", mins, secs) %>
+                  <% end %>
+                </td>
+                <td class="px-4 py-4 text-sm">
+                  <% if imported %>
+                    <span class="inline-flex items-center rounded-full bg-green-100 px-2 py-0.5 text-xs font-medium text-green-700">
+                      <%= t('workouts.strava_activities.already_imported') %>
+                    </span>
+                  <% else %>
+                    <span class="inline-flex items-center rounded-full bg-orange-100 px-2 py-0.5 text-xs font-medium text-orange-700">Strava</span>
+                  <% end %>
+                </td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="flex justify-end mt-4">
+        <button type="submit" class="btn-primary inline-flex items-center gap-2">
+          <svg class="w-4 h-4" viewBox="0 0 20 20" fill="currentColor">
+            <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+          </svg>
+          <%= t('workouts.strava_activities.import_selected') %>
+        </button>
+      </div>
+    <% end %>
+  <% else %>
+    <p class="text-gray-500"><%= t('workouts.strava_activities.no_activities') %></p>
+  <% end %>
+</div>
