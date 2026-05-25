@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_05_08_220041) do
+ActiveRecord::Schema[8.1].define(version: 2026_05_19_180353) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -197,6 +197,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_05_08_220041) do
     t.bigint "user_id", null: false
     t.date "workout_date"
     t.index ["challenge_participation_id"], name: "index_workouts_on_challenge_participation_id"
+    t.index ["user_id", "provider", "external_id"], name: "index_workouts_on_user_provider_external_id", unique: true, where: "((provider IS NOT NULL) AND (external_id IS NOT NULL))"
     t.index ["user_id"], name: "index_workouts_on_user_id"
   end
 

@@ -1,6 +1,8 @@
+# frozen_string_literal: true
+
+# OmniAuth is kept for future providers (Google, etc.).
+# Strava uses strava-ruby-client directly via OauthController.
+
 Rails.application.config.middleware.use OmniAuth::Builder do
-  provider :strava,
-    Rails.application.credentials.strava[:client_id],
-    Rails.application.credentials.strava[:client_secret],
-    scope: "read,activity:read_all"
+  # provider :google_oauth2, ...
 end

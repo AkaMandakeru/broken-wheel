@@ -79,9 +79,9 @@
 
     <div class="pt-2">
       <% if current_user.connected_to_strava? %>
-        <%= button_to "Disconnect from Strava", disconnect_strava_path, method: :delete, class: "btn-primary" %>
+        <%= button_to t('profiles.show.disconnect_strava'), disconnect_strava_path, method: :delete, class: "btn-primary" %>
       <% else %>
-        <%= button_to "Connect to Strava", "/auth/strava", method: :post, class: "btn-primary" %>
+        <%= button_to t('profiles.show.connect_strava'), "/auth/strava", method: :post, class: "btn-primary", data: { turbo: false } %>
       <% end %>
     </div>
   </div>

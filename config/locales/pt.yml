@@ -203,6 +203,8 @@ pt:
       update_profile: "Atualizar perfil"
       connected_apps: "Aplicativos conectados"
       connect_apps_description: "Conecte Strava, Garmin e mais. Em breve."
+      connect_strava: "Conectar ao Strava"
+      disconnect_strava: "Desconectar do Strava"
       badges_achievements: "Medalhas e Conquistas"
       no_badges_yet: "Complete desafios para conquistar medalhas. Nenhuma ainda!"
       edit_profile: "Editar Perfil"
@@ -386,6 +388,14 @@ pt:
       sport: "Esporte"
       pace: "Ritmo"
       no_workouts: "Nenhum treino ainda. Adicione um acima!"
+      browse_strava: "Ver Atividades do Strava"
+      source: "Origem"
+    strava_activities:
+      title: "Atividades do Strava"
+      back: "Voltar para Treinos"
+      import_selected: "Importar Selecionados"
+      already_imported: "Importado"
+      no_activities: "Nenhuma atividade encontrada no Strava."
       edit: "Editar"
       delete: "Excluir"
 
@@ -438,6 +448,10 @@ pt:
       not_member: "Você não é membro."
     profiles:
       updated: "Perfil atualizado com sucesso."
+    strava:
+      connected: "Strava conectado com sucesso!"
+      disconnected: "Strava desconectado."
+      connect_failed: "Não conseguimos conectar ao Strava. Tente novamente."
     timeline_post_comments:
       created: "Comentário adicionado!"
     timeline_posts:
@@ -448,6 +462,14 @@ pt:
       added_with_achievements:
         one: "Treino adicionado! Você desbloqueou 1 nova conquista 🏅"
         other: "Treino adicionado! Você desbloqueou %{count} novas conquistas 🏅"
+      strava_not_connected: "Conecte ao Strava primeiro no seu perfil."
+      strava_auth_failed: "Autorização do Strava falhou. Reconecte pelo seu perfil."
+      strava_rate_limited: "Limite de requisições do Strava atingido. Tente novamente em alguns minutos."
+      strava_sync_failed: "Algo deu errado ao sincronizar do Strava. Tente novamente."
+      no_activities_selected: "Selecione pelo menos uma atividade para importar."
+      strava_imported:
+        one: "1 treino importado do Strava!"
+        other: "%{count} treinos importados do Strava!"
 
   # Devise framework error messages (looked up at root errors.messages)
   errors:

@@ -13,12 +13,17 @@ Rails.application.routes.draw do
   patch "profile", to: "profiles#update"
   put "profile", to: "profiles#update"
 
-  get  "/auth/strava",          to: "oauth#connect",    as: :auth_strava
-  get  "/auth/strava/callback", to: "oauth#callback",   as: :auth_strava_callback
-  delete "/auth/strava",        to: "oauth#disconnect", as: :disconnect_strava
+  post   "/auth/strava",          to: "oauth#connect",     as: :auth_strava
+  get    "/auth/strava/callback", to: "oauth#callback",   as: :auth_strava_callback
+  delete "/auth/strava",          to: "oauth#disconnect", as: :disconnect_strava
 
   get "achievements", to: "achievements#index", as: :achievements
-  resources :workouts, only: [:index, :create]
+  resources :workouts, only: [:index, :create] do
+    collection do
+      get  :strava_activities
+      post :import_strava
+    end
+  end
   resources :challenges, only: [:index, :show] do
     member do
       post :join

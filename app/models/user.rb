@@ -16,6 +16,6 @@ class User < ApplicationRecord
   validates :first_name, :last_name, presence: true
 
   def connected_to_strava?
-    strava_token.present? && strava_token.expires_at.present?
+    strava_token.present? && strava_token.refresh_token.present?
   end
 end
