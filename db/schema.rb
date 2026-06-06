@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_05_25_142033) do
+ActiveRecord::Schema[8.1].define(version: 2026_06_05_150000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -117,6 +117,37 @@ ActiveRecord::Schema[8.1].define(version: 2026_05_25_142033) do
     t.index ["created_by_id"], name: "index_clubs_on_created_by_id"
   end
 
+  create_table "event_participations", force: :cascade do |t|
+    t.string "bib_number"
+    t.datetime "created_at", null: false
+    t.bigint "event_id", null: false
+    t.text "notes"
+    t.decimal "selected_distance_km"
+    t.datetime "updated_at", null: false
+    t.bigint "user_id", null: false
+    t.bigint "workout_id"
+    t.index ["event_id"], name: "index_event_participations_on_event_id"
+    t.index ["user_id", "event_id"], name: "index_event_participations_on_user_id_and_event_id", unique: true
+    t.index ["user_id"], name: "index_event_participations_on_user_id"
+    t.index ["workout_id"], name: "index_event_participations_on_workout_id"
+  end
+
+  create_table "events", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.text "description"
+    t.decimal "distance_km"
+    t.jsonb "distances", default: [], null: false
+    t.datetime "event_date"
+    t.integer "event_participations_count", default: 0, null: false
+    t.string "location"
+    t.string "sport"
+    t.string "status", default: "upcoming", null: false
+    t.string "title", null: false
+    t.datetime "updated_at", null: false
+    t.index ["event_date"], name: "index_events_on_event_date"
+    t.index ["status"], name: "index_events_on_status"
+  end
+
   create_table "strava_tokens", force: :cascade do |t|
     t.string "access_token"
     t.bigint "athlete_id"
@@ -167,6 +198,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_05_25_142033) do
 
   create_table "users", force: :cascade do |t|
     t.string "address"
+    t.boolean "admin", default: false, null: false
     t.string "blood_type"
     t.datetime "confirmation_sent_at"
     t.string "confirmation_token"
@@ -221,6 +253,9 @@ ActiveRecord::Schema[8.1].define(version: 2026_05_25_142033) do
   add_foreign_key "club_memberships", "clubs"
   add_foreign_key "club_memberships", "users"
   add_foreign_key "clubs", "users", column: "created_by_id"
+  add_foreign_key "event_participations", "events"
+  add_foreign_key "event_participations", "users"
+  add_foreign_key "event_participations", "workouts"
   add_foreign_key "strava_tokens", "users"
   add_foreign_key "timeline_post_comments", "timeline_posts"
   add_foreign_key "timeline_post_comments", "users"

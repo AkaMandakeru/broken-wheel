@@ -1,0 +1,62 @@
+<div class="pt-8">
+  <h1 class="text-2xl font-bold text-gray-900 mb-6"><%= t("admin.dashboard.title") %></h1>
+
+  <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+    <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-5">
+      <p class="text-sm text-gray-500"><%= t("admin.dashboard.challenges") %></p>
+      <p class="text-3xl font-bold text-gray-900 mt-1"><%= @challenges_count %></p>
+    </div>
+    <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-5">
+      <p class="text-sm text-gray-500"><%= t("admin.dashboard.active_challenges") %></p>
+      <p class="text-3xl font-bold text-[#FC4C02] mt-1"><%= @active_challenges_count %></p>
+    </div>
+    <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-5">
+      <p class="text-sm text-gray-500"><%= t("admin.dashboard.events") %></p>
+      <p class="text-3xl font-bold text-gray-900 mt-1"><%= @events_count %></p>
+    </div>
+    <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-5">
+      <p class="text-sm text-gray-500"><%= t("admin.dashboard.upcoming_events") %></p>
+      <p class="text-3xl font-bold text-blue-600 mt-1"><%= @upcoming_events_count %></p>
+    </div>
+  </div>
+
+  <div class="flex items-center justify-between mb-4">
+    <h2 class="text-lg font-semibold text-gray-900"><%= t("admin.dashboard.recent_challenges") %></h2>
+    <%= link_to t("admin.challenges.new"), new_admin_challenge_path, class: "bg-[#FC4C02] text-white px-4 py-2 rounded-lg hover:bg-[#e04402] transition font-medium text-sm" %>
+  </div>
+
+  <div class="space-y-3">
+    <% @recent_challenges.each do |challenge| %>
+      <%= link_to admin_challenge_path(challenge), class: "block bg-white rounded-lg shadow-sm border border-gray-200 p-4 hover:shadow-md transition" do %>
+        <div class="flex justify-between items-center">
+          <span class="font-medium text-gray-900"><%= challenge.title %></span>
+          <span class="text-xs px-2 py-1 rounded-full <%= challenge.status == 'active' ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-600' %>">
+            <%= t("admin.challenges.statuses.#{challenge.status}", default: challenge.status.to_s.capitalize) %>
+          </span>
+        </div>
+      <% end %>
+    <% end %>
+    <% if @recent_challenges.empty? %>
+      <p class="text-gray-500 py-4"><%= t("admin.challenges.empty") %></p>
+    <% end %>
+  </div>
+
+  <div class="flex items-center justify-between mb-4 mt-10">
+    <h2 class="text-lg font-semibold text-gray-900"><%= t("admin.dashboard.upcoming_events") %></h2>
+    <%= link_to t("admin.events.new"), new_admin_event_path, class: "bg-[#FC4C02] text-white px-4 py-2 rounded-lg hover:bg-[#e04402] transition font-medium text-sm" %>
+  </div>
+
+  <div class="space-y-3">
+    <% @upcoming_events.each do |event| %>
+      <%= link_to admin_event_path(event), class: "block bg-white rounded-lg shadow-sm border border-gray-200 p-4 hover:shadow-md transition" do %>
+        <div class="flex justify-between items-center">
+          <span class="font-medium text-gray-900"><%= event.title %></span>
+          <span class="text-sm text-gray-500"><%= event.event_date&.strftime("%b %-d, %Y") %></span>
+        </div>
+      <% end %>
+    <% end %>
+    <% if @upcoming_events.empty? %>
+      <p class="text-gray-500 py-4"><%= t("admin.events.empty") %></p>
+    <% end %>
+  </div>
+</div>

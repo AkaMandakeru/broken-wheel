@@ -1,0 +1,13 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(awk '/create_table \"challenges\"/,/^  end/' db/schema.rb)",
+      "Bash(bin/rails db:migrate)",
+      "Bash(bin/rails runner *)",
+      "Bash(bin/rails routes *)",
+      "Bash(bin/rails zeitwerk:check)",
+      "Bash(awk '/create_table \"workouts\"/,/^  end/' db/schema.rb)",
+      "Bash(sed -n '1,40p' app/controllers/workouts_controller.rb)"
+    ]
+  }
+}

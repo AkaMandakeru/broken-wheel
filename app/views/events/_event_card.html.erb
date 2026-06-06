@@ -1,0 +1,30 @@
+<%= link_to event_path(event), class: "block bg-white rounded-lg shadow-sm border border-gray-200 hover:shadow-md transition overflow-hidden" do %>
+  <div class="flex">
+    <% if event.image.attached? %>
+      <%= image_tag event.image.variant(resize_to_fill: [120, 120]), class: "w-28 h-28 object-cover flex-shrink-0" %>
+    <% end %>
+    <div class="p-4 flex-1">
+      <div class="flex items-start justify-between">
+        <h3 class="text-lg font-semibold text-gray-900"><%= event.title %></h3>
+        <p class="text-xs px-2 py-1 rounded-full <%= event.upcoming? ? 'bg-blue-100 text-blue-700' : 'bg-gray-100 text-gray-600' %>">
+          <%= t("events.statuses.#{event.status}", default: event.status.to_s.capitalize) %>
+        </p>
+      </div>
+      <div class="flex-wrap gap-x-8 gap-y-2 mt-3 text-sm text-gray-500">
+        <% if event.event_date %>
+          <p><i class="fa-solid fa-calendar-day mr-1"></i> <%= event.event_date.strftime("%b %-d, %Y · %H:%M") %></p>
+        <% end %>
+        <% if event.location.present? %>
+          <p><i class="fa-solid fa-location-dot mr-1"></i> <%= event.location %></p>
+        <% end %>
+        <% if event.sport.present? %>
+          <p><i class="fa-solid fa-person-running mr-1"></i> <%= t("enums.sports.#{event.sport}", default: event.sport.capitalize) %></p>
+        <% end %>
+        <% if event_distances_label(event) %>
+          <p><i class="fa-solid fa-ruler-horizontal mr-1"></i> <%= event_distances_label(event) %></p>
+        <% end %>
+        <p class="text-[#FC4C02] font-medium"><i class="fa-solid fa-user-group mr-1"></i><%= t("events.show.going_count", count: event.event_participations_count) %></p>
+      </div>
+    </div>
+  </div>
+<% end %>

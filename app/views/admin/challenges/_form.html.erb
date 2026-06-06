@@ -1,0 +1,89 @@
+<%= form_with model: [:admin, challenge], html: { multipart: true, class: "space-y-6" } do |f| %>
+  <% if challenge.errors.any? %>
+    <div class="bg-red-50 border border-red-200 text-red-700 rounded-lg p-4">
+      <p class="font-medium mb-1"><%= t("admin.challenges.form.errors", count: challenge.errors.count) %></p>
+      <ul class="list-disc list-inside text-sm">
+        <% challenge.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6 space-y-5">
+    <div>
+      <%= f.label :title, t("admin.challenges.fields.title"), class: "block text-sm font-medium text-gray-700 mb-1" %>
+      <%= f.text_field :title, class: "block w-full rounded-lg border border-gray-300 px-3 py-2 focus:border-[#FC4C02] focus:ring-[#FC4C02] focus:outline-none" %>
+    </div>
+
+    <div>
+      <%= f.label :description, t("admin.challenges.fields.description"), class: "block text-sm font-medium text-gray-700 mb-1" %>
+      <%= f.text_area :description, rows: 4, class: "block w-full rounded-lg border border-gray-300 px-3 py-2 focus:border-[#FC4C02] focus:ring-[#FC4C02] focus:outline-none" %>
+    </div>
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+      <div>
+        <%= f.label :sport, t("admin.challenges.fields.sport"), class: "block text-sm font-medium text-gray-700 mb-1" %>
+        <%= f.select :sport,
+              Challenge::SPORTS.map { |s| [t("enums.sports.#{s}", default: s.capitalize), s] },
+              { include_blank: t("admin.challenges.form.any") },
+              class: "block w-full rounded-lg border border-gray-300 px-3 py-2 focus:border-[#FC4C02] focus:ring-[#FC4C02] focus:outline-none" %>
+      </div>
+
+      <div>
+        <%= f.label :challenge_type, t("admin.challenges.fields.type"), class: "block text-sm font-medium text-gray-700 mb-1" %>
+        <%= f.select :challenge_type,
+              Challenge::CHALLENGE_TYPES.map { |ct| [t("enums.challenge_types.#{ct}", default: ct.capitalize), ct] },
+              { include_blank: t("admin.challenges.form.select") },
+              class: "block w-full rounded-lg border border-gray-300 px-3 py-2 focus:border-[#FC4C02] focus:ring-[#FC4C02] focus:outline-none" %>
+      </div>
+
+      <div>
+        <%= f.label :target_value, t("admin.challenges.fields.target_value"), class: "block text-sm font-medium text-gray-700 mb-1" %>
+        <%= f.number_field :target_value, step: "0.01", min: 0, class: "block w-full rounded-lg border border-gray-300 px-3 py-2 focus:border-[#FC4C02] focus:ring-[#FC4C02] focus:outline-none" %>
+      </div>
+
+      <div>
+        <%= f.label :target_unit, t("admin.challenges.fields.target_unit"), class: "block text-sm font-medium text-gray-700 mb-1" %>
+        <%= f.select :target_unit,
+              Challenge::TARGET_UNITS.map { |u| [t("admin.challenges.units.#{u}", default: u), u] },
+              { include_blank: t("admin.challenges.form.select") },
+              class: "block w-full rounded-lg border border-gray-300 px-3 py-2 focus:border-[#FC4C02] focus:ring-[#FC4C02] focus:outline-none" %>
+      </div>
+
+      <div>
+        <%= f.label :starts_at, t("admin.challenges.fields.starts_at"), class: "block text-sm font-medium text-gray-700 mb-1" %>
+        <%= f.datetime_local_field :starts_at, class: "block w-full rounded-lg border border-gray-300 px-3 py-2 focus:border-[#FC4C02] focus:ring-[#FC4C02] focus:outline-none" %>
+      </div>
+
+      <div>
+        <%= f.label :ends_at, t("admin.challenges.fields.ends_at"), class: "block text-sm font-medium text-gray-700 mb-1" %>
+        <%= f.datetime_local_field :ends_at, class: "block w-full rounded-lg border border-gray-300 px-3 py-2 focus:border-[#FC4C02] focus:ring-[#FC4C02] focus:outline-none" %>
+      </div>
+
+      <div>
+        <%= f.label :status, t("admin.challenges.fields.status"), class: "block text-sm font-medium text-gray-700 mb-1" %>
+        <%= f.select :status,
+              Challenge::STATUSES.map { |s| [t("admin.challenges.statuses.#{s}", default: s.capitalize), s] },
+              {},
+              class: "block w-full rounded-lg border border-gray-300 px-3 py-2 focus:border-[#FC4C02] focus:ring-[#FC4C02] focus:outline-none" %>
+      </div>
+    </div>
+
+    <div>
+      <%= f.label :image, t("admin.challenges.fields.image"), class: "block text-sm font-medium text-gray-700 mb-1" %>
+      <% if challenge.image.attached? %>
+        <div class="mb-3">
+          <%= image_tag challenge.image.variant(resize_to_limit: [200, 200]), class: "rounded-lg border border-gray-200" %>
+        </div>
+      <% end %>
+      <%= f.file_field :image, accept: "image/png,image/jpeg,image/webp", class: "block w-full text-sm text-gray-600 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:bg-[#FC4C02] file:text-white file:cursor-pointer hover:file:bg-[#e04402]" %>
+      <p class="text-xs text-gray-400 mt-1"><%= t("admin.challenges.form.image_hint") %></p>
+    </div>
+  </div>
+
+  <div class="flex items-center gap-3">
+    <%= f.submit t("admin.challenges.form.save"), class: "bg-[#FC4C02] text-white px-6 py-2.5 rounded-lg hover:bg-[#e04402] transition font-medium cursor-pointer" %>
+    <%= link_to t("admin.challenges.form.cancel"), admin_challenges_path, class: "border border-gray-300 px-6 py-2.5 rounded-lg hover:bg-gray-50 transition font-medium" %>
+  </div>
+<% end %>

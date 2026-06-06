@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title><%= content_for(:title) || "Broken Wheels · Admin" %></title>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="application-name" content="Broken Wheels">
+    <meta name="mobile-web-app-capable" content="yes">
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+
+    <%= yield :head %>
+
+    <%= tag.link rel: "manifest", href: pwa_manifest_path(format: :json) %>
+    <meta name="theme-color" content="#FC4C02">
+
+    <link rel="icon" href="/favicon.ico" sizes="any">
+    <link rel="icon" href="/favicon-32x32.png" type="image/png" sizes="32x32">
+    <link rel="icon" href="/favicon-16x16.png" type="image/png" sizes="16x16">
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+
+    <script src="https://kit.fontawesome.com/6b3c680981.js" crossorigin="anonymous"></script>
+
+    <%= stylesheet_link_tag "tailwind", "data-turbo-track": "reload" %>
+    <%= stylesheet_link_tag :app, "data-turbo-track": "reload" %>
+    <%= javascript_importmap_tags %>
+  </head>
+
+  <body class="min-h-screen bg-gray-50 pt-16 overflow-x-hidden">
+    <%= render "shared/nav" %>
+
+    <%# Admin sub-header %>
+    <div class="border-b border-gray-200 bg-white">
+      <div class="container mx-auto px-4 sm:px-6 lg:px-8 max-w-5xl">
+        <div class="flex h-12 items-center gap-6 text-sm font-medium">
+          <span class="flex items-center gap-2 text-gray-900">
+            <i class="fa-solid fa-shield-halved text-[#FC4C02]"></i> <%= t("admin.nav.title") %>
+          </span>
+          <%= link_to t("admin.nav.dashboard"), admin_root_path, class: "text-gray-600 hover:text-[#FC4C02] transition" %>
+          <%= link_to t("admin.nav.challenges"), admin_challenges_path, class: "text-gray-600 hover:text-[#FC4C02] transition" %>
+          <%= link_to t("admin.nav.events"), admin_events_path, class: "text-gray-600 hover:text-[#FC4C02] transition" %>
+        </div>
+      </div>
+    </div>
+
+    <% if notice %>
+      <div class="bg-green-100 border-l-4 border-green-500 text-green-700 p-4 mx-auto max-w-5xl" role="alert">
+        <p><%= notice %></p>
+      </div>
+    <% end %>
+    <% if alert %>
+      <div class="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 mx-auto max-w-5xl" role="alert">
+        <p><%= alert %></p>
+      </div>
+    <% end %>
+
+    <main class="container mx-auto px-4 py-6 sm:px-6 lg:px-8 max-w-5xl">
+      <%= yield %>
+    </main>
+
+    <%= render "shared/footer" %>
+  </body>
+</html>

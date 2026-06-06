@@ -1,0 +1,72 @@
+<div class="pt-8">
+  <div class="flex items-start justify-between mb-6">
+    <div>
+      <%= link_to admin_challenges_path, class: "text-sm text-gray-500 hover:text-[#FC4C02] flex items-center gap-1 mb-2" do %>
+        <i class="fa-solid fa-arrow-left text-xs"></i> <%= t("admin.challenges.title") %>
+      <% end %>
+      <h1 class="text-2xl font-bold text-gray-900"><%= @challenge.title %></h1>
+    </div>
+    <div class="flex items-center gap-2">
+      <%= link_to t("admin.challenges.edit"), edit_admin_challenge_path(@challenge), class: "bg-[#FC4C02] text-white px-4 py-2 rounded-lg hover:bg-[#e04402] transition font-medium text-sm" %>
+      <%= button_to t("admin.challenges.delete"), admin_challenge_path(@challenge), method: :delete, form: { data: { turbo_confirm: t("admin.challenges.confirm_delete") } }, class: "border border-red-300 text-red-600 px-4 py-2 rounded-lg hover:bg-red-50 transition font-medium text-sm cursor-pointer" %>
+    </div>
+  </div>
+
+  <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+    <div class="lg:col-span-2 bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+      <% if @challenge.image.attached? %>
+        <%= image_tag @challenge.image.variant(resize_to_limit: [800, 400]), class: "rounded-lg mb-4 w-full object-cover" %>
+      <% end %>
+
+      <p class="text-gray-600 mb-4"><%= @challenge.description %></p>
+
+      <dl class="grid grid-cols-2 gap-4 text-sm">
+        <div>
+          <dt class="text-gray-500"><%= t("admin.challenges.fields.sport") %></dt>
+          <dd class="font-medium text-gray-900"><%= t("enums.sports.#{@challenge.sport}", default: @challenge.sport&.capitalize.to_s) %></dd>
+        </div>
+        <div>
+          <dt class="text-gray-500"><%= t("admin.challenges.fields.type") %></dt>
+          <dd class="font-medium text-gray-900"><%= t("enums.challenge_types.#{@challenge.challenge_type}", default: @challenge.challenge_type&.capitalize.to_s) %></dd>
+        </div>
+        <div>
+          <dt class="text-gray-500"><%= t("admin.challenges.fields.target_value") %></dt>
+          <dd class="font-medium text-gray-900"><%= @challenge.target_value %> <%= @challenge.target_unit %></dd>
+        </div>
+        <div>
+          <dt class="text-gray-500"><%= t("admin.challenges.fields.status") %></dt>
+          <dd>
+            <span class="text-xs px-2 py-1 rounded-full <%= @challenge.status == 'active' ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-600' %>">
+              <%= t("admin.challenges.statuses.#{@challenge.status}", default: @challenge.status.to_s.capitalize) %>
+            </span>
+          </dd>
+        </div>
+        <div>
+          <dt class="text-gray-500"><%= t("admin.challenges.fields.starts_at") %></dt>
+          <dd class="font-medium text-gray-900"><%= @challenge.starts_at&.strftime("%Y-%m-%d %H:%M") || "—" %></dd>
+        </div>
+        <div>
+          <dt class="text-gray-500"><%= t("admin.challenges.fields.ends_at") %></dt>
+          <dd class="font-medium text-gray-900"><%= @challenge.ends_at&.strftime("%Y-%m-%d %H:%M") || "—" %></dd>
+        </div>
+      </dl>
+    </div>
+
+    <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+      <h2 class="text-sm font-semibold text-gray-900 mb-4">
+        <%= t("admin.challenges.participants", count: @participations.size) %>
+      </h2>
+      <div class="space-y-2">
+        <% @participations.each_with_index do |p, i| %>
+          <div class="flex items-center justify-between text-sm">
+            <span class="text-gray-700"><%= i + 1 %>. <%= p.user.first_name %> <%= p.user.last_name %></span>
+            <span class="font-medium text-gray-900"><%= p.progress_value %></span>
+          </div>
+        <% end %>
+        <% if @participations.empty? %>
+          <p class="text-gray-400 text-sm"><%= t("admin.challenges.no_participants") %></p>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>

@@ -332,7 +332,9 @@ pt:
       workouts: "Treinos"
       achievements: "Conquistas"
       clubs: "Clubes"
+      events: "Eventos"
       profile: "Perfil"
+      admin: "Admin"
       log_out: "Sair"
       sign_up: "Cadastrar-se"
       log_in: "Entrar"
@@ -441,6 +443,177 @@ pt:
       password_mismatch: "As senhas não coincidem"
       min_length: "Deve ter pelo menos %{count} caracteres"
 
+  # Área administrativa
+  admin:
+    flashes:
+      not_authorized: "Você não tem permissão para acessar essa página."
+      challenges:
+        created: "Desafio criado."
+        updated: "Desafio atualizado."
+        destroyed: "Desafio excluído."
+      events:
+        created: "Evento criado."
+        updated: "Evento atualizado."
+        destroyed: "Evento excluído."
+    nav:
+      title: "Admin"
+      dashboard: "Painel"
+      challenges: "Desafios"
+      events: "Eventos"
+    dashboard:
+      title: "Painel"
+      challenges: "Desafios"
+      active_challenges: "Ativos"
+      events: "Eventos"
+      upcoming_events: "Próximos eventos"
+      participations: "Participações"
+      users: "Usuários"
+      recent_challenges: "Desafios recentes"
+    events:
+      title: "Eventos"
+      new: "Novo evento"
+      edit: "Editar evento"
+      delete: "Excluir"
+      confirm_delete: "Excluir este evento? Esta ação não pode ser desfeita."
+      empty: "Nenhum evento ainda."
+      participants:
+        one: "1 participante"
+        other: "%{count} participantes"
+      no_participants: "Nenhum participante ainda."
+      fields:
+        title: "Título"
+        description: "Descrição"
+        sport: "Esporte"
+        event_date: "Data e hora"
+        location: "Local"
+        distance_km: "Distância (km)"
+        distances: "Distâncias"
+        custom_distances: "Distâncias personalizadas"
+        attendees: "Participantes"
+        status: "Status"
+        image: "Imagem"
+        actions: "Ações"
+      statuses:
+        upcoming: "Em breve"
+        completed: "Concluído"
+      form:
+        save: "Salvar"
+        cancel: "Cancelar"
+        any: "Qualquer"
+        image_hint: "PNG, JPG ou WebP. Opcional."
+        custom_distances_hint: "Distâncias extras em km separadas por vírgula, ex.: 3, 8, 15."
+        errors:
+          one: "1 erro impediu o salvamento:"
+          other: "%{count} erros impediram o salvamento:"
+    challenges:
+      title: "Desafios"
+      new: "Novo desafio"
+      edit: "Editar desafio"
+      delete: "Excluir"
+      confirm_delete: "Excluir este desafio? Esta ação não pode ser desfeita."
+      empty: "Nenhum desafio ainda."
+      participants:
+        one: "1 participante"
+        other: "%{count} participantes"
+      no_participants: "Nenhum participante ainda."
+      fields:
+        title: "Título"
+        description: "Descrição"
+        sport: "Esporte"
+        type: "Tipo"
+        target_value: "Meta"
+        target_unit: "Unidade"
+        starts_at: "Início"
+        ends_at: "Término"
+        status: "Status"
+        image: "Imagem"
+        actions: "Ações"
+      statuses:
+        active: "Ativo"
+        completed: "Concluído"
+      units:
+        km: "km"
+        hours: "horas"
+        times: "vezes (treinos)"
+      form:
+        save: "Salvar"
+        cancel: "Cancelar"
+        select: "Selecione…"
+        any: "Qualquer"
+        image_hint: "PNG, JPG ou WebP. Opcional."
+        errors:
+          one: "1 erro impediu o salvamento:"
+          other: "%{count} erros impediram o salvamento:"
+
+  # Eventos (voltados ao usuário)
+  events:
+    statuses:
+      upcoming: "Em breve"
+      completed: "Concluído"
+    index:
+      title: "Eventos"
+      subtitle: "Provas e eventos da comunidade. Registre que você participou e vincule sua atividade."
+      upcoming: "Em breve"
+      past: "Eventos passados"
+      empty: "Nenhum evento ainda. Volte em breve!"
+    show:
+      back: "Voltar aos eventos"
+      going_count:
+        zero: "Ninguém confirmado ainda"
+        one: "1 pessoa confirmada"
+        other: "%{count} pessoas confirmadas"
+      going_badge: "Confirmado"
+      choose_distance: "Qual distância você vai fazer?"
+      category: "Distância"
+      distance_going_count:
+        zero: "0 confirmados"
+        one: "1 confirmado"
+        other: "%{count} confirmados"
+      rsvp: "Vou participar"
+      join_title: "Participe deste evento"
+      join_subtitle: "Avise que você vai participar. Você pode adicionar seu resultado depois."
+      youre_going: "Presença confirmada!"
+      cancel_rsvp: "Não poderei ir"
+      confirm_cancel: "Cancelar sua presença neste evento?"
+      add_result_title: "Adicionar seu resultado"
+      add_result_subtitle: "Terminou o evento? Vincule a atividade que você fez."
+      add_result_submit: "Salvar resultado"
+      already_done_title: "Já participou?"
+      already_done_subtitle: "Registre seu resultado agora vinculando sua atividade."
+      you_participated: "Você registrou sua participação"
+      no_workout_linked: "Nenhuma atividade vinculada."
+      record_title: "Registre sua participação"
+      record_subtitle: "Vincule uma das suas atividades para registrar seu resultado neste evento."
+      select_workout: "Sua atividade"
+      select_workout_blank: "Selecione uma atividade…"
+      bib: "Número de peito"
+      notes: "Observações"
+      record_submit: "Registrar participação"
+      remove: "Remover"
+      confirm_remove: "Remover sua participação neste evento?"
+      no_workouts: "Você ainda não tem atividades."
+      import_strava: "Importar do Strava"
+      sign_in_prompt: "Entre para registrar que você participou deste evento."
+      sign_in: "Entrar"
+      results: "Resultados (%{count})"
+      athlete: "Atleta"
+      distance: "Distância"
+      time: "Tempo"
+      pace: "Ritmo"
+      no_results: "Nenhum resultado registrado ainda. Seja o primeiro!"
+
+  activerecord:
+    attributes:
+      event_participation:
+        selected_distance_km: "Distância"
+    errors:
+      models:
+        event_participation:
+          attributes:
+            selected_distance_km:
+              blank: "Escolha uma distância"
+              inclusion: "Escolha uma das distâncias oferecidas"
+
   # Enum value labels (rótulos para valores enum armazenados no banco)
   enums:
     sports:
@@ -458,6 +631,13 @@ pt:
       joined: "Você entrou no desafio!"
       joined_connect_strava: "Você entrou no desafio! Conecte o Strava no seu perfil para importar treinos automaticamente."
       must_join_first: "Participe do desafio primeiro para convidar amigos."
+    events:
+      going: "Presença confirmada! Adicione seu resultado após o evento."
+      already_going: "Você já está na lista deste evento."
+      workout_linked: "Seu resultado foi salvo!"
+      recorded: "Sua participação foi registrada!"
+      record_failed: "Não foi possível registrar sua participação. Tente novamente."
+      removed: "Sua participação foi removida."
     clubs:
       created: "Clube criado!"
       already_member: "Você já é membro."
@@ -492,6 +672,7 @@ pt:
   # Devise framework error messages (looked up at root errors.messages)
   errors:
     messages:
+      after_start: "deve ser posterior à data de início"
       already_confirmed: "já foi confirmado, por favor tente entrar"
       confirmation_period_expired: "precisa ser confirmado em %{period}, por favor solicite um novo"
       expired: "expirou, por favor solicite um novo"

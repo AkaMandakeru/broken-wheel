@@ -3,6 +3,8 @@ class User < ApplicationRecord
   has_one :strava_token, dependent: :destroy
 
   has_many :challenge_participations
+  has_many :event_participations
+  has_many :events, through: :event_participations
   has_many :workouts
   has_many :user_badges
   has_many :badges, through: :user_badges

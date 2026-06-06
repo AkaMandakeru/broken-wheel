@@ -42,5 +42,15 @@ Rails.application.routes.draw do
     end
   end
 
+  resources :events, only: [:index, :show] do
+    resource :participation, only: [:create, :update, :destroy], controller: "event_participations"
+  end
+
+  namespace :admin do
+    root "dashboard#index"
+    resources :challenges
+    resources :events
+  end
+
   get "/switch_locale/:locale", to: "locales#switch", as: :switch_locale
 end

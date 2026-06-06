@@ -360,7 +360,9 @@ en:
       workouts: "Workouts"
       achievements: "Achievements"
       clubs: "Clubs"
+      events: "Events"
       profile: "Profile"
+      admin: "Admin"
       log_out: "Log out"
       sign_up: "Sign up"
       log_in: "Sign in"
@@ -469,6 +471,177 @@ en:
       password_mismatch: "Passwords don't match"
       min_length: "Must be at least %{count} characters"
 
+  # Admin area
+  admin:
+    flashes:
+      not_authorized: "You are not authorized to access that page."
+      challenges:
+        created: "Challenge created."
+        updated: "Challenge updated."
+        destroyed: "Challenge deleted."
+      events:
+        created: "Event created."
+        updated: "Event updated."
+        destroyed: "Event deleted."
+    nav:
+      title: "Admin"
+      dashboard: "Dashboard"
+      challenges: "Challenges"
+      events: "Events"
+    dashboard:
+      title: "Dashboard"
+      challenges: "Challenges"
+      active_challenges: "Active"
+      events: "Events"
+      upcoming_events: "Upcoming events"
+      participations: "Participations"
+      users: "Users"
+      recent_challenges: "Recent challenges"
+    events:
+      title: "Events"
+      new: "New event"
+      edit: "Edit event"
+      delete: "Delete"
+      confirm_delete: "Delete this event? This cannot be undone."
+      empty: "No events yet."
+      participants:
+        one: "1 participant"
+        other: "%{count} participants"
+      no_participants: "No participants yet."
+      fields:
+        title: "Title"
+        description: "Description"
+        sport: "Sport"
+        event_date: "Date & time"
+        location: "Location"
+        distance_km: "Distance (km)"
+        distances: "Distances"
+        custom_distances: "Custom distances"
+        attendees: "Attendees"
+        status: "Status"
+        image: "Image"
+        actions: "Actions"
+      statuses:
+        upcoming: "Upcoming"
+        completed: "Completed"
+      form:
+        save: "Save"
+        cancel: "Cancel"
+        any: "Any"
+        image_hint: "PNG, JPG or WebP. Optional."
+        custom_distances_hint: "Comma-separated extra distances in km, e.g. 3, 8, 15."
+        errors:
+          one: "1 error prevented saving:"
+          other: "%{count} errors prevented saving:"
+    challenges:
+      title: "Challenges"
+      new: "New challenge"
+      edit: "Edit challenge"
+      delete: "Delete"
+      confirm_delete: "Delete this challenge? This cannot be undone."
+      empty: "No challenges yet."
+      participants:
+        one: "1 participant"
+        other: "%{count} participants"
+      no_participants: "No participants yet."
+      fields:
+        title: "Title"
+        description: "Description"
+        sport: "Sport"
+        type: "Type"
+        target_value: "Target"
+        target_unit: "Unit"
+        starts_at: "Starts at"
+        ends_at: "Ends at"
+        status: "Status"
+        image: "Image"
+        actions: "Actions"
+      statuses:
+        active: "Active"
+        completed: "Completed"
+      units:
+        km: "km"
+        hours: "hours"
+        times: "times (workouts)"
+      form:
+        save: "Save"
+        cancel: "Cancel"
+        select: "Select…"
+        any: "Any"
+        image_hint: "PNG, JPG or WebP. Optional."
+        errors:
+          one: "1 error prevented saving:"
+          other: "%{count} errors prevented saving:"
+
+  # User-facing events
+  events:
+    statuses:
+      upcoming: "Upcoming"
+      completed: "Completed"
+    index:
+      title: "Events"
+      subtitle: "Races and events from the community. Record that you took part and link your activity."
+      upcoming: "Upcoming"
+      past: "Past events"
+      empty: "No events yet. Check back soon!"
+    show:
+      back: "Back to events"
+      going_count:
+        zero: "No one going yet"
+        one: "1 person going"
+        other: "%{count} people going"
+      going_badge: "Going"
+      choose_distance: "Which distance will you do?"
+      category: "Distance"
+      distance_going_count:
+        zero: "0 going"
+        one: "1 going"
+        other: "%{count} going"
+      rsvp: "I'll be there"
+      join_title: "Join this event"
+      join_subtitle: "Let others know you'll be taking part. You can add your result afterwards."
+      youre_going: "You're going!"
+      cancel_rsvp: "Can't make it"
+      confirm_cancel: "Cancel your RSVP for this event?"
+      add_result_title: "Add your result"
+      add_result_subtitle: "Done with the event? Link the activity you did."
+      add_result_submit: "Save result"
+      already_done_title: "Already took part?"
+      already_done_subtitle: "Record your result now by linking your activity."
+      you_participated: "You recorded your participation"
+      no_workout_linked: "No activity linked."
+      record_title: "Record your participation"
+      record_subtitle: "Link one of your activities to log your result for this event."
+      select_workout: "Your activity"
+      select_workout_blank: "Select an activity…"
+      bib: "Bib number"
+      notes: "Notes"
+      record_submit: "Record participation"
+      remove: "Remove"
+      confirm_remove: "Remove your participation from this event?"
+      no_workouts: "You don't have any activities yet."
+      import_strava: "Import from Strava"
+      sign_in_prompt: "Sign in to record that you participated in this event."
+      sign_in: "Sign in"
+      results: "Results (%{count})"
+      athlete: "Athlete"
+      distance: "Distance"
+      time: "Time"
+      pace: "Pace"
+      no_results: "No results recorded yet. Be the first!"
+
+  activerecord:
+    attributes:
+      event_participation:
+        selected_distance_km: "Distance"
+    errors:
+      models:
+        event_participation:
+          attributes:
+            selected_distance_km:
+              blank: "Please choose a distance"
+              inclusion: "Please choose one of the offered distances"
+
   # Enum value labels (for displaying DB-stored enum strings)
   enums:
     sports:
@@ -486,6 +659,13 @@ en:
       joined: "Joined challenge!"
       joined_connect_strava: "Joined challenge! Connect Strava in your profile to import workouts automatically."
       must_join_first: "Join the challenge first to invite friends."
+    events:
+      going: "You're on the list! Add your result after the event."
+      already_going: "You're already on the list for this event."
+      workout_linked: "Your result was saved!"
+      recorded: "Your participation was recorded!"
+      record_failed: "We couldn't record your participation. Please try again."
+      removed: "Your participation was removed."
     clubs:
       created: "Club created!"
       already_member: "You're already a member."
@@ -520,6 +700,7 @@ en:
   # Devise framework error messages (looked up at root errors.messages)
   errors:
     messages:
+      after_start: "must be after the start date"
       already_confirmed: "was already confirmed, please try signing in"
       confirmation_period_expired: "needs to be confirmed within %{period}, please request a new one"
       expired: "has expired, please request a new one"

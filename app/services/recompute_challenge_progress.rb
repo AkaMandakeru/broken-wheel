@@ -16,8 +16,11 @@ class RecomputeChallengeProgress
   private
 
   def computed_progress
-    if @challenge.target_unit == "km"
+    case @challenge.target_unit
+    when "km"
       @participation.workouts.sum(:distance_km)
+    when "times"
+      @participation.workouts.count
     else
       @participation.workouts.sum(:duration_minutes).to_f / 60
     end

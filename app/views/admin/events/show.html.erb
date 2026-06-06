@@ -1,0 +1,88 @@
+<div class="pt-8">
+  <div class="flex items-start justify-between mb-6">
+    <div>
+      <%= link_to admin_events_path, class: "text-sm text-gray-500 hover:text-[#FC4C02] flex items-center gap-1 mb-2" do %>
+        <i class="fa-solid fa-arrow-left text-xs"></i> <%= t("admin.events.title") %>
+      <% end %>
+      <h1 class="text-2xl font-bold text-gray-900"><%= @event.title %></h1>
+    </div>
+    <div class="flex items-center gap-2">
+      <%= link_to t("admin.events.edit"), edit_admin_event_path(@event), class: "bg-[#FC4C02] text-white px-4 py-2 rounded-lg hover:bg-[#e04402] transition font-medium text-sm" %>
+      <%= button_to t("admin.events.delete"), admin_event_path(@event), method: :delete, form: { data: { turbo_confirm: t("admin.events.confirm_delete") } }, class: "border border-red-300 text-red-600 px-4 py-2 rounded-lg hover:bg-red-50 transition font-medium text-sm cursor-pointer" %>
+    </div>
+  </div>
+
+  <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+    <div class="lg:col-span-2 bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+      <% if @event.image.attached? %>
+        <%= image_tag @event.image.variant(resize_to_limit: [800, 400]), class: "rounded-lg mb-4 w-full object-cover" %>
+      <% end %>
+
+      <p class="text-gray-600 mb-4"><%= @event.description %></p>
+
+      <dl class="grid grid-cols-2 gap-4 text-sm">
+        <div>
+          <dt class="text-gray-500"><%= t("admin.events.fields.sport") %></dt>
+          <dd class="font-medium text-gray-900"><%= t("enums.sports.#{@event.sport}", default: @event.sport&.capitalize.to_s) %></dd>
+        </div>
+        <div>
+          <dt class="text-gray-500"><%= t("admin.events.fields.status") %></dt>
+          <dd>
+            <span class="text-xs px-2 py-1 rounded-full <%= @event.upcoming? ? 'bg-blue-100 text-blue-700' : 'bg-gray-100 text-gray-600' %>">
+              <%= t("admin.events.statuses.#{@event.status}", default: @event.status.to_s.capitalize) %>
+            </span>
+          </dd>
+        </div>
+        <div>
+          <dt class="text-gray-500"><%= t("admin.events.fields.event_date") %></dt>
+          <dd class="font-medium text-gray-900"><%= @event.event_date&.strftime("%Y-%m-%d %H:%M") || "—" %></dd>
+        </div>
+        <div>
+          <dt class="text-gray-500"><%= t("admin.events.fields.location") %></dt>
+          <dd class="font-medium text-gray-900"><%= @event.location.presence || "—" %></dd>
+        </div>
+        <div class="col-span-2">
+          <dt class="text-gray-500"><%= t("admin.events.fields.distances") %></dt>
+          <dd class="font-medium text-gray-900"><%= event_distances_label(@event) || "—" %></dd>
+        </div>
+      </dl>
+    </div>
+
+    <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+      <h2 class="text-sm font-semibold text-gray-900 mb-4">
+        <%= t("admin.events.participants", count: @event.event_participations_count) %>
+      </h2>
+
+      <% if @event.distances.present? %>
+        <div class="mb-4 space-y-1">
+          <% @event.distances.each do |d| %>
+            <div class="flex items-center justify-between text-sm">
+              <span class="text-gray-600"><%= format_km(d) %> km</span>
+              <span class="font-medium text-gray-900"><%= @distance_counts[d] || 0 %></span>
+            </div>
+          <% end %>
+          <hr class="my-2 border-gray-100">
+        </div>
+      <% end %>
+
+      <div class="space-y-2">
+        <% @participations.each do |p| %>
+          <div class="flex items-center justify-between text-sm">
+            <span class="text-gray-700">
+              <%= p.user.first_name %> <%= p.user.last_name %>
+              <% if p.selected_distance_km %>
+                <span class="text-xs text-gray-400">· <%= format_km(p.selected_distance_km) %> km</span>
+              <% end %>
+            </span>
+            <span class="font-medium text-gray-900">
+              <%= p.distance_km ? "#{p.distance_km} km" : "—" %>
+            </span>
+          </div>
+        <% end %>
+        <% if @participations.empty? %>
+          <p class="text-gray-400 text-sm"><%= t("admin.events.no_participants") %></p>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>
