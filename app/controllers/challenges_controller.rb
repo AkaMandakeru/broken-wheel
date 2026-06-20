@@ -5,7 +5,8 @@ class ChallengesController < ApplicationController
   before_action :set_challenge, only: [ :show, :join, :invite ]
 
   def index
-    @challenges = Challenge.where(status: "active").order(starts_at: :desc)
+    @type = params[:type].presence_in(Challenge::CHALLENGE_TYPES)
+    @challenges = Challenge.where(status: "active").of_type(@type).order(starts_at: :desc)
   end
 
   def show
@@ -23,15 +24,8 @@ class ChallengesController < ApplicationController
 
     Analytics.track(user: current_user, event: "challenge_joined", properties: { challenge_id: @challenge.id, challenge_type: @challenge.challenge_type, sport: @challenge.sport })
 
-    if @challenge.challenge_type == "weekly"
-      workouts = current_user.workouts.where(workout_date: Challenge.current_week_window)
-    elsif @challenge.challenge_type == "monthly"
-      start_date = Date.current.beginning_of_month
-      end_date = Date.current.end_of_month
-      workouts = current_user.workouts.where(workout_date: start_date..end_date)
-    else
-      workouts = current_user.workouts.none
-    end
+    window = @challenge.workout_window
+    workouts = window ? current_user.workouts.where(workout_date: window) : current_user.workouts.none
 
     workouts = workouts.where(sport: @challenge.sport) if @challenge.sport.present?
     workouts_to_assign = workouts.where(challenge_participation_id: nil)

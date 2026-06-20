@@ -1,7 +1,7 @@
 <div class="pt-8">
   <%= link_to t('challenges.show.back_to_challenge'), challenge_path(@challenge), class: "text-[#FC4C02] hover:underline mb-6 inline-block" %>
 
-  <h1 class="text-2xl font-bold text-gray-900 mb-6"><%= t('challenges.show.timeline', title: @challenge.title) %></h1>
+  <h1 class="text-2xl font-bold text-gray-900 mb-6"><%= t('challenges.show.timeline', title: @challenge.display_title) %></h1>
 
   <%= form_with model: @timeline_post, url: challenge_timeline_posts_path(@challenge), local: true, html: { class: "bg-white dark:bg-neutral-800 border border-black/10 dark:border-white/10 rounded-xl shadow-sm p-6 mb-8", data: { controller: "image-preview", image_preview_multiple_value: "true" } } do |f| %>
     <%= f.text_area :content, rows: 3, placeholder: t('timeline_posts.index.share_workout'), class: "form-control mb-4" %>

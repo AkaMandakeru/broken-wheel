@@ -10,6 +10,8 @@ class User < ApplicationRecord
   has_many :badges, through: :user_badges
   has_many :club_memberships
   has_many :clubs, through: :club_memberships
+  has_many :support_tickets, dependent: :destroy
+  has_many :support_messages, dependent: :destroy
 
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :validatable,

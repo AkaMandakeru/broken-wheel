@@ -46,10 +46,17 @@ Rails.application.routes.draw do
     resource :participation, only: [:create, :update, :destroy], controller: "event_participations"
   end
 
+  resources :support_tickets, only: [:index, :new, :create, :show] do
+    resources :messages, only: [:create], controller: "support_messages"
+  end
+
   namespace :admin do
     root "dashboard#index"
     resources :challenges
     resources :events
+    resources :support_tickets, only: [:index, :show, :update] do
+      resources :messages, only: [:create], controller: "support_messages"
+    end
   end
 
   get "/switch_locale/:locale", to: "locales#switch", as: :switch_locale

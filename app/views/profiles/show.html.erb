@@ -90,7 +90,7 @@
         <% @user.user_badges.includes(:badge, :challenge).each do |ub| %>
           <div class="bg-white rounded-lg border border-gray-200 p-4 text-center min-w-[100px]">
             <span class="text-3xl"><%= ub.badge.icon %></span>
-            <p class="text-sm font-medium text-gray-900 mt-2"><%= ub.badge.name %></p>
+            <p class="text-sm font-medium text-gray-900 mt-2"><%= ub.badge.display_name %></p>
             <p class="text-xs text-gray-500"><%= ub.earned_at&.strftime("%b %Y") %></p>
           </div>
         <% end %>

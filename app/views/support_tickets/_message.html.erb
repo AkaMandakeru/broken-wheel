@@ -1,0 +1,12 @@
+<%# locals: message %>
+<div class="flex <%= message.from_admin ? 'justify-start' : 'justify-end' %>">
+  <div class="max-w-[80%] rounded-lg px-4 py-3 <%= message.from_admin ? 'bg-gray-100 text-gray-800' : 'bg-[#FC4C02] text-white' %>">
+    <p class="text-xs font-semibold mb-1 <%= message.from_admin ? 'text-gray-500' : 'text-orange-100' %>">
+      <%= message.from_admin ? t("support.show.from_team") : message.user.first_name %>
+    </p>
+    <p class="text-sm whitespace-pre-wrap"><%= message.body %></p>
+    <p class="text-[10px] mt-1 <%= message.from_admin ? 'text-gray-400' : 'text-orange-100' %>">
+      <%= message.created_at.strftime("%b %-d, %Y · %H:%M") %>
+    </p>
+  </div>
+</div>

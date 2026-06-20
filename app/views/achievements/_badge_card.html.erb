@@ -7,9 +7,9 @@
 <div class="rounded-lg border p-3 text-center transition cursor-pointer hover:shadow-md hover:scale-105 duration-150 <%= earned ? 'bg-white border-gray-200 shadow-sm' : 'bg-gray-50 border-gray-100' %>"
      data-action="click->modal#open"
      data-badge-icon="<%= badge.icon %>"
-     data-badge-name="<%= badge.name %>"
-     data-badge-title="<%= badge.title %>"
-     data-badge-description="<%= badge.description %>"
+     data-badge-name="<%= badge.display_name %>"
+     data-badge-title="<%= badge.display_title %>"
+     data-badge-description="<%= badge.display_description %>"
      data-badge-points="<%= badge.points %>"
      data-badge-earned="<%= earned %>"
      data-badge-earned-at="<%= earned_at_label %>"
@@ -18,8 +18,8 @@
      data-badge-progress-kind="<%= kind %>">
 
   <div class="text-3xl mb-1 <%= earned ? '' : 'opacity-40' %>"><%= badge.icon %></div>
-  <p class="text-xs font-semibold text-gray-900 leading-tight mb-1 <%= 'opacity-50' unless earned %>"><%= badge.name %></p>
-  <p class="text-xs font-medium <%= earned ? 'text-[#FC4C02]' : 'text-gray-400' %>"><%= badge.title %></p>
+  <p class="text-xs font-semibold text-gray-900 leading-tight mb-1 <%= 'opacity-50' unless earned %>"><%= badge.display_name %></p>
+  <p class="text-xs font-medium <%= earned ? 'text-[#FC4C02]' : 'text-gray-400' %>"><%= badge.display_title %></p>
   <p class="text-xs text-gray-400 mt-1"><%= badge.points %> <%= t('achievements.badge_card.points') %></p>
 
   <% if earned %>

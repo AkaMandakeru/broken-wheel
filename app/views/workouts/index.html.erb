@@ -25,7 +25,7 @@
   <h2 class="text-lg font-semibold text-gray-900 mb-4"><%= t('workouts.index.active_challenges') %></h2>
   <div class="space-y-4 mb-8">
     <% @participations.each do |participation| %>
-      <%= render "shared/progress_bar", participation: participation, challenge: participation.challenge, title: participation.challenge.title %>
+      <%= render "shared/progress_bar", participation: participation, challenge: participation.challenge, title: participation.challenge.display_title %>
     <% end %>
     <% if @participations.empty? %>
       <p class="text-gray-500"><%= t('workouts.index.no_active_challenges') %> <%= link_to t('workouts.index.join_challenge'), challenges_path, class: "text-[#FC4C02] hover:underline" %>.</p>
@@ -60,7 +60,7 @@
       </div>
       <div class="relative gap-y-1.5">
         <%= f.label :challenge_participation_id, t('workouts.index.count_toward_challenge'), class: "form-label" %>
-        <%= f.collection_select :challenge_participation_id, @participations || [], :id, ->(p) { p.challenge.title }, { include_blank: t('workouts.index.none') }, class: "form-control" %>
+        <%= f.collection_select :challenge_participation_id, @participations || [], :id, ->(p) { p.challenge.display_title }, { include_blank: t('workouts.index.none') }, class: "form-control" %>
       </div>
       <div class="pt-2">
         <%= f.submit t('workouts.index.add_workout'), class: "btn-primary w-full" %>

@@ -1,0 +1,41 @@
+<div class="pt-8 max-w-2xl mx-auto">
+  <%= link_to support_tickets_path, class: "text-sm text-gray-500 hover:text-[#FC4C02] flex items-center gap-1 mb-2" do %>
+    <i class="fa-solid fa-arrow-left text-xs"></i> <%= t("support.title") %>
+  <% end %>
+  <h1 class="text-2xl font-bold text-gray-900 mb-1"><%= t("support.new.title") %></h1>
+  <p class="text-gray-600 mb-6"><%= t("support.new.subtitle") %></p>
+
+  <%= form_with model: @ticket, url: support_tickets_path, class: "space-y-5 bg-white rounded-lg shadow-sm border border-gray-200 p-6" do |f| %>
+    <% if @ticket.errors.any? %>
+      <div class="bg-red-50 border border-red-200 text-red-700 rounded-lg p-4">
+        <ul class="list-disc list-inside text-sm">
+          <% @ticket.errors.full_messages.each do |message| %>
+            <li><%= message %></li>
+          <% end %>
+        </ul>
+      </div>
+    <% end %>
+
+    <%= f.hidden_field :source %>
+
+    <div>
+      <%= f.label :category, t("support.fields.category"), class: "block text-sm font-medium text-gray-700 mb-1" %>
+      <%= f.select :category,
+            SupportTicket::CATEGORIES.map { |c| [t("support.categories.#{c}"), c] },
+            {},
+            class: "block w-full rounded-lg border border-gray-300 px-3 py-2 focus:border-[#FC4C02] focus:ring-[#FC4C02] focus:outline-none" %>
+    </div>
+
+    <div>
+      <%= f.label :subject, t("support.fields.subject"), class: "block text-sm font-medium text-gray-700 mb-1" %>
+      <%= f.text_field :subject, class: "block w-full rounded-lg border border-gray-300 px-3 py-2 focus:border-[#FC4C02] focus:ring-[#FC4C02] focus:outline-none" %>
+    </div>
+
+    <div>
+      <%= label_tag "support_ticket_body", t("support.fields.message"), class: "block text-sm font-medium text-gray-700 mb-1" %>
+      <%= text_area_tag "support_ticket[body]", params.dig(:support_ticket, :body), id: "support_ticket_body", rows: 5, class: "block w-full rounded-lg border border-gray-300 px-3 py-2 focus:border-[#FC4C02] focus:ring-[#FC4C02] focus:outline-none" %>
+    </div>
+
+    <%= f.submit t("support.new.submit"), class: "bg-[#FC4C02] text-white px-6 py-2.5 rounded-lg hover:bg-[#e04402] transition font-medium cursor-pointer" %>
+  <% end %>
+</div>

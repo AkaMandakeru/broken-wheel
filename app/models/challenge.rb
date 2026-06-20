@@ -5,8 +5,8 @@ class Challenge < ApplicationRecord
   has_many :participants, through: :challenge_participations, source: :user
   has_many :timeline_posts
 
-  SPORTS = %w[run bike soccer].freeze
-  CHALLENGE_TYPES = %w[weekly monthly].freeze
+  SPORTS = %w[run soccer].freeze
+  CHALLENGE_TYPES = %w[weekly biweekly monthly annually custom].freeze
   TARGET_UNITS = %w[km hours times].freeze
   STATUSES = %w[active completed].freeze
 
@@ -18,8 +18,37 @@ class Challenge < ApplicationRecord
   validates :target_value, numericality: { greater_than: 0 }, allow_nil: true
   validate :ends_after_starts
 
+  scope :of_type, ->(type) { where(challenge_type: type) if type.present? && CHALLENGE_TYPES.include?(type) }
+
   def self.current_week_window(today: Date.current)
     today.beginning_of_week(:sunday)..today.end_of_week(:sunday)
+  end
+
+  # Date range used to back-fill existing workouts when a user joins.
+  # weekly/monthly track the current period; other types use the challenge's
+  # own start/end dates. Returns nil when no window can be determined.
+  def workout_window(today: Date.current)
+    case challenge_type
+    when "weekly"  then self.class.current_week_window(today: today)
+    when "monthly" then today.beginning_of_month..today.end_of_month
+    else
+      starts_at && ends_at ? (starts_at.to_date..ends_at.to_date) : nil
+    end
+  end
+
+  # Default (system) challenges carry a stable `key` and are translated via
+  # locale files. Challenges created by an admin/customer have no key and show
+  # the title/description provided by their creator.
+  def default?
+    key.present?
+  end
+
+  def display_title
+    default? ? I18n.t("challenges.defaults.#{key}.title", default: title.to_s) : title
+  end
+
+  def display_description
+    default? ? I18n.t("challenges.defaults.#{key}.description", default: description.to_s) : description
   end
 
   private

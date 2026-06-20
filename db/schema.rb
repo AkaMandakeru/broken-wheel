@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_06_05_150000) do
+ActiveRecord::Schema[8.1].define(version: 2026_06_08_130000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -87,6 +87,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_06_05_150000) do
     t.datetime "created_at", null: false
     t.text "description"
     t.datetime "ends_at"
+    t.string "key"
     t.string "sport"
     t.datetime "starts_at"
     t.string "status"
@@ -94,6 +95,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_06_05_150000) do
     t.decimal "target_value"
     t.string "title"
     t.datetime "updated_at", null: false
+    t.index ["key"], name: "index_challenges_on_key", unique: true
   end
 
   create_table "club_memberships", force: :cascade do |t|
@@ -158,6 +160,32 @@ ActiveRecord::Schema[8.1].define(version: 2026_06_05_150000) do
     t.datetime "updated_at", null: false
     t.bigint "user_id", null: false
     t.index ["user_id"], name: "index_strava_tokens_on_user_id"
+  end
+
+  create_table "support_messages", force: :cascade do |t|
+    t.text "body", null: false
+    t.datetime "created_at", null: false
+    t.boolean "from_admin", default: false, null: false
+    t.bigint "support_ticket_id", null: false
+    t.datetime "updated_at", null: false
+    t.bigint "user_id", null: false
+    t.index ["support_ticket_id"], name: "index_support_messages_on_support_ticket_id"
+    t.index ["user_id"], name: "index_support_messages_on_user_id"
+  end
+
+  create_table "support_tickets", force: :cascade do |t|
+    t.string "category", default: "general", null: false
+    t.datetime "created_at", null: false
+    t.datetime "last_message_at"
+    t.string "source", default: "general", null: false
+    t.string "status", default: "open", null: false
+    t.string "subject"
+    t.integer "support_messages_count", default: 0, null: false
+    t.datetime "updated_at", null: false
+    t.bigint "user_id", null: false
+    t.index ["last_message_at"], name: "index_support_tickets_on_last_message_at"
+    t.index ["status"], name: "index_support_tickets_on_status"
+    t.index ["user_id"], name: "index_support_tickets_on_user_id"
   end
 
   create_table "timeline_post_comments", force: :cascade do |t|
@@ -257,6 +285,9 @@ ActiveRecord::Schema[8.1].define(version: 2026_06_05_150000) do
   add_foreign_key "event_participations", "users"
   add_foreign_key "event_participations", "workouts"
   add_foreign_key "strava_tokens", "users"
+  add_foreign_key "support_messages", "support_tickets"
+  add_foreign_key "support_messages", "users"
+  add_foreign_key "support_tickets", "users"
   add_foreign_key "timeline_post_comments", "timeline_posts"
   add_foreign_key "timeline_post_comments", "users"
   add_foreign_key "timeline_posts", "challenges"

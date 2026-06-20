@@ -29,6 +29,9 @@
       <div>
         <h3 class="text-sm font-semibold text-white uppercase tracking-wider mb-3"><%= t("shared.footer.links_title") %></h3>
         <ul class="space-y-2 text-sm">
+          <% if user_signed_in? %>
+            <li><%= link_to t("shared.nav.support"), support_tickets_path, class: "hover:text-white transition" %></li>
+          <% end %>
           <li><a href="#" class="hover:text-white transition"><%= t("shared.footer.about") %></a></li>
           <li><a href="#" class="hover:text-white transition"><%= t("shared.footer.privacy") %></a></li>
           <li><a href="#" class="hover:text-white transition"><%= t("shared.footer.terms") %></a></li>

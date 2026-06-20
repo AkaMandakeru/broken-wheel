@@ -4,11 +4,11 @@
   <% end %>
 
   <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6 mb-6">
-    <h1 class="text-2xl font-bold text-gray-900"><%= @challenge.title %></h1>
-    <p class="text-gray-600 mt-2"><%= @challenge.description %></p>
+    <h1 class="text-2xl font-bold text-gray-900"><%= @challenge.display_title %></h1>
+    <p class="text-gray-600 mt-2"><%= @challenge.display_description %></p>
     <div class="flex gap-4 mt-4 text-sm text-gray-500">
-      <span><%= @challenge.sport&.capitalize %></span>
-      <span><%= t('challenges.show.target') %>: <%= @challenge.target_value %> <%= @challenge.target_unit %></span>
+      <span><%= t("enums.sports.#{@challenge.sport}", default: @challenge.sport&.capitalize.to_s) %></span>
+      <span><%= t('challenges.show.target') %>: <%= @challenge.target_value %> <%= t("enums.target_units.#{@challenge.target_unit}", default: @challenge.target_unit.to_s) %></span>
       <span><%= @challenge.starts_at&.strftime("%b %d") %> - <%= @challenge.ends_at&.strftime("%b %d, %Y") %></span>
     </div>
 
@@ -43,7 +43,7 @@
               <tr class="<%= p.user_id == current_user.id ? 'bg-orange-50' : '' %>">
                 <td class="px-6 py-4 text-sm font-medium text-gray-900"><%= i + 1 %></td>
                 <td class="px-6 py-4 text-sm text-gray-700"><%= p.user.first_name %> <%= p.user.last_name %></td>
-                <td class="px-6 py-4 text-sm text-gray-700"><%= p.progress_value %> / <%= @challenge.target_value %> <%= @challenge.target_unit %></td>
+                <td class="px-6 py-4 text-sm text-gray-700"><%= p.progress_value %> / <%= @challenge.target_value %> <%= t("enums.target_units.#{@challenge.target_unit}", default: @challenge.target_unit.to_s) %></td>
               </tr>
             <% end %>
           </tbody>
@@ -51,4 +51,8 @@
       </div>
     </div>
   <% end %>
+
+  <div class="mt-8">
+    <%= render "shared/feedback_button", source: "challenges", label: t("support.help_with.challenges") %>
+  </div>
 </div>

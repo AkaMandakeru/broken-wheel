@@ -4,7 +4,7 @@
       <%= link_to admin_challenges_path, class: "text-sm text-gray-500 hover:text-[#FC4C02] flex items-center gap-1 mb-2" do %>
         <i class="fa-solid fa-arrow-left text-xs"></i> <%= t("admin.challenges.title") %>
       <% end %>
-      <h1 class="text-2xl font-bold text-gray-900"><%= @challenge.title %></h1>
+      <h1 class="text-2xl font-bold text-gray-900"><%= @challenge.display_title %></h1>
     </div>
     <div class="flex items-center gap-2">
       <%= link_to t("admin.challenges.edit"), edit_admin_challenge_path(@challenge), class: "bg-[#FC4C02] text-white px-4 py-2 rounded-lg hover:bg-[#e04402] transition font-medium text-sm" %>
@@ -18,7 +18,7 @@
         <%= image_tag @challenge.image.variant(resize_to_limit: [800, 400]), class: "rounded-lg mb-4 w-full object-cover" %>
       <% end %>
 
-      <p class="text-gray-600 mb-4"><%= @challenge.description %></p>
+      <p class="text-gray-600 mb-4"><%= @challenge.display_description %></p>
 
       <dl class="grid grid-cols-2 gap-4 text-sm">
         <div>

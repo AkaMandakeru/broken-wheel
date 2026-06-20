@@ -1,0 +1,6 @@
+<%# locals: source (string), label (optional), css (optional) %>
+<%= link_to new_support_ticket_path(source: local_assigns.fetch(:source, "general")),
+      class: local_assigns.fetch(:css, "inline-flex items-center gap-2 text-sm font-medium text-[#FC4C02] hover:underline") do %>
+  <i class="fa-solid fa-comment-dots"></i>
+  <%= local_assigns.fetch(:label) { t("support.feedback_button") } %>
+<% end %>

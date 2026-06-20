@@ -39,6 +39,13 @@
           <%= link_to t("admin.nav.dashboard"), admin_root_path, class: "text-gray-600 hover:text-[#FC4C02] transition" %>
           <%= link_to t("admin.nav.challenges"), admin_challenges_path, class: "text-gray-600 hover:text-[#FC4C02] transition" %>
           <%= link_to t("admin.nav.events"), admin_events_path, class: "text-gray-600 hover:text-[#FC4C02] transition" %>
+          <%= link_to admin_support_tickets_path, class: "text-gray-600 hover:text-[#FC4C02] transition flex items-center gap-1" do %>
+            <%= t("admin.nav.support") %>
+            <% open_tickets = SupportTicket.open_tickets.count %>
+            <% if open_tickets.positive? %>
+              <span class="text-xs bg-[#FC4C02] text-white rounded-full px-1.5 py-0.5"><%= open_tickets %></span>
+            <% end %>
+          <% end %>
         </div>
       </div>
     </div>

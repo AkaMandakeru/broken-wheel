@@ -198,4 +198,8 @@
   <% else %>
     <p class="text-gray-500 py-6"><%= t("events.show.no_results") %></p>
   <% end %>
+
+  <div class="mt-8">
+    <%= render "shared/feedback_button", source: "events", label: t("support.help_with.events") %>
+  </div>
 </div>

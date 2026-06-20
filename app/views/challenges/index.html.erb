@@ -11,13 +11,23 @@
     </div>
   <% end %>
 
+  <%# Filter by challenge type %>
+  <div class="flex flex-wrap gap-2 mb-6 text-sm">
+    <%= link_to t('challenges.index.filters.all'), challenges_path,
+          class: "px-3 py-1.5 rounded-lg #{@type.nil? ? 'bg-[#FC4C02] text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'}" %>
+    <% Challenge::CHALLENGE_TYPES.each do |type| %>
+      <%= link_to t("enums.challenge_types.#{type}", default: type.capitalize), challenges_path(type: type),
+            class: "px-3 py-1.5 rounded-lg #{@type == type ? 'bg-[#FC4C02] text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'}" %>
+    <% end %>
+  </div>
+
   <div class="space-y-4">
     <% @challenges.each do |challenge| %>
       <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6 hover:shadow-md transition">
         <div class="flex justify-between items-start">
           <div>
-            <h2 class="text-lg font-semibold text-gray-900"><%= challenge.title %></h2>
-            <p class="text-sm text-gray-600 mt-1"><%= challenge.description %></p>
+            <h2 class="text-lg font-semibold text-gray-900"><%= challenge.display_title %></h2>
+            <p class="text-sm text-gray-600 mt-1"><%= challenge.display_description %></p>
             <div class="flex gap-4 mt-2 text-sm text-gray-500">
               <span><%= t("enums.sports.#{challenge.sport}", default: challenge.sport&.capitalize.to_s) %></span>
               <span><%= challenge.target_value %> <%= challenge.target_unit %></span>
@@ -38,6 +48,10 @@
   </div>
 
   <% if @challenges.empty? %>
-    <p class="text-gray-500 py-8"><%= t('challenges.index.no_challenges') %> <code class="bg-gray-100 px-2 py-1 rounded">bin/rails db:seed</code> <%= t('challenges.index.to_add_sample') %>.</p>
+    <% if @type %>
+      <p class="text-gray-500 py-8"><%= t('challenges.index.none_for_filter') %></p>
+    <% else %>
+      <p class="text-gray-500 py-8"><%= t('challenges.index.no_challenges') %> <code class="bg-gray-100 px-2 py-1 rounded">bin/rails db:seed</code> <%= t('challenges.index.to_add_sample') %>.</p>
+    <% end %>
   <% end %>
 </div>

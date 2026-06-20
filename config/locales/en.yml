@@ -63,6 +63,21 @@ en:
 
   # Challenges
   challenges:
+    # Translated titles/descriptions for the default (system) challenges, keyed
+    # by Challenge#key. Admin/customer-created challenges use their own text.
+    defaults:
+      weekly_distance_run:
+        title: "Weekly Run · 20 km"
+        description: "Run 20 km this week."
+      monthly_distance_run:
+        title: "Monthly Run · 80 km"
+        description: "Run 80 km this month."
+      weekly_count_run:
+        title: "Weekly Run · 4 workouts"
+        description: "Complete 4 runs this week."
+      monthly_count_run:
+        title: "Monthly Run · 16 workouts"
+        description: "Complete 16 runs this month."
     index:
       title: "Challenges"
       browse_signed_in: "Browse and join challenges to compete with friends."
@@ -71,6 +86,9 @@ en:
       log_in: "Log in"
       view: "View"
       join: "Join"
+      filters:
+        all: "All"
+      none_for_filter: "No challenges of this type right now."
       no_challenges: "No challenges yet. Run"
       to_add_sample: "to add sample challenges."
     show:
@@ -362,6 +380,7 @@ en:
       clubs: "Clubs"
       events: "Events"
       profile: "Profile"
+      support: "Support"
       admin: "Admin"
       log_out: "Log out"
       sign_up: "Sign up"
@@ -483,20 +502,41 @@ en:
         created: "Event created."
         updated: "Event updated."
         destroyed: "Event deleted."
+      support:
+        updated: "Ticket updated."
+        replied: "Reply sent."
+        reply_failed: "Could not send the reply. Please try again."
     nav:
       title: "Admin"
       dashboard: "Dashboard"
       challenges: "Challenges"
       events: "Events"
+      support: "Messages"
     dashboard:
       title: "Dashboard"
       challenges: "Challenges"
       active_challenges: "Active"
       events: "Events"
       upcoming_events: "Upcoming events"
+      open_tickets: "Open messages"
       participations: "Participations"
       users: "Users"
       recent_challenges: "Recent challenges"
+    support:
+      title: "Messages"
+      empty: "No messages yet."
+      reply_label: "Reply"
+      reply_submit: "Send reply"
+      close: "Close ticket"
+      reopen: "Reopen ticket"
+      filters:
+        all: "All"
+      fields:
+        subject: "Subject"
+        user: "User"
+        category: "Type"
+        updated: "Updated"
+        status: "Status"
     events:
       title: "Events"
       new: "New event"
@@ -630,6 +670,58 @@ en:
       pace: "Pace"
       no_results: "No results recorded yet. Be the first!"
 
+  # Support / feedback messages
+  support:
+    title: "Support & feedback"
+    feedback_button: "Need help or have a suggestion?"
+    help_with:
+      integrations: "Having trouble connecting an app? Message us"
+      challenges: "Question about this challenge? Message us"
+      events: "Question about this event? Message us"
+    fields:
+      category: "Type"
+      subject: "Subject"
+      message: "Message"
+    categories:
+      general: "General"
+      support: "Help / Support"
+      suggestion: "Suggestion"
+      bug: "Report a problem"
+    sources:
+      general: "General"
+      integrations: "Integrations"
+      challenges: "Challenges"
+      events: "Events"
+      workouts: "Workouts"
+      achievements: "Achievements"
+      profile: "Profile"
+    statuses:
+      open: "Open"
+      answered: "Answered"
+      closed: "Closed"
+    index:
+      empty: "You haven't sent any messages yet."
+    new:
+      title: "New message"
+      subtitle: "Send us a question, a suggestion, or report a problem. We'll reply here."
+      submit: "Send message"
+    show:
+      from_team: "Support team"
+      reply_label: "Add a reply"
+      reply_submit: "Send reply"
+      closed_notice: "This conversation is closed. Start a new message if you still need help."
+
+  # Achievement badge text. Keyed by badge type + threshold; English names and
+  # titles fall back to the values stored in the database, so only the templated
+  # descriptions are listed here.
+  badges:
+    descriptions:
+      workout_count: "Complete %{count} running workouts."
+      distance_pr: "Run %{distance}km for the first time."
+      distance_count: "Complete %{count} runs of %{distance}km or more."
+      streak: "Maintain a running streak for %{weeks} consecutive week(s)."
+      pace: "Run %{distance}km at %{pace} pace or faster."
+
   activerecord:
     attributes:
       event_participation:
@@ -650,10 +742,21 @@ en:
       soccer: "Soccer"
     challenge_types:
       weekly: "Weekly"
+      biweekly: "Bi-weekly"
       monthly: "Monthly"
+      annually: "Annually"
+      custom: "Custom"
+    target_units:
+      km: "km"
+      hours: "hours"
+      times: "times"
 
   # Flash messages set by controllers
   flashes:
+    support:
+      created: "Message sent! We'll reply here soon."
+      message_sent: "Reply sent."
+      message_failed: "Could not send your reply. Please try again."
     challenges:
       already_joined: "You already joined this challenge."
       joined: "Joined challenge!"

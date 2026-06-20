@@ -1,0 +1,48 @@
+<div class="pt-8">
+  <div class="flex items-center justify-between mb-6">
+    <h1 class="text-2xl font-bold text-gray-900"><%= t("admin.support.title") %></h1>
+  </div>
+
+  <%# Status filter %>
+  <div class="flex gap-2 mb-6 text-sm">
+    <%= link_to t("admin.support.filters.all"), admin_support_tickets_path,
+          class: "px-3 py-1.5 rounded-lg #{@status.nil? ? 'bg-[#FC4C02] text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'}" %>
+    <% SupportTicket::STATUSES.each do |status| %>
+      <%= link_to t("support.statuses.#{status}"), admin_support_tickets_path(status: status),
+            class: "px-3 py-1.5 rounded-lg #{@status == status ? 'bg-[#FC4C02] text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'}" %>
+    <% end %>
+  </div>
+
+  <% if @tickets.any? %>
+    <div class="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
+      <table class="min-w-full divide-y divide-gray-200">
+        <thead class="bg-gray-50">
+          <tr>
+            <th class="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider"><%= t("admin.support.fields.subject") %></th>
+            <th class="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider"><%= t("admin.support.fields.user") %></th>
+            <th class="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider"><%= t("admin.support.fields.category") %></th>
+            <th class="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider"><%= t("admin.support.fields.updated") %></th>
+            <th class="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider"><%= t("admin.support.fields.status") %></th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-gray-100">
+          <% @tickets.each do |ticket| %>
+            <tr class="hover:bg-gray-50">
+              <td class="px-4 py-3">
+                <%= link_to ticket.subject, admin_support_ticket_path(ticket), class: "font-medium text-gray-900 hover:text-[#FC4C02]" %>
+              </td>
+              <td class="px-4 py-3 text-sm text-gray-600"><%= ticket.user.first_name %> <%= ticket.user.last_name %></td>
+              <td class="px-4 py-3 text-sm text-gray-600"><%= t("support.categories.#{ticket.category}") %></td>
+              <td class="px-4 py-3 text-sm text-gray-600"><%= (ticket.last_message_at || ticket.created_at).strftime("%b %-d, %Y") %></td>
+              <td class="px-4 py-3">
+                <span class="text-xs px-2 py-1 rounded-full <%= status_badge_class(ticket.status) %>"><%= t("support.statuses.#{ticket.status}") %></span>
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+  <% else %>
+    <p class="text-gray-500 py-8"><%= t("admin.support.empty") %></p>
+  <% end %>
+</div>

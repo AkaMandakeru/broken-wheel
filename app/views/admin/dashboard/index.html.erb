@@ -18,6 +18,10 @@
       <p class="text-sm text-gray-500"><%= t("admin.dashboard.upcoming_events") %></p>
       <p class="text-3xl font-bold text-blue-600 mt-1"><%= @upcoming_events_count %></p>
     </div>
+    <%= link_to admin_support_tickets_path(status: "open"), class: "bg-white rounded-lg shadow-sm border border-gray-200 p-5 hover:shadow-md transition" do %>
+      <p class="text-sm text-gray-500"><%= t("admin.dashboard.open_tickets") %></p>
+      <p class="text-3xl font-bold <%= @open_tickets_count.positive? ? 'text-[#FC4C02]' : 'text-gray-900' %> mt-1"><%= @open_tickets_count %></p>
+    <% end %>
   </div>
 
   <div class="flex items-center justify-between mb-4">
@@ -29,7 +33,7 @@
     <% @recent_challenges.each do |challenge| %>
       <%= link_to admin_challenge_path(challenge), class: "block bg-white rounded-lg shadow-sm border border-gray-200 p-4 hover:shadow-md transition" do %>
         <div class="flex justify-between items-center">
-          <span class="font-medium text-gray-900"><%= challenge.title %></span>
+          <span class="font-medium text-gray-900"><%= challenge.display_title %></span>
           <span class="text-xs px-2 py-1 rounded-full <%= challenge.status == 'active' ? 'bg-green-100 text-green-700' : 'bg-gray-100 text-gray-600' %>">
             <%= t("admin.challenges.statuses.#{challenge.status}", default: challenge.status.to_s.capitalize) %>
           </span>

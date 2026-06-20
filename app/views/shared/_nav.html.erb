@@ -103,13 +103,13 @@
 
   <%# Sidebar overlay (mobile) %>
   <div data-sidebar-target="overlay"
-       class="hidden fixed inset-0 z-60 bg-black/50 md:hidden transition-opacity"
+       class="hidden fixed inset-0 z-[60] bg-black/50 md:hidden transition-opacity"
        data-action="click->sidebar#close"
        aria-hidden="true"></div>
 
   <%# Sidebar panel (mobile) %>
   <aside data-sidebar-target="panel"
-         class="fixed top-0 left-0 z-70 h-full w-72 -translate-x-full transition-transform duration-300 ease-in-out md:hidden bg-background border-r border-border shadow-xl">
+         class="fixed top-0 left-0 z-[70] h-full w-72 -translate-x-full transition-transform duration-300 ease-in-out md:hidden bg-background border-r border-border shadow-xl">
     <div class="flex flex-col h-full">
       <%# Sidebar header %>
       <div class="flex items-center justify-between h-16 px-4 border-b border-border">

@@ -22,7 +22,7 @@
           <% @challenges.each do |challenge| %>
             <tr class="hover:bg-gray-50">
               <td class="px-4 py-3">
-                <%= link_to challenge.title, admin_challenge_path(challenge), class: "font-medium text-gray-900 hover:text-[#FC4C02]" %>
+                <%= link_to challenge.display_title, admin_challenge_path(challenge), class: "font-medium text-gray-900 hover:text-[#FC4C02]" %>
               </td>
               <td class="px-4 py-3 text-sm text-gray-600">
                 <%= t("enums.sports.#{challenge.sport}", default: challenge.sport&.capitalize.to_s) %>

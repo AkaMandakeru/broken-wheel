@@ -8,6 +8,7 @@ module Admin
       @events_count = Event.count
       @upcoming_events_count = Event.upcoming.count
       @users_count = User.count
+      @open_tickets_count = SupportTicket.open_tickets.count
       @recent_challenges = Challenge.order(created_at: :desc).limit(5)
       @upcoming_events = Event.upcoming.by_date.limit(5)
     end

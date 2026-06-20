@@ -35,6 +35,21 @@ pt:
 
   # Challenges (Desafios)
   challenges:
+    # Títulos/descrições traduzidos dos desafios padrão (do sistema), por
+    # Challenge#key. Desafios criados por admin/cliente usam o próprio texto.
+    defaults:
+      weekly_distance_run:
+        title: "Corrida Semanal · 20 km"
+        description: "Corra 20 km nesta semana."
+      monthly_distance_run:
+        title: "Corrida Mensal · 80 km"
+        description: "Corra 80 km neste mês."
+      weekly_count_run:
+        title: "Corrida Semanal · 4 treinos"
+        description: "Complete 4 corridas nesta semana."
+      monthly_count_run:
+        title: "Corrida Mensal · 16 treinos"
+        description: "Complete 16 corridas neste mês."
     index:
       title: "Desafios"
       browse_signed_in: "Navegue e participe de desafios para competir com amigos."
@@ -43,6 +58,9 @@ pt:
       log_in: "Entrar"
       view: "Ver"
       join: "Participar"
+      filters:
+        all: "Todos"
+      none_for_filter: "Nenhum desafio deste tipo no momento."
       no_challenges: "Nenhum desafio ainda. Execute"
       to_add_sample: "para adicionar desafios de exemplo."
     show:
@@ -334,6 +352,7 @@ pt:
       clubs: "Clubes"
       events: "Eventos"
       profile: "Perfil"
+      support: "Suporte"
       admin: "Admin"
       log_out: "Sair"
       sign_up: "Cadastrar-se"
@@ -455,20 +474,41 @@ pt:
         created: "Evento criado."
         updated: "Evento atualizado."
         destroyed: "Evento excluído."
+      support:
+        updated: "Ticket atualizado."
+        replied: "Resposta enviada."
+        reply_failed: "Não foi possível enviar a resposta. Tente novamente."
     nav:
       title: "Admin"
       dashboard: "Painel"
       challenges: "Desafios"
       events: "Eventos"
+      support: "Mensagens"
     dashboard:
       title: "Painel"
       challenges: "Desafios"
       active_challenges: "Ativos"
       events: "Eventos"
       upcoming_events: "Próximos eventos"
+      open_tickets: "Mensagens abertas"
       participations: "Participações"
       users: "Usuários"
       recent_challenges: "Desafios recentes"
+    support:
+      title: "Mensagens"
+      empty: "Nenhuma mensagem ainda."
+      reply_label: "Responder"
+      reply_submit: "Enviar resposta"
+      close: "Fechar ticket"
+      reopen: "Reabrir ticket"
+      filters:
+        all: "Todos"
+      fields:
+        subject: "Assunto"
+        user: "Usuário"
+        category: "Tipo"
+        updated: "Atualizado"
+        status: "Status"
     events:
       title: "Eventos"
       new: "Novo evento"
@@ -602,6 +642,172 @@ pt:
       pace: "Ritmo"
       no_results: "Nenhum resultado registrado ainda. Seja o primeiro!"
 
+  # Suporte / mensagens de feedback
+  support:
+    title: "Suporte e feedback"
+    feedback_button: "Precisa de ajuda ou tem uma sugestão?"
+    help_with:
+      integrations: "Problemas para conectar um app? Fale conosco"
+      challenges: "Dúvida sobre este desafio? Fale conosco"
+      events: "Dúvida sobre este evento? Fale conosco"
+    fields:
+      category: "Tipo"
+      subject: "Assunto"
+      message: "Mensagem"
+    categories:
+      general: "Geral"
+      support: "Ajuda / Suporte"
+      suggestion: "Sugestão"
+      bug: "Relatar um problema"
+    sources:
+      general: "Geral"
+      integrations: "Integrações"
+      challenges: "Desafios"
+      events: "Eventos"
+      workouts: "Treinos"
+      achievements: "Conquistas"
+      profile: "Perfil"
+    statuses:
+      open: "Aberto"
+      answered: "Respondido"
+      closed: "Fechado"
+    index:
+      empty: "Você ainda não enviou nenhuma mensagem."
+    new:
+      title: "Nova mensagem"
+      subtitle: "Envie uma dúvida, uma sugestão ou relate um problema. Responderemos aqui."
+      submit: "Enviar mensagem"
+    show:
+      from_team: "Equipe de suporte"
+      reply_label: "Adicionar uma resposta"
+      reply_submit: "Enviar resposta"
+      closed_notice: "Esta conversa está fechada. Inicie uma nova mensagem se ainda precisar de ajuda."
+
+  # Texto das conquistas (badges). Chaveado por tipo + limite.
+  badges:
+    descriptions:
+      workout_count: "Complete %{count} treinos de corrida."
+      distance_pr: "Corra %{distance}km pela primeira vez."
+      distance_count: "Complete %{count} corridas de %{distance}km ou mais."
+      streak: "Mantenha uma sequência de corrida por %{weeks} semana(s) consecutiva(s)."
+      pace: "Corra %{distance}km em um ritmo de %{pace} ou mais rápido."
+    workout_count:
+      names:
+        "1": "Primeira Volta"
+        "5": "Engrenando"
+        "10": "No Embalo"
+        "25": "Estrada Conhecida"
+        "50": "Rodas de Ferro"
+        "100": "Esmaga-Século"
+        "200": "Dose Dupla"
+        "300": "Tríplice Coroa"
+        "400": "Implacável"
+        "500": "Quebra-Rodas"
+      titles:
+        "1": "Novato"
+        "5": "Broto"
+        "10": "Regular"
+        "25": "Comprometido"
+        "50": "Dedicado"
+        "100": "Centurião"
+        "200": "Veterano"
+        "300": "Elite"
+        "400": "Lenda"
+        "500": "Campeão"
+    distance_pr:
+      names:
+        "3": "Primeiro Trecho"
+        "5": "Estreia no Parque"
+        "8": "Oito na Conta"
+        "10": "Casa dos Dez"
+        "15": "Herói do Meio"
+        "20": "Marca dos Vinte"
+        "21": "Metade do Caminho"
+        "25": "Quarto de Século"
+        "30": "Trinta Sujos"
+        "40": "Os Quarenta"
+        "42": "Revelação Total"
+        "50": "Pioneiro Ultra"
+      titles:
+        "3": "Explorador"
+        "5": "Andarilho"
+        "8": "Passista"
+        "10": "Corredor"
+        "15": "Aventureiro"
+        "20": "Buscador de Resistência"
+        "21": "Meio-Maratonista"
+        "25": "Guerreiro da Distância"
+        "30": "Corredor de Ferro"
+        "40": "Maratonista em Treino"
+        "42": "Maratonista"
+        "50": "Ultramaratonista"
+    streak:
+      names:
+        "1": "Primeira Semana"
+        "5": "Toca Aqui, 5 Semanas"
+        "10": "Sequência de Dois Dígitos"
+        "25": "Trimestre na Pegada"
+        "50": "Sequência de Meio Século"
+        "100": "Sequência do Século"
+        "200": "Duzentos Firmes"
+        "300": "Ritmo Implacável"
+        "400": "Quatrocentas Razões"
+        "500": "Chama Eterna"
+      titles:
+        "1": "Novato Consistente"
+        "5": "Guerreiro Semanal"
+        "10": "Construtor de Hábito"
+        "25": "Guardião do Ritmo"
+        "50": "Máquina de Sequência"
+        "100": "Inquebrável"
+        "200": "Imparável"
+        "300": "Lenda da Sequência"
+        "400": "Elite da Sequência"
+        "500": "Campeão da Sequência"
+    series:
+      "3": "Sprint"
+      "5": "Corrida no Parque"
+      "8": "Oito"
+      "10": "Clube dos Dez"
+      "15": "Quinze"
+      "20": "Vinte"
+      "21": "Meia-Maratona"
+      "25": "Vinte e Cinco"
+      "30": "Trinta"
+      "40": "Quarenta"
+      "42": "Maratona"
+      "50": "Ultra"
+    count_tiers:
+      "1": "Novato"
+      "5": "Iniciante"
+      "10": "Regular"
+      "25": "Comprometido"
+      "50": "Dedicado"
+      "100": "Centurião"
+      "200": "Veterano"
+      "300": "Elite"
+      "400": "Lenda"
+      "500": "Campeão"
+    pace:
+      labels:
+        "5": "5K"
+        "10": "10K"
+        "21": "Meia-Maratona"
+      names:
+        "60": "Cruzeiro"
+        "55": "Marcador"
+        "50": "Ligeiro"
+        "45": "Rápido"
+        "40": "Flamejante"
+        "35": "Relâmpago"
+      titles:
+        "60": "Novato de Ritmo"
+        "55": "Marcador de Trilha"
+        "50": "Buscador de Velocidade"
+        "45": "Veloz na Pista"
+        "40": "Chama Veloz"
+        "35": "Campeão de Velocidade"
+
   activerecord:
     attributes:
       event_participation:
@@ -622,10 +828,21 @@ pt:
       soccer: "Futebol"
     challenge_types:
       weekly: "Semanal"
+      biweekly: "Quinzenal"
       monthly: "Mensal"
+      annually: "Anual"
+      custom: "Personalizado"
+    target_units:
+      km: "km"
+      hours: "horas"
+      times: "vezes"
 
   # Flash messages set by controllers
   flashes:
+    support:
+      created: "Mensagem enviada! Responderemos aqui em breve."
+      message_sent: "Resposta enviada."
+      message_failed: "Não foi possível enviar sua resposta. Tente novamente."
     challenges:
       already_joined: "Você já está participando deste desafio."
       joined: "Você entrou no desafio!"

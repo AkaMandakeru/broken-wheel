@@ -5,7 +5,7 @@
   <% percent = target.positive? ? [100, (progress / target * 100).round].min : 0 %>
   <div class="space-y-2">
     <div class="flex justify-between text-sm">
-      <span class="text-gray-600"><%= progress %> / <%= target %> <%= challenge.target_unit %></span>
+      <span class="text-gray-600"><%= progress %> / <%= target %> <%= t("enums.target_units.#{challenge.target_unit}", default: challenge.target_unit.to_s) %></span>
       <span class="font-medium text-gray-900"><%= percent %>%</span>
     </div>
     <div class="h-3 bg-gray-200 rounded-full overflow-hidden">
