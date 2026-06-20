@@ -1,6 +1,29 @@
 # frozen_string_literal: true
 
 # ---------------------------------------------------------------------------
+# Default admin user (development only)
+#   Override with ADMIN_EMAIL / ADMIN_PASSWORD env vars if desired.
+# ---------------------------------------------------------------------------
+
+if Rails.env.development?
+  admin_email = ENV.fetch("ADMIN_EMAIL", "admin@example.com")
+  admin_password = ENV.fetch("ADMIN_PASSWORD", "password")
+
+  admin = User.find_or_initialize_by(email: admin_email)
+  admin.assign_attributes(
+    first_name: "Admin",
+    last_name: "User",
+    password: admin_password,
+    password_confirmation: admin_password,
+    admin: true,
+    confirmed_at: admin.confirmed_at || Time.current
+  )
+  admin.save!
+
+  puts "👤 Admin user ready: #{admin_email} / #{admin_password}"
+end
+
+# ---------------------------------------------------------------------------
 # Default (system) Challenges
 #   Titles/descriptions are translated via config/locales
 #   (challenges.defaults.<key>.*); the English text below is only a fallback.
