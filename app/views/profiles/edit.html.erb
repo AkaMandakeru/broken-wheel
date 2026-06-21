@@ -1,0 +1,88 @@
+<div class="pt-8">
+  <%= link_to profile_path, class: "text-sm text-gray-500 hover:text-[#FC4C02] flex items-center gap-1 mb-2" do %>
+    <i class="fa-solid fa-arrow-left text-xs"></i> <%= t('profiles.edit.back') %>
+  <% end %>
+  <h1 class="text-2xl font-bold text-gray-900 mb-6"><%= t('profiles.edit.title') %></h1>
+
+  <div class="bg-white dark:bg-neutral-800 border border-black/10 dark:border-white/10 rounded-xl shadow-sm p-6 sm:p-8 max-w-xl">
+    <%= form_with model: @user, url: profile_path, method: :patch, local: true, html: { class: "space-y-5" } do |f| %>
+      <%= render "shared/error_messages", resource: @user %>
+
+      <div class="flex items-center gap-4 mb-2" data-controller="image-preview">
+        <div class="w-24 h-24 rounded-full overflow-hidden bg-neutral-200 dark:bg-neutral-700 flex items-center justify-center shrink-0 relative">
+          <img data-image-preview-target="preview" src="" alt="Preview" class="hidden absolute inset-0 w-full h-full object-cover">
+          <span data-image-preview-target="placeholder" class="text-neutral-500 text-2xl <%= 'hidden' if @user.avatar.attached? %>"><%= @user.first_name&.first || "?" %></span>
+          <% if @user.avatar.attached? %>
+            <%= image_tag url_for(@user.avatar), class: "w-full h-full object-cover", data: { image_preview_target: "current" } %>
+          <% end %>
+        </div>
+        <div>
+          <%= f.label :avatar, t('profiles.show.profile_picture'), class: "form-label" %>
+          <%= f.file_field :avatar, accept: "image/*", class: "text-sm text-neutral-700 dark:text-neutral-300", data: { image_preview_target: "input", action: "change->image-preview#preview" } %>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div class="relative gap-y-1.5">
+          <%= f.label :first_name, t("devise.registrations.new.first_name"), class: "form-label" %>
+          <%= f.text_field :first_name, class: "form-control" %>
+        </div>
+        <div class="relative gap-y-1.5">
+          <%= f.label :last_name, t("devise.registrations.new.last_name"), class: "form-label" %>
+          <%= f.text_field :last_name, class: "form-control" %>
+        </div>
+      </div>
+
+      <div class="relative gap-y-1.5">
+        <%= f.label :title, t("profiles.show.title_label"), class: "form-label" %>
+        <%= f.select :title,
+              @user.available_titles.map { |key| [Titles.label(key), key] },
+              { include_blank: t('profiles.show.title_none') },
+              class: "form-control" %>
+        <p class="text-xs text-gray-400 mt-1"><%= t('profiles.show.title_hint') %></p>
+      </div>
+
+      <div class="relative gap-y-1.5">
+        <%= f.label :nickname, t("profiles.show.nickname"), class: "form-label" %>
+        <%= f.text_field :nickname, class: "form-control", placeholder: t('profiles.show.optional') %>
+      </div>
+
+      <div class="relative gap-y-1.5">
+        <%= f.label :document, t("profiles.show.document"), class: "form-label" %>
+        <%= f.text_field :document, class: "form-control", placeholder: t('profiles.show.optional') %>
+      </div>
+
+      <div class="relative gap-y-1.5">
+        <%= f.label :phone, t("profiles.show.phone"), class: "form-label" %>
+        <%= f.telephone_field :phone, class: "form-control", placeholder: t('profiles.show.optional') %>
+      </div>
+
+      <div class="relative gap-y-1.5">
+        <%= f.label :blood_type, t("profiles.show.blood_type"), class: "form-label" %>
+        <%= f.text_field :blood_type, class: "form-control", placeholder: t('profiles.show.optional') %>
+      </div>
+
+      <div class="relative gap-y-1.5">
+        <%= f.label :address, t("profiles.show.address"), class: "form-label" %>
+        <%= f.text_area :address, rows: 2, class: "form-control", placeholder: t('profiles.show.optional') %>
+      </div>
+
+      <div>
+        <p class="form-label"><%= t('profiles.show.sports') %></p>
+        <div class="flex gap-4">
+          <% %w[run bike soccer].each do |sport| %>
+            <label class="flex items-center gap-2 text-sm text-neutral-700 dark:text-neutral-300">
+              <%= check_box_tag "user[sports][]", sport, Array(@user.sports).include?(sport), class: "rounded border-neutral-300 text-neutral-800 focus:ring-neutral-600" %>
+              <span><%= t("enums.sports.#{sport}", default: sport.capitalize) %></span>
+            </label>
+          <% end %>
+        </div>
+      </div>
+
+      <div class="pt-2 flex items-center gap-3">
+        <%= f.submit t('profiles.show.update_profile'), class: "btn-primary w-full sm:w-auto" %>
+        <%= link_to t('profiles.edit.cancel'), profile_path, class: "text-sm text-gray-500 hover:text-gray-700" %>
+      </div>
+    <% end %>
+  </div>
+</div>

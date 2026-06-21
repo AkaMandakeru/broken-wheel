@@ -1,0 +1,37 @@
+# Profile titles catalogue.
+# Add new titles here — no database changes needed. Each key is the title's
+# stable identifier (what gets stored on the user). `default: true` grants the
+# title to every user automatically (now and on sign-up).
+#
+#   key:
+#     default: true            # optional — auto-granted to all users
+#     name:
+#       en: "English label"
+#       pt: "Rótulo em português"
+
+rookie:
+  default: true
+  name:
+    en: "Rookie"
+    pt: "Iniciante"
+
+daily_runner:
+  default: true
+  name:
+    en: "Daily Runner"
+    pt: "Corredor Diário"
+
+master_of_5km:
+  name:
+    en: "Master of 5km"
+    pt: "Mestre dos 5km"
+
+trail_hunter:
+  name:
+    en: "Trail Hunter"
+    pt: "Caçador de Trilhas"
+
+slacker:
+  name:
+    en: "Slacker"
+    pt: "Folgado"

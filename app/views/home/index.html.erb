@@ -1,210 +1,226 @@
 <% content_for :title, t("home.meta.title") %>
 
-<% feature_items = [
-  { key: "import",        icon: "fa-cloud-arrow-down", tone: "primary"   },
-  { key: "achievements",  icon: "fa-trophy",           tone: "accent"    },
-  { key: "challenges",    icon: "fa-calendar-days",    tone: "secondary" },
-  { key: "progress",      icon: "fa-arrow-trend-up",   tone: "primary"   },
-  { key: "communities",   icon: "fa-users",            tone: "secondary" },
-  { key: "seasonal",      icon: "fa-award",            tone: "accent"    },
-  { key: "goals",         icon: "fa-bullseye",         tone: "secondary" },
-  { key: "leaderboards",  icon: "fa-chart-simple",     tone: "primary"   }
-] %>
-
-<% feature_tone = {
-  "primary"   => { bg: "bg-primary/10",   fg: "text-primary"   },
-  "secondary" => { bg: "bg-secondary/10", fg: "text-secondary" },
-  "accent"    => { bg: "bg-accent/10",    fg: "text-accent"    }
-} %>
-
-<% challenge_cards = [
-  { key: "daily",    icon: "fa-bolt",   bg: "bg-accent",    fg: "text-accent-foreground"    },
-  { key: "weekly",   icon: "fa-bullseye", bg: "bg-primary",  fg: "text-primary-foreground"   },
-  { key: "seasonal", icon: "fa-sun",    bg: "bg-secondary", fg: "text-secondary-foreground" }
-] %>
-
-<% challenge_types = [
-  { key: "daily",    icon: "fa-clock",      tone: "accent"    },
-  { key: "weekly",   icon: "fa-fire",       tone: "primary"   },
-  { key: "seasonal", icon: "fa-snowflake",  tone: "secondary" }
-] %>
-
 <%# Full-bleed wrapper: breaks out of the layout's max-w-4xl <main> %>
 <div class="-mt-6 w-screen relative left-1/2 right-1/2 -ml-[50vw] -mr-[50vw] bg-background text-foreground">
 
-  <%# Hero %>
-  <section class="relative overflow-hidden bg-linear-to-br from-primary/5 via-background to-secondary/5 py-20 md:py-32">
-    <div class="absolute inset-0 overflow-hidden pointer-events-none">
-      <div class="absolute -top-40 -right-40 h-80 w-80 rounded-full bg-primary/10 blur-3xl"></div>
-      <div class="absolute -bottom-40 -left-40 h-80 w-80 rounded-full bg-secondary/10 blur-3xl"></div>
+  <%# ===================================================================== %>
+  <%# SECTION 1 — HERO                                                       %>
+  <%# ===================================================================== %>
+  <section id="home" class="relative overflow-hidden min-h-screen flex items-center bg-linear-to-br from-primary/5 via-background to-secondary/5 py-16">
+    <div class="absolute inset-0 pointer-events-none">
+      <div class="absolute -top-40 -right-40 h-96 w-96 rounded-full bg-primary/10 blur-3xl"></div>
+      <div class="absolute -bottom-40 -left-40 h-96 w-96 rounded-full bg-secondary/10 blur-3xl"></div>
     </div>
 
     <div class="container relative mx-auto px-4 max-w-6xl">
-      <div class="grid lg:grid-cols-2 gap-12 items-center">
+      <div class="grid lg:grid-cols-2 gap-12 lg:gap-8 items-center">
         <div class="text-center lg:text-left">
-          <div class="inline-flex items-center gap-2 rounded-full bg-accent/10 px-4 py-2 text-sm font-medium text-accent mb-6">
-            <i class="fa-solid fa-bolt"></i>
+          <div class="inline-flex items-center gap-2 rounded-full bg-card border border-border px-4 py-2 text-sm font-medium text-foreground mb-6 shadow-sm">
+            <i class="fa-brands fa-strava text-[#FC4C02]"></i>
             <span><%= t("home.hero.badge") %></span>
           </div>
 
-          <h1 class="text-balance text-4xl font-bold tracking-tight text-foreground sm:text-5xl lg:text-6xl">
-            <%= t("home.hero.headline_lead") %>
-            <span class="text-primary"><%= t("home.hero.headline_accent") %></span>
+          <h1 class="text-balance text-4xl font-extrabold tracking-tight text-foreground sm:text-5xl lg:text-6xl leading-[1.05]">
+            <%= t("home.hero.title_lead") %>
+            <span class="block text-primary mt-2"><%= t("home.hero.title_accent") %></span>
           </h1>
 
-          <p class="mt-6 text-pretty text-lg text-muted-foreground max-w-xl mx-auto lg:mx-0">
-            <%= t("home.hero.subheadline") %>
+          <p class="mt-6 text-pretty text-lg sm:text-xl text-muted-foreground max-w-xl mx-auto lg:mx-0">
+            <%= t("home.hero.subtitle") %>
           </p>
 
           <div class="mt-8 flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
             <% if user_signed_in? %>
               <%= link_to t("home.hero.cta_authenticated"), challenges_path,
-                    class: "inline-flex items-center justify-center bg-primary text-primary-foreground hover:bg-primary-hover transition px-8 py-3 rounded-lg font-semibold" %>
+                    class: "inline-flex items-center justify-center bg-primary text-primary-foreground hover:bg-primary-hover transition px-8 py-4 rounded-xl font-bold text-lg shadow-lg shadow-primary/20" %>
             <% else %>
               <%= link_to t("home.hero.cta_primary"), new_user_registration_path,
-                    class: "inline-flex items-center justify-center bg-primary text-primary-foreground hover:bg-primary-hover transition px-8 py-3 rounded-lg font-semibold" %>
-              <%= link_to t("home.hero.cta_secondary"), challenges_path,
-                    class: "inline-flex items-center justify-center border-2 border-primary text-primary hover:bg-primary/10 transition px-8 py-3 rounded-lg font-semibold" %>
+                    class: "inline-flex items-center justify-center bg-primary text-primary-foreground hover:bg-primary-hover transition px-8 py-4 rounded-xl font-bold text-lg shadow-lg shadow-primary/20" %>
+              <%= link_to t("home.hero.cta_secondary"), "#how",
+                    class: "inline-flex items-center justify-center border-2 border-border text-foreground hover:bg-muted transition px-8 py-4 rounded-xl font-bold text-lg" %>
             <% end %>
           </div>
 
-          <div class="mt-12 grid grid-cols-3 gap-8">
-            <div class="text-center lg:text-left">
-              <div class="text-3xl font-bold text-primary"><%= t("home.hero.stats.athletes_value") %></div>
-              <div class="text-sm text-muted-foreground"><%= t("home.hero.stats.athletes_label") %></div>
-            </div>
-            <div class="text-center lg:text-left">
-              <div class="text-3xl font-bold text-secondary"><%= t("home.hero.stats.workouts_value") %></div>
-              <div class="text-sm text-muted-foreground"><%= t("home.hero.stats.workouts_label") %></div>
-            </div>
-            <div class="text-center lg:text-left">
-              <div class="text-3xl font-bold text-accent"><%= t("home.hero.stats.challenges_value") %></div>
-              <div class="text-sm text-muted-foreground"><%= t("home.hero.stats.challenges_label") %></div>
-            </div>
+          <div class="mt-6 inline-flex items-center gap-2 text-sm text-muted-foreground">
+            <i class="fa-solid fa-bolt text-accent"></i>
+            <%= t("home.hero.note") %>
           </div>
         </div>
 
-        <div class="relative flex justify-center">
-          <div class="relative">
-            <div class="absolute inset-0 flex items-center justify-center">
-              <div class="h-72 w-72 md:h-96 md:w-96 rounded-full border-2 border-primary/20 animate-pulse"></div>
-            </div>
-            <div class="absolute inset-0 flex items-center justify-center">
-              <div class="h-56 w-56 md:h-80 md:w-80 rounded-full border-2 border-secondary/30"></div>
-            </div>
-
-            <div class="relative z-10 flex items-center justify-center h-72 w-72 md:h-96 md:w-96">
-              <%= image_tag "logo.png", alt: "Broken Wheels", class: "h-40 w-40 md:h-56 md:w-56 drop-shadow-2xl object-cover rounded-full" %>
+        <%# Hero visual — Runner Profile Screen %>
+        <%= render layout: "home/screenshot", locals: { name: "home/profile.png", alt: t("home.hero.profile.alt") } do %>
+          <div class="min-h-[540px] flex flex-col gap-4 p-5 pt-9 bg-linear-to-b from-primary/5 to-background">
+            <div class="flex items-center gap-3">
+              <div class="h-14 w-14 rounded-full bg-primary/20 flex items-center justify-center text-primary text-xl font-extrabold">JS</div>
+              <div>
+                <p class="font-bold text-foreground leading-tight"><%= t("home.hero.profile.name") %></p>
+                <span class="inline-flex items-center gap-1 text-xs font-semibold bg-accent/15 text-accent rounded-full px-2 py-0.5 mt-1">🏆 <%= t("home.hero.profile.level") %></span>
+              </div>
             </div>
 
-            <div class="absolute top-4 right-0 md:top-8 md:right-4 bg-background shadow-lg rounded-xl p-3 flex items-center gap-2">
-              <i class="fa-solid fa-trophy text-accent"></i>
-              <span class="text-sm font-medium text-foreground"><%= t("home.hero.badge_achievement") %></span>
+            <div class="bg-card rounded-2xl border border-border p-4">
+              <div class="flex justify-between text-xs text-muted-foreground mb-1.5">
+                <span class="font-semibold"><%= t("home.hero.profile.xp_label") %></span>
+                <span>720 / 1000 XP</span>
+              </div>
+              <div class="h-2.5 bg-muted rounded-full overflow-hidden">
+                <div class="h-full bg-primary rounded-full" style="width: 72%"></div>
+              </div>
             </div>
 
-            <div class="absolute bottom-4 left-0 md:bottom-8 md:left-4 bg-background shadow-lg rounded-xl p-3 flex items-center gap-2">
-              <i class="fa-solid fa-users text-secondary"></i>
-              <span class="text-sm font-medium text-foreground"><%= t("home.hero.badge_joined") %></span>
+            <div class="grid grid-cols-2 gap-3">
+              <div class="bg-card rounded-2xl border border-border p-4">
+                <p class="text-2xl">🔥</p>
+                <p class="text-lg font-extrabold text-foreground mt-1"><%= t("home.hero.profile.streak") %></p>
+              </div>
+              <div class="bg-card rounded-2xl border border-border p-4">
+                <p class="text-2xl">🏃</p>
+                <p class="text-lg font-extrabold text-foreground mt-1"><%= t("home.hero.profile.distance") %></p>
+              </div>
+              <div class="bg-card rounded-2xl border border-border p-4">
+                <p class="text-2xl">⚡</p>
+                <p class="text-lg font-extrabold text-foreground mt-1"><%= t("home.hero.profile.rank") %></p>
+              </div>
+              <div class="bg-card rounded-2xl border border-border p-4">
+                <p class="text-2xl">🎖</p>
+                <p class="text-lg font-extrabold text-foreground mt-1"><%= t("home.hero.profile.achievements") %></p>
+              </div>
             </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <%# Features %>
-  <section id="features" class="py-20 md:py-32 bg-background">
-    <div class="container mx-auto px-4 max-w-6xl">
-      <div class="text-center max-w-3xl mx-auto mb-16">
-        <span class="inline-block text-sm font-semibold text-primary uppercase tracking-wider mb-4">
-          <%= t("home.features.eyebrow") %>
-        </span>
-        <h2 class="text-balance text-3xl font-bold text-foreground sm:text-4xl lg:text-5xl">
-          <%= t("home.features.title") %>
-        </h2>
-        <p class="mt-4 text-pretty text-lg text-muted-foreground">
-          <%= t("home.features.subtitle") %>
-        </p>
-      </div>
-
-      <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
-        <% feature_items.each do |item| %>
-          <% tone = feature_tone[item[:tone]] %>
-          <div class="group relative bg-card rounded-2xl p-6 border border-border hover:border-primary/50 hover:shadow-lg transition-all duration-300">
-            <div class="inline-flex p-3 rounded-xl <%= tone[:bg] %> mb-4">
-              <i class="fa-solid <%= item[:icon] %> <%= tone[:fg] %> text-xl"></i>
-            </div>
-            <h3 class="text-lg font-semibold text-foreground mb-2">
-              <%= t("home.features.items.#{item[:key]}.title") %>
-            </h3>
-            <p class="text-sm text-muted-foreground">
-              <%= t("home.features.items.#{item[:key]}.body") %>
-            </p>
           </div>
         <% end %>
       </div>
     </div>
   </section>
 
-  <%# Challenges %>
-  <section id="challenges" class="py-20 md:py-32 bg-muted/30">
+  <%# ===================================================================== %>
+  <%# SECTION 2 — HOW IT WORKS                                               %>
+  <%# ===================================================================== %>
+  <section id="how" class="py-20 md:py-28 bg-background">
     <div class="container mx-auto px-4 max-w-6xl">
-      <div class="grid lg:grid-cols-2 gap-12 items-center">
-        <div>
-          <span class="inline-block text-sm font-semibold text-secondary uppercase tracking-wider mb-4">
-            <%= t("home.challenges.eyebrow") %>
-          </span>
-          <h2 class="text-balance text-3xl font-bold text-foreground sm:text-4xl lg:text-5xl">
-            <%= t("home.challenges.title") %>
-          </h2>
-          <p class="mt-4 text-pretty text-lg text-muted-foreground">
-            <%= t("home.challenges.subtitle") %>
-          </p>
+      <h2 class="text-balance text-center text-3xl font-extrabold text-foreground sm:text-4xl lg:text-5xl mb-16">
+        <%= t("home.how.title") %>
+      </h2>
 
-          <div class="mt-8 space-y-4">
-            <% challenge_types.each do |type| %>
-              <% tone = feature_tone[type[:tone]] %>
-              <div class="flex items-center gap-4">
-                <div class="flex items-center justify-center h-12 w-12 rounded-full <%= tone[:bg] %>">
-                  <i class="fa-solid <%= type[:icon] %> <%= tone[:fg] %> text-xl"></i>
-                </div>
-                <div>
-                  <h4 class="font-semibold text-foreground"><%= t("home.challenges.types.#{type[:key]}.title") %></h4>
-                  <p class="text-sm text-muted-foreground"><%= t("home.challenges.types.#{type[:key]}.body") %></p>
+      <div class="grid lg:grid-cols-2 gap-12 items-center">
+        <div class="space-y-6">
+          <% %w[connect progress compete].each_with_index do |step, i| %>
+            <div class="flex gap-4 items-start">
+              <div class="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-primary text-primary-foreground text-lg font-extrabold"><%= i + 1 %></div>
+              <div>
+                <h3 class="text-xl font-bold text-foreground"><%= t("home.how.steps.#{step}.title") %></h3>
+                <p class="text-muted-foreground mt-1"><%= t("home.how.steps.#{step}.body") %></p>
+              </div>
+            </div>
+            <% unless step == "compete" %>
+              <div class="pl-6 text-muted-foreground/40"><i class="fa-solid fa-arrow-down"></i></div>
+            <% end %>
+          <% end %>
+        </div>
+
+        <%# Activity feed screenshot %>
+        <%= render layout: "home/screenshot", locals: { name: "home/feed.png", alt: t("home.how.feed_alt") } do %>
+          <div class="min-h-[540px] p-4 pt-9 space-y-3 bg-muted/20">
+            <% [["fa-bolt", "+120 XP", "Morning Run · 8.2 km"], ["fa-trophy", "Achievement", "Early Runner unlocked"], ["fa-bolt", "+95 XP", "Tempo Run · 6.0 km"]].each do |icon, tag, label| %>
+              <div class="bg-card rounded-2xl border border-border p-4 flex items-center gap-3">
+                <div class="h-10 w-10 rounded-full bg-primary/10 flex items-center justify-center text-primary"><i class="fa-solid <%= icon %>"></i></div>
+                <div class="min-w-0">
+                  <p class="text-sm font-bold text-foreground"><%= tag %></p>
+                  <p class="text-xs text-muted-foreground truncate"><%= label %></p>
                 </div>
               </div>
             <% end %>
+            <div class="bg-primary/5 border border-primary/20 rounded-2xl p-4 text-center">
+              <p class="text-sm font-semibold text-primary"><i class="fa-brands fa-strava"></i> <%= t("home.how.synced") %></p>
+            </div>
           </div>
-        </div>
+        <% end %>
+      </div>
+    </div>
+  </section>
+
+  <%# ===================================================================== %>
+  <%# SECTION 3 — CORE GAME LOOP                                             %>
+  <%# ===================================================================== %>
+  <section id="game" class="py-20 md:py-28 bg-muted/30">
+    <div class="container mx-auto px-4 max-w-6xl">
+      <h2 class="text-balance text-center text-3xl font-extrabold text-foreground sm:text-4xl lg:text-5xl mb-12">
+        <%= t("home.loop.title") %>
+      </h2>
+
+      <%# Horizontal progression %>
+      <div class="flex flex-wrap items-center justify-center gap-3 mb-16">
+        <% loop_steps = t("home.loop.steps") %>
+        <% loop_steps.each_with_index do |step, i| %>
+          <span class="inline-flex items-center rounded-full bg-card border border-border px-5 py-2.5 font-bold text-foreground shadow-sm"><%= step %></span>
+          <% unless i == loop_steps.length - 1 %>
+            <i class="fa-solid fa-arrow-right text-primary"></i>
+          <% end %>
+        <% end %>
+      </div>
+
+      <div class="grid lg:grid-cols-2 gap-12 items-center">
+        <%# Achievements screenshot %>
+        <%= render layout: "home/screenshot", locals: { name: "home/achievements.png", alt: t("home.loop.achievements_alt") } do %>
+          <div class="min-h-[540px] p-5 pt-9 bg-background">
+            <p class="text-sm font-bold text-foreground mb-4"><%= t("home.loop.achievements_alt") %></p>
+            <div class="grid grid-cols-3 gap-3">
+              <% ["🏅", "🥇", "🔥", "⚡", "🌅", "💯", "🏆", "🎖", "🚀"].each_with_index do |emoji, i| %>
+                <div class="aspect-square rounded-2xl border border-border flex items-center justify-center text-3xl <%= i < 5 ? 'bg-card' : 'bg-muted/40 opacity-40' %>"><%= emoji %></div>
+              <% end %>
+            </div>
+          </div>
+        <% end %>
 
         <div class="space-y-4">
-          <% challenge_cards.each do |card| %>
-            <div class="bg-card rounded-2xl p-6 border border-border hover:shadow-lg transition-shadow">
-              <div class="flex items-start justify-between">
-                <div class="flex items-start gap-4">
-                  <div class="<%= card[:bg] %> p-3 rounded-xl">
-                    <i class="fa-solid <%= card[:icon] %> <%= card[:fg] %> text-xl"></i>
-                  </div>
-                  <div>
-                    <span class="text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-                      <%= t("home.challenges.cards.#{card[:key]}.type") %>
-                    </span>
-                    <h4 class="text-lg font-semibold text-foreground mt-1">
-                      <%= t("home.challenges.cards.#{card[:key]}.title") %>
-                    </h4>
-                    <p class="text-sm text-muted-foreground mt-1">
-                      <%= t("home.challenges.cards.#{card[:key]}.body") %>
-                    </p>
-                  </div>
+          <% t("home.loop.examples").each do |example| %>
+            <div class="flex items-center gap-4 bg-card rounded-2xl border border-border p-5">
+              <span class="text-3xl">🏅</span>
+              <span class="text-lg font-bold text-foreground"><%= example %></span>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <%# ===================================================================== %>
+  <%# SECTION 4 — CLUBS                                                      %>
+  <%# ===================================================================== %>
+  <section id="clubs" class="py-20 md:py-28 bg-background">
+    <div class="container mx-auto px-4 max-w-6xl">
+      <div class="grid lg:grid-cols-2 gap-12 items-center">
+        <div class="order-2 lg:order-1">
+          <span class="inline-block text-sm font-bold text-secondary uppercase tracking-wider mb-4"><%= t("home.clubs.eyebrow") %></span>
+          <h2 class="text-balance text-3xl font-extrabold text-foreground sm:text-4xl lg:text-5xl"><%= t("home.clubs.title") %></h2>
+          <p class="mt-4 text-lg text-muted-foreground"><%= t("home.clubs.subtitle") %></p>
+        </div>
+
+        <%# Club screenshot %>
+        <div class="order-1 lg:order-2">
+          <%= render layout: "home/screenshot", locals: { name: "home/club.png", alt: t("home.clubs.club_alt") } do %>
+            <div class="min-h-[540px] p-5 pt-9 bg-background space-y-4">
+              <div class="flex items-center gap-3">
+                <div class="h-12 w-12 rounded-2xl bg-secondary/15 flex items-center justify-center text-secondary text-xl">🏃</div>
+                <div>
+                  <p class="font-bold text-foreground">Trail Hunters</p>
+                  <p class="text-xs text-muted-foreground">128 <%= t("home.clubs.members") %></p>
                 </div>
               </div>
-              <div class="flex items-center justify-between mt-4 pt-4 border-t border-border">
-                <div class="flex items-center gap-4 text-sm text-muted-foreground">
-                  <span><%= t("home.challenges.cards.#{card[:key]}.participants") %> <%= t("home.challenges.participants") %></span>
-                  <span class="font-semibold text-accent"><%= t("home.challenges.cards.#{card[:key]}.reward") %></span>
+              <div class="bg-card rounded-2xl border border-border p-4">
+                <div class="flex justify-between text-sm mb-1.5">
+                  <span class="font-semibold text-foreground"><%= t("home.clubs.weekly_goal") %></span>
+                  <span class="text-muted-foreground"><%= t("home.clubs.example_progress") %></span>
                 </div>
-                <%= link_to t("home.challenges.join"), challenges_path,
-                      class: "inline-flex items-center bg-primary text-primary-foreground hover:bg-primary-hover transition px-4 py-2 rounded-lg text-sm font-semibold" %>
+                <div class="h-2.5 bg-muted rounded-full overflow-hidden"><div class="h-full bg-secondary rounded-full" style="width: 50%"></div></div>
+              </div>
+              <div class="bg-card rounded-2xl border border-border p-4">
+                <p class="text-xs font-bold text-muted-foreground uppercase tracking-wider mb-3"><%= t("home.clubs.leaderboard") %></p>
+                <% [["1", "Ana R.", "82 km"], ["2", "Você", "74 km"], ["3", "Lucas M.", "61 km"]].each do |pos, who, km| %>
+                  <div class="flex items-center justify-between py-1.5 text-sm <%= who == 'Você' ? 'font-bold text-primary' : 'text-foreground' %>">
+                    <span class="flex items-center gap-3"><span class="text-muted-foreground"><%= pos %></span><%= who %></span>
+                    <span><%= km %></span>
+                  </div>
+                <% end %>
               </div>
             </div>
           <% end %>
@@ -213,52 +229,108 @@
     </div>
   </section>
 
-  <%# Final CTA %>
-  <section id="community" class="py-20 md:py-32 bg-linear-to-br from-primary via-primary/90 to-primary/80 relative overflow-hidden">
-    <div class="absolute inset-0 overflow-hidden pointer-events-none">
+  <%# ===================================================================== %>
+  <%# SECTION 5 — SEASONS                                                    %>
+  <%# ===================================================================== %>
+  <section id="seasons" class="py-20 md:py-28 bg-muted/30">
+    <div class="container mx-auto px-4 max-w-6xl">
+      <div class="grid lg:grid-cols-2 gap-12 items-center">
+        <%# Season screenshot %>
+        <%= render layout: "home/screenshot", locals: { name: "home/season.png", alt: t("home.seasons.season_alt") } do %>
+          <div class="min-h-[540px] p-5 pt-9 bg-linear-to-b from-accent/5 to-background space-y-4">
+            <div class="text-center">
+              <p class="text-xs font-bold text-accent uppercase tracking-wider"><%= t("home.seasons.label") %></p>
+              <p class="text-2xl font-extrabold text-foreground">Summer Surge</p>
+            </div>
+            <div class="bg-card rounded-2xl border border-border p-4">
+              <div class="flex justify-between text-sm mb-1.5">
+                <span class="font-semibold text-foreground"><%= t("home.seasons.tier") %></span>
+                <span class="text-muted-foreground">Tier 7 / 10</span>
+              </div>
+              <div class="h-2.5 bg-muted rounded-full overflow-hidden"><div class="h-full bg-accent rounded-full" style="width: 70%"></div></div>
+            </div>
+            <div class="bg-card rounded-2xl border border-border p-4 flex items-center justify-between">
+              <span class="text-sm font-semibold text-foreground"><%= t("home.seasons.rank") %></span>
+              <span class="text-lg font-extrabold text-accent">#42</span>
+            </div>
+            <div class="grid grid-cols-3 gap-3">
+              <% [["🎖", true], ["⚡", true], ["🏆", false]].each do |emoji, unlocked| %>
+                <div class="aspect-square rounded-2xl border border-border flex items-center justify-center text-2xl <%= unlocked ? 'bg-card' : 'bg-muted/40 opacity-40' %>"><%= emoji %></div>
+              <% end %>
+            </div>
+          </div>
+        <% end %>
+
+        <div>
+          <span class="inline-block text-sm font-bold text-accent uppercase tracking-wider mb-4"><%= t("home.seasons.eyebrow") %></span>
+          <h2 class="text-balance text-3xl font-extrabold text-foreground sm:text-4xl lg:text-5xl"><%= t("home.seasons.title") %></h2>
+          <p class="mt-4 text-lg text-muted-foreground"><%= t("home.seasons.subtitle") %></p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <%# ===================================================================== %>
+  <%# SECTION 6 — SHARE YOUR JOURNEY                                         %>
+  <%# ===================================================================== %>
+  <section id="share" class="py-20 md:py-28 bg-background">
+    <div class="container mx-auto px-4 max-w-6xl">
+      <div class="text-center max-w-2xl mx-auto mb-12">
+        <h2 class="text-balance text-3xl font-extrabold text-foreground sm:text-4xl lg:text-5xl"><%= t("home.share.title") %></h2>
+        <p class="mt-4 text-lg text-muted-foreground"><%= t("home.share.subtitle") %></p>
+      </div>
+
+      <div class="max-w-md mx-auto">
+        <% if screenshot_available?("home/runner-card.png") %>
+          <%= image_tag "home/runner-card.png", alt: t("home.share.card_alt"), class: "w-full rounded-3xl shadow-2xl" %>
+        <% else %>
+          <div class="rounded-3xl bg-linear-to-br from-primary via-primary/90 to-secondary p-8 text-primary-foreground shadow-2xl">
+            <div class="flex items-center gap-3 mb-6">
+              <div class="h-14 w-14 rounded-full bg-primary-foreground/20 flex items-center justify-center text-xl font-extrabold">JS</div>
+              <div>
+                <p class="text-xl font-extrabold"><%= t("home.share.card.name") %></p>
+                <p class="text-primary-foreground/80 text-sm">@jeansilva</p>
+              </div>
+            </div>
+            <div class="space-y-2 text-lg font-bold">
+              <p>🏃 <%= t("home.share.card.distance") %></p>
+              <p>🔥 <%= t("home.share.card.streak") %></p>
+              <p>🏆 <%= t("home.share.card.title") %></p>
+            </div>
+          </div>
+        <% end %>
+
+        <div class="flex gap-3 justify-center mt-6">
+          <span class="inline-flex items-center gap-2 bg-card border border-border rounded-xl px-5 py-3 font-semibold text-foreground"><i class="fa-brands fa-instagram text-pink-500"></i> <%= t("home.share.instagram") %></span>
+          <span class="inline-flex items-center gap-2 bg-card border border-border rounded-xl px-5 py-3 font-semibold text-foreground"><i class="fa-solid fa-circle-plus text-secondary"></i> <%= t("home.share.stories") %></span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <%# ===================================================================== %>
+  <%# FINAL CTA                                                              %>
+  <%# ===================================================================== %>
+  <section id="community" class="py-20 md:py-28 bg-linear-to-br from-primary via-primary/90 to-primary/80 relative overflow-hidden">
+    <div class="absolute inset-0 pointer-events-none">
       <div class="absolute top-0 right-0 h-64 w-64 rounded-full bg-secondary/20 blur-3xl"></div>
       <div class="absolute bottom-0 left-0 h-64 w-64 rounded-full bg-accent/20 blur-3xl"></div>
     </div>
 
-    <div class="container relative mx-auto px-4 max-w-6xl">
-      <div class="max-w-3xl mx-auto text-center">
-        <h2 class="text-balance text-3xl font-bold text-primary-foreground sm:text-4xl lg:text-5xl">
-          <%= t("home.cta.title") %>
-        </h2>
-        <p class="mt-6 text-pretty text-lg text-primary-foreground/80">
-          <%= t("home.cta.body") %>
-        </p>
+    <div class="container relative mx-auto px-4 max-w-3xl text-center">
+      <h2 class="text-balance text-3xl font-extrabold text-primary-foreground sm:text-4xl lg:text-5xl"><%= t("home.cta.title") %></h2>
+      <p class="mt-4 text-lg text-primary-foreground/80"><%= t("home.cta.subtitle") %></p>
 
-        <div class="mt-8 flex flex-wrap justify-center gap-4">
-          <% t("home.cta.benefits").each do |benefit| %>
-            <div class="flex items-center gap-2 text-primary-foreground/90">
-              <i class="fa-solid fa-circle-check text-secondary"></i>
-              <span class="text-sm"><%= benefit %></span>
-            </div>
+      <div class="mt-8">
+        <% if user_signed_in? %>
+          <%= link_to challenges_path, class: "inline-flex items-center justify-center bg-background text-primary hover:bg-background/90 transition px-10 py-4 rounded-xl font-bold text-lg shadow-xl" do %>
+            <%= t("home.hero.cta_authenticated") %><i class="fa-solid fa-arrow-right ml-2"></i>
           <% end %>
-        </div>
-
-        <div class="mt-10 flex flex-col sm:flex-row gap-4 justify-center">
-          <% if user_signed_in? %>
-            <%= link_to challenges_path,
-                  class: "inline-flex items-center justify-center bg-background text-primary hover:bg-background/90 transition px-8 py-3 rounded-lg font-semibold" do %>
-              <%= t("home.hero.cta_authenticated") %>
-              <i class="fa-solid fa-arrow-right ml-2"></i>
-            <% end %>
-          <% else %>
-            <%= link_to new_user_registration_path,
-                  class: "inline-flex items-center justify-center bg-background text-primary hover:bg-background/90 transition px-8 py-3 rounded-lg font-semibold" do %>
-              <%= t("home.cta.button") %>
-              <i class="fa-solid fa-arrow-right ml-2"></i>
-            <% end %>
-            <%= link_to t("home.cta.button_secondary"), "#",
-                  class: "inline-flex items-center justify-center border border-primary-foreground/30 text-primary-foreground hover:bg-primary-foreground/10 transition px-8 py-3 rounded-lg font-semibold" %>
+        <% else %>
+          <%= link_to new_user_registration_path, class: "inline-flex items-center justify-center bg-background text-primary hover:bg-background/90 transition px-10 py-4 rounded-xl font-bold text-lg shadow-xl" do %>
+            <%= t("home.cta.button") %><i class="fa-solid fa-arrow-right ml-2"></i>
           <% end %>
-        </div>
-
-        <p class="mt-6 text-sm text-primary-foreground/60">
-          <%= t("home.cta.disclaimer") %>
-        </p>
+        <% end %>
       </div>
     </div>
   </section>

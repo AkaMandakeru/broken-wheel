@@ -18,8 +18,67 @@ class User < ApplicationRecord
          :lockable, :timeoutable
 
   validates :first_name, :last_name, presence: true
+  # The displayed title (singular) must be one the user has actually earned.
+  validate :displayed_title_is_earned
+
+  after_create :grant_default_titles
 
   def connected_to_strava?
     strava_token.present? && strava_token.refresh_token.present?
+  end
+
+  # --- Earned titles (catalogue lives in config/titles.yml) ------------------
+
+  # Earned title keys as symbols, e.g. [:rookie, :daily_runner].
+  def titles
+    Array(self[:titles]).map(&:to_sym)
+  end
+
+  # Grant a title from the catalogue. Returns false for unknown keys.
+  #   user.add_title(:slacker)
+  def add_title(key)
+    return false unless Titles.exists?(key)
+
+    stored = Array(self[:titles]).map(&:to_s)
+    unless stored.include?(key.to_s)
+      self[:titles] = stored + [ key.to_s ]
+      save
+    end
+    true
+  end
+
+  def remove_title(key)
+    self[:titles] = Array(self[:titles]).map(&:to_s) - [ key.to_s ]
+    self.title = nil if title == key.to_s
+    save
+  end
+
+  def title?(key)
+    titles.include?(key.to_sym)
+  end
+
+  # Titles the user may pick as their displayed title (the ones they've earned).
+  def available_titles
+    titles
+  end
+
+  # Localized label for the displayed title, or nil when none is set.
+  def title_label
+    title.present? ? Titles.label(title) : nil
+  end
+
+  private
+
+  def grant_default_titles
+    defaults = Titles.defaults.map(&:to_s)
+    return if defaults.empty?
+
+    update_column(:titles, (Array(self[:titles]).map(&:to_s) | defaults))
+  end
+
+  def displayed_title_is_earned
+    return if title.blank?
+
+    errors.add(:title, :inclusion) unless titles.include?(title.to_sym)
   end
 end

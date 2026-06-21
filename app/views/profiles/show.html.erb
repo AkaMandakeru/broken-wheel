@@ -1,89 +1,81 @@
 <div class="pt-8">
-  <h1 class="text-2xl font-bold text-gray-900 mb-6"><%= t('profiles.show.title') %></h1>
-
-  <div class="bg-white dark:bg-neutral-800 border border-black/10 dark:border-white/10 rounded-xl shadow-sm p-6 sm:p-8 max-w-xl">
-    <%= form_with model: @user, url: profile_path, method: :patch, local: true, html: { class: "space-y-5" } do |f| %>
-      <%= render "shared/error_messages", resource: @user %>
-
-      <div class="flex items-center gap-4 mb-2" data-controller="image-preview">
-        <div class="w-24 h-24 rounded-full overflow-hidden bg-neutral-200 dark:bg-neutral-700 flex items-center justify-center shrink-0 relative">
-          <img data-image-preview-target="preview" src="" alt="Preview" class="hidden absolute inset-0 w-full h-full object-cover">
-          <span data-image-preview-target="placeholder" class="text-neutral-500 text-2xl <%= 'hidden' if @user.avatar.attached? %>"><%= @user.first_name&.first || "?" %></span>
-          <% if @user.avatar.attached? %>
-            <%= image_tag url_for(@user.avatar), class: "w-full h-full object-cover", data: { image_preview_target: "current" } %>
-          <% end %>
-        </div>
-        <div>
-          <%= f.label :avatar, t('profiles.show.profile_picture'), class: "form-label" %>
-          <%= f.file_field :avatar, accept: "image/*", class: "text-sm text-neutral-700 dark:text-neutral-300", data: { image_preview_target: "input", action: "change->image-preview#preview" } %>
-        </div>
+  <%# Header: avatar, name, edit button %>
+  <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6 sm:p-8">
+    <div class="flex flex-col sm:flex-row sm:items-center gap-5">
+      <div class="w-20 h-20 rounded-full overflow-hidden bg-primary/15 flex items-center justify-center shrink-0">
+        <% if @user.avatar.attached? %>
+          <%= image_tag url_for(@user.avatar), class: "w-full h-full object-cover" %>
+        <% else %>
+          <span class="text-primary text-3xl font-extrabold"><%= @user.first_name&.first || "?" %></span>
+        <% end %>
       </div>
 
-      <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-        <div class="relative gap-y-1.5">
-          <%= f.label :first_name, t("devise.registrations.new.first_name"), class: "form-label" %>
-          <%= f.text_field :first_name, class: "form-control" %>
-        </div>
-        <div class="relative gap-y-1.5">
-          <%= f.label :last_name, t("devise.registrations.new.last_name"), class: "form-label" %>
-          <%= f.text_field :last_name, class: "form-control" %>
-        </div>
+      <div class="flex-1 min-w-0">
+        <h1 class="text-2xl font-bold text-gray-900"><%= @user.first_name %> <%= @user.last_name %></h1>
+        <% if @user.title_label.present? %>
+          <p class="text-sm font-semibold text-primary"><i class="fa-solid fa-medal mr-1"></i><%= @user.title_label %></p>
+        <% end %>
+        <% if @user.nickname.present? %>
+          <p class="text-gray-500">@<%= @user.nickname %></p>
+        <% end %>
+        <% if Array(@user.sports).any? %>
+          <div class="flex flex-wrap gap-2 mt-3">
+            <% Array(@user.sports).each do |sport| %>
+              <span class="text-xs font-medium bg-gray-100 text-gray-700 rounded-full px-3 py-1">
+                <%= t("enums.sports.#{sport}", default: sport.capitalize) %>
+              </span>
+            <% end %>
+          </div>
+        <% end %>
       </div>
 
-      <div class="relative gap-y-1.5">
-        <%= f.label :nickname, t("profiles.show.nickname"), class: "form-label" %>
-        <%= f.text_field :nickname, class: "form-control", placeholder: t('profiles.show.optional') %>
-      </div>
+      <%= link_to edit_profile_path, class: "shrink-0 inline-flex items-center gap-2 border border-gray-300 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-50 transition font-medium text-sm" do %>
+        <i class="fa-solid fa-pen"></i> <%= t('profiles.show.edit_profile') %>
+      <% end %>
+    </div>
 
-      <div class="relative gap-y-1.5">
-        <%= f.label :document, t("profiles.show.document"), class: "form-label" %>
-        <%= f.text_field :document, class: "form-control", placeholder: t('profiles.show.optional') %>
+    <%# Stats grid %>
+    <div class="grid grid-cols-2 lg:grid-cols-5 gap-3 mt-6">
+      <div class="bg-gray-50 rounded-xl border border-gray-100 p-4">
+        <p class="text-2xl">🏃</p>
+        <p class="text-xl font-extrabold text-gray-900 mt-1"><%= @stats[:distance_km] %> <span class="text-sm font-semibold text-gray-500">km</span></p>
+        <p class="text-xs text-gray-500"><%= t('profiles.show.stats.distance') %></p>
       </div>
-
-      <div class="relative gap-y-1.5">
-        <%= f.label :phone, t("profiles.show.phone"), class: "form-label" %>
-        <%= f.telephone_field :phone, class: "form-control", placeholder: t('profiles.show.optional') %>
+      <div class="bg-gray-50 rounded-xl border border-gray-100 p-4">
+        <p class="text-2xl">🔥</p>
+        <p class="text-xl font-extrabold text-gray-900 mt-1"><%= @stats[:week_streak] %></p>
+        <p class="text-xs text-gray-500"><%= t('profiles.show.stats.week_streak') %></p>
       </div>
-
-      <div class="relative gap-y-1.5">
-        <%= f.label :blood_type, t("profiles.show.blood_type"), class: "form-label" %>
-        <%= f.text_field :blood_type, class: "form-control", placeholder: t('profiles.show.optional') %>
+      <div class="bg-gray-50 rounded-xl border border-gray-100 p-4">
+        <p class="text-2xl">🏋️</p>
+        <p class="text-xl font-extrabold text-gray-900 mt-1"><%= @stats[:workouts] %></p>
+        <p class="text-xs text-gray-500"><%= t('profiles.show.stats.workouts') %></p>
       </div>
-
-      <div class="relative gap-y-1.5">
-        <%= f.label :address, t("profiles.show.address"), class: "form-label" %>
-        <%= f.text_area :address, rows: 2, class: "form-control", placeholder: t('profiles.show.optional') %>
+      <div class="bg-gray-50 rounded-xl border border-gray-100 p-4">
+        <p class="text-2xl">🎖</p>
+        <p class="text-xl font-extrabold text-gray-900 mt-1"><%= @stats[:earned_count] %> <span class="text-sm font-semibold text-gray-500">/ <%= @stats[:total_badges] %></span></p>
+        <p class="text-xs text-gray-500"><%= t('profiles.show.stats.achievements') %></p>
       </div>
-
-      <div>
-        <p class="form-label"><%= t('profiles.show.sports') %></p>
-        <div class="flex gap-4">
-          <% %w[run bike soccer].each do |sport| %>
-            <label class="flex items-center gap-2 text-sm text-neutral-700 dark:text-neutral-300">
-              <%= check_box_tag "user[sports][]", sport, Array(@user.sports).include?(sport), class: "rounded border-neutral-300 text-neutral-800 focus:ring-neutral-600" %>
-              <span><%= t("workouts.index.#{sport}") %></span>
-            </label>
-          <% end %>
-        </div>
+      <div class="bg-gray-50 rounded-xl border border-gray-100 p-4">
+        <p class="text-2xl">⚡</p>
+        <p class="text-xl font-extrabold text-primary mt-1"><%= @stats[:points] %></p>
+        <p class="text-xs text-gray-500"><%= t('profiles.show.stats.points') %></p>
       </div>
-
-      <div class="pt-2">
-        <%= f.submit t('profiles.show.update_profile'), class: "btn-primary w-full sm:w-auto" %>
-      </div>
-    <% end %>
+    </div>
   </div>
 
-  <div class="mt-12">
-    <h2 class="text-lg font-semibold text-gray-900 mb-4"><%= t('profiles.show.connected_apps') %></h2>
+  <%# Connected apps %>
+  <div class="mt-10">
+    <h2 class="text-lg font-semibold text-gray-900 mb-2"><%= t('profiles.show.connected_apps') %></h2>
     <p class="text-gray-600 text-sm mb-3"><%= t('profiles.show.connect_apps_description') %></p>
-
     <%= link_to integrations_path, class: "text-sm font-medium bg-[#FC4C02] text-white px-3 py-1.5 rounded-lg hover:bg-[#e04402] transition inline-flex items-center gap-2" do %>
       <i class="fa-solid fa-plug"></i>
       <%= t('profiles.show.manage_apps') %>
     <% end %>
   </div>
 
-  <div class="mt-12">
+  <%# Badges / achievements %>
+  <div class="mt-10">
     <h2 class="text-lg font-semibold text-gray-900 mb-4"><%= t('profiles.show.badges_achievements') %></h2>
     <% if @user.user_badges.any? %>
       <div class="flex flex-wrap gap-4">

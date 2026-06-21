@@ -57,7 +57,7 @@ DEFAULT_CHALLENGES = [
   { key: "weekly_distance_run",   challenge_type: "weekly",  sport: "run",  target_value: 20,  target_unit: "km",    title: "Weekly Run 20km",    description: "Run 20km this week." },
   { key: "monthly_distance_run",  challenge_type: "monthly", sport: "run",  target_value: 80,  target_unit: "km",    title: "Monthly Run 80km",   description: "Run 80km this month." },
   { key: "weekly_count_run",      challenge_type: "weekly",  sport: "run",  target_value: 4,   target_unit: "times", title: "Weekly Run x4",      description: "Complete 4 runs this week." },
-  { key: "monthly_count_run",     challenge_type: "monthly", sport: "run",  target_value: 16,  target_unit: "times", title: "Monthly Run x16",    description: "Complete 16 runs this month." },
+  { key: "monthly_count_run",     challenge_type: "monthly", sport: "run",  target_value: 16,  target_unit: "times", title: "Monthly Run x16",    description: "Complete 16 runs this month." }
 ].freeze
 
 DEFAULT_CHALLENGES.each { |attrs| upsert_default_challenge(**attrs) }

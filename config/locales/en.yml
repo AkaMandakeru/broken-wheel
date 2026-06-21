@@ -255,6 +255,9 @@ en:
       badges_achievements: "Badges & Achievements"
       no_badges_yet: "Complete challenges to earn badges. None yet!"
       edit_profile: "Edit Profile"
+      title_label: "Title"
+      title_none: "No title"
+      title_hint: "Earn more titles in challenges and seasons."
       personal_info: "Personal Information"
       name: "Name"
       nickname: "Nickname"
@@ -268,103 +271,98 @@ en:
       total_workouts: "Total Workouts"
       total_distance: "Total Distance"
       recent_activities: "Recent Activities"
+      stats:
+        distance: "Distance"
+        week_streak: "Week streak"
+        workouts: "Workouts"
+        achievements: "Achievements"
+        points: "Points"
+    edit:
+      title: "Edit profile"
+      back: "Back to profile"
+      cancel: "Cancel"
 
   # Home (landing page)
   home:
     meta:
-      title: "Broken Wheels — Gamified Fitness Community"
+      title: "Broken Wheels — Turn running into a game"
     hero:
-      badge: "Gamified Fitness Community"
-      headline_lead: "Turn Every Run Into an"
-      headline_accent: "Achievement"
-      subheadline: "Import your workouts from Strava and other providers, compete in daily and weekly challenges, earn achievements, and join a community of athletes pushing their limits."
+      badge: "Powered by Strava"
+      title_lead: "Your training happens on Strava."
+      title_accent: "Your journey happens here."
+      subtitle: "Turn real runs into XP, achievements, seasons, rankings and challenges with friends."
       cta_primary: "Start Your Journey"
-      cta_secondary: "Watch Demo"
+      cta_secondary: "See Demo"
       cta_authenticated: "Go to challenges"
-      stats:
-        athletes_value: "50K+"
-        athletes_label: "Active Athletes"
-        workouts_value: "1M+"
-        workouts_label: "Workouts Tracked"
-        challenges_value: "500+"
-        challenges_label: "Weekly Challenges"
-      badge_achievement: "Achievement Unlocked!"
-      badge_joined: "+234 joined today"
-    features:
-      eyebrow: "Features"
-      title: "Everything You Need to Level Up Your Fitness"
-      subtitle: "Broken Wheels brings gamification to your fitness journey. Import, track, compete, and achieve — all in one powerful platform."
-      items:
-        import:
-          title: "Import from Anywhere"
-          body: "Seamlessly sync your workouts from Strava, Garmin, Apple Health, and more. All your data in one place."
-        achievements:
-          title: "Earn Achievements"
-          body: "Unlock badges and trophies as you hit milestones. From your first 5K to your hundredth workout."
-        challenges:
-          title: "Daily & Weekly Challenges"
-          body: "Compete in time-limited challenges against yourself and the community. New challenges every day."
+      note: "Connect your first run in less than 2 minutes."
+      profile:
+        alt: "Runner profile screen"
+        name: "Jean Silva"
+        level: "Level 14"
+        xp_label: "Weekly XP"
+        streak: "8 week streak"
+        distance: "248 km"
+        rank: "Top 12%"
+        achievements: "6 Achievements"
+    how:
+      title: "Keep running. We turn it into a game."
+      feed_alt: "Activity feed"
+      synced: "Synced from Strava"
+      steps:
+        connect:
+          title: "Connect"
+          body: "Import runs from Strava and fitness apps."
         progress:
-          title: "Track Your Progress"
-          body: "Beautiful charts and insights show your improvement over time. See your journey unfold."
-        communities:
-          title: "Join Communities"
-          body: "Find your tribe. Join groups based on location, fitness level, or interests. Train together."
-        seasonal:
-          title: "Seasonal Events"
-          body: "Participate in special seasonal challenges with exclusive rewards and community-wide goals."
-        goals:
-          title: "Personal Goals"
-          body: "Set custom targets and let our smart system help you achieve them with personalized guidance."
-        leaderboards:
-          title: "Real-time Leaderboards"
-          body: "See where you stand among friends and the global community. Climb the ranks every week."
-    challenges:
-      eyebrow: "Challenges"
-      title: "Push Your Limits with Exciting Challenges"
-      subtitle: "From quick daily sprints to epic seasonal events, there's always a new challenge waiting for you. Compete, earn rewards, and climb the leaderboards."
-      types:
-        daily:
-          title: "Daily Challenges"
-          body: "Fresh challenges every 24 hours"
-        weekly:
-          title: "Weekly Competitions"
-          body: "7-day challenges with bigger rewards"
-        seasonal:
-          title: "Seasonal Events"
-          body: "Special challenges with exclusive rewards"
-      participants: "participants"
-      join: "Join"
-      cards:
-        daily:
-          type: "Daily Challenge"
-          title: "Morning Run Sprint"
-          body: "Complete a 3km run before 9 AM"
-          participants: "1,234"
-          reward: "50 XP"
-        weekly:
-          type: "Weekly Challenge"
-          title: "Distance Warrior"
-          body: "Run a total of 30km this week"
-          participants: "5,678"
-          reward: "200 XP + Badge"
-        seasonal:
-          type: "Seasonal Challenge"
-          title: "Summer Surge"
-          body: "Complete 20 outdoor workouts this month"
-          participants: "12,345"
-          reward: "500 XP + Trophy"
+          title: "Progress"
+          body: "Gain XP, unlock titles and achievements."
+        compete:
+          title: "Compete"
+          body: "Climb rankings and challenge friends."
+    loop:
+      title: "Every run unlocks something."
+      achievements_alt: "Achievements"
+      steps:
+        - "Run"
+        - "Gain XP"
+        - "Unlock"
+        - "Share"
+        - "Repeat"
+      examples:
+        - "First 100km"
+        - "Early Runner"
+        - "Morning Beast"
+    clubs:
+      eyebrow: "Clubs"
+      title: "Running is better together."
+      subtitle: "Create clubs, complete goals and climb together."
+      club_alt: "Club screen"
+      members: "members"
+      weekly_goal: "Weekly goal"
+      example_progress: "500 / 1000 km"
+      leaderboard: "Leaderboard"
+    seasons:
+      eyebrow: "Seasons"
+      label: "Current season"
+      title: "A new season every month."
+      subtitle: "Complete objectives and unlock rewards."
+      season_alt: "Season progress"
+      tier: "Season tier"
+      rank: "Your rank"
+    share:
+      title: "Show your progress."
+      subtitle: "Generate shareable runner cards."
+      card_alt: "Runner card"
+      instagram: "Instagram"
+      stories: "Stories"
+      card:
+        name: "Jean Silva"
+        distance: "248 km"
+        streak: "8 week streak"
+        title: "Trail Hunter"
     cta:
-      title: "Ready to Transform Your Fitness Journey?"
-      body: "Join thousands of athletes who have already leveled up their training with Broken Wheels. Your next achievement is waiting."
-      button: "Get Started Free"
-      button_secondary: "View Pricing Plans"
-      disclaimer: "No spam, no tricks. Start your free account today."
-      benefits:
-        - "Free to start, no credit card required"
-        - "Import unlimited workouts"
-        - "Join global challenges"
-        - "Connect with athletes worldwide"
+      title: "Start your journey."
+      subtitle: "Connect your first run in less than 2 minutes."
+      button: "Start Free"
 
   # PWA
   pwa:
@@ -388,6 +386,7 @@ en:
       get_started: "Get Started"
       features: "Features"
       community: "Community"
+      ranking: "Ranking"
       contact: "Contact"
       open_menu: "Open menu"
       close_menu: "Close menu"

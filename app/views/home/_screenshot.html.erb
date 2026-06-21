@@ -1,0 +1,15 @@
+<%# Phone-framed product visual. locals: name (asset path), alt.
+    Renders the real screenshot when the asset exists, otherwise the yielded faux
+    mockup. Render it with `render layout: "home/screenshot"` and a block. %>
+<div class="relative mx-auto w-full max-w-[300px]">
+  <div class="rounded-[2.5rem] bg-gray-900 p-2.5 shadow-2xl ring-1 ring-black/10">
+    <div class="relative rounded-[2rem] overflow-hidden bg-background">
+      <div class="absolute top-0 left-1/2 -translate-x-1/2 h-5 w-28 bg-gray-900 rounded-b-2xl z-20"></div>
+      <% if screenshot_available?(name) %>
+        <%= image_tag name, alt: local_assigns[:alt].to_s, class: "w-full block" %>
+      <% else %>
+        <%= yield %>
+      <% end %>
+    </div>
+  </div>
+</div>

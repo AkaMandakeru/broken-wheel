@@ -52,10 +52,10 @@
               <% end %>
             <% end %>
           <% else %>
-            <%= link_to t('shared.nav.features'),  root_path(anchor: 'features'),   class: "text-sm font-medium text-muted-foreground hover:text-primary transition-colors" %>
-            <%= link_to t('shared.nav.challenges'), root_path(anchor: 'challenges'), class: "text-sm font-medium text-muted-foreground hover:text-primary transition-colors" %>
-            <%= link_to t('shared.nav.community'), root_path(anchor: 'community'),  class: "text-sm font-medium text-muted-foreground hover:text-primary transition-colors" %>
-            <%= link_to t('shared.nav.contact'),   root_path(anchor: 'contact'),    class: "text-sm font-medium text-muted-foreground hover:text-primary transition-colors" %>
+            <%= link_to t('shared.nav.home'),       root_path,                       class: "text-sm font-medium text-muted-foreground hover:text-primary transition-colors" %>
+            <%= link_to t('shared.nav.challenges'), challenges_path,                 class: "text-sm font-medium text-muted-foreground hover:text-primary transition-colors" %>
+            <%= link_to t('shared.nav.community'),  root_path(anchor: 'clubs'),      class: "text-sm font-medium text-muted-foreground hover:text-primary transition-colors" %>
+            <%= link_to t('shared.nav.ranking'),    root_path(anchor: 'seasons'),    class: "text-sm font-medium text-muted-foreground hover:text-primary transition-colors" %>
           <% end %>
         </nav>
 
@@ -161,17 +161,17 @@
             <% end %>
           <% end %>
         <% else %>
-          <%= link_to root_path(anchor: 'features'), class: "flex items-center gap-3 px-4 py-3 rounded-lg text-foreground hover:bg-muted hover:text-primary transition", data: { action: "click->sidebar#close" } do %>
-            <i class="fa-solid fa-star w-5 text-muted-foreground"></i> <%= t('shared.nav.features') %>
+          <%= link_to root_path, class: "flex items-center gap-3 px-4 py-3 rounded-lg text-foreground hover:bg-muted hover:text-primary transition", data: { action: "click->sidebar#close" } do %>
+            <i class="fa-solid fa-house w-5 text-muted-foreground"></i> <%= t('shared.nav.home') %>
           <% end %>
-          <%= link_to root_path(anchor: 'challenges'), class: "flex items-center gap-3 px-4 py-3 rounded-lg text-foreground hover:bg-muted hover:text-primary transition", data: { action: "click->sidebar#close" } do %>
+          <%= link_to challenges_path, class: "flex items-center gap-3 px-4 py-3 rounded-lg text-foreground hover:bg-muted hover:text-primary transition", data: { action: "click->sidebar#close" } do %>
             <i class="fa-solid fa-trophy w-5 text-muted-foreground"></i> <%= t('shared.nav.challenges') %>
           <% end %>
-          <%= link_to root_path(anchor: 'community'), class: "flex items-center gap-3 px-4 py-3 rounded-lg text-foreground hover:bg-muted hover:text-primary transition", data: { action: "click->sidebar#close" } do %>
+          <%= link_to root_path(anchor: 'clubs'), class: "flex items-center gap-3 px-4 py-3 rounded-lg text-foreground hover:bg-muted hover:text-primary transition", data: { action: "click->sidebar#close" } do %>
             <i class="fa-solid fa-users w-5 text-muted-foreground"></i> <%= t('shared.nav.community') %>
           <% end %>
-          <%= link_to root_path(anchor: 'contact'), class: "flex items-center gap-3 px-4 py-3 rounded-lg text-foreground hover:bg-muted hover:text-primary transition", data: { action: "click->sidebar#close" } do %>
-            <i class="fa-solid fa-envelope w-5 text-muted-foreground"></i> <%= t('shared.nav.contact') %>
+          <%= link_to root_path(anchor: 'seasons'), class: "flex items-center gap-3 px-4 py-3 rounded-lg text-foreground hover:bg-muted hover:text-primary transition", data: { action: "click->sidebar#close" } do %>
+            <i class="fa-solid fa-ranking-star w-5 text-muted-foreground"></i> <%= t('shared.nav.ranking') %>
           <% end %>
         <% end %>
 

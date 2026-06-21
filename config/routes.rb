@@ -10,6 +10,7 @@ Rails.application.routes.draw do
   root "home#index"
 
   get "profile", to: "profiles#show"
+  get "profile/edit", to: "profiles#edit", as: :edit_profile
   patch "profile", to: "profiles#update"
   put "profile", to: "profiles#update"
 
