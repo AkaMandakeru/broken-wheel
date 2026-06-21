@@ -8,6 +8,9 @@
     <meta name="mobile-web-app-capable" content="yes">
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
+    <% if (vapid_key = Rails.application.config.x.web_push[:public_key]).present? %>
+      <meta name="vapid-public-key" content="<%= vapid_key %>">
+    <% end %>
 
     <%= yield :head %>
 

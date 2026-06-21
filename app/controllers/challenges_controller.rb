@@ -7,6 +7,8 @@ class ChallengesController < ApplicationController
   def index
     @type = params[:type].presence_in(Challenge::CHALLENGE_TYPES)
     @challenges = Challenge.where(status: "active").of_type(@type).order(starts_at: :desc)
+    @active_season = Season.active.by_recent.first
+    @season_participation = current_user.season_participations.find_by(season: @active_season) if @active_season && user_signed_in?
   end
 
   def show

@@ -86,6 +86,8 @@ en:
       log_in: "Log in"
       view: "View"
       join: "Join"
+      season_cta: "Complete challenges to earn season XP and rewards."
+      view_season: "View season"
       filters:
         all: "All"
       none_for_filter: "No challenges of this type right now."
@@ -281,6 +283,15 @@ en:
       title: "Edit profile"
       back: "Back to profile"
       cancel: "Cancel"
+    notifications:
+      title: "Push notifications"
+      description: "Get notified about new achievements and events, even when the app is closed."
+      enable: "Enable notifications"
+      disable: "Disable notifications"
+      enabled: "Notifications are on."
+      disabled: "Notifications are off."
+      denied: "Notifications are blocked in your browser settings."
+      unsupported: "Your browser doesn't support push notifications."
 
   # Home (landing page)
   home:
@@ -377,6 +388,7 @@ en:
       achievements: "Achievements"
       clubs: "Clubs"
       events: "Events"
+      seasons: "Seasons"
       profile: "Profile"
       support: "Support"
       admin: "Admin"
@@ -501,6 +513,16 @@ en:
         created: "Event created."
         updated: "Event updated."
         destroyed: "Event deleted."
+      seasons:
+        created: "Season created."
+        updated: "Season updated."
+        destroyed: "Season deleted."
+      season_challenges:
+        added: "Challenge added to season."
+        removed: "Challenge removed from season."
+      season_rewards:
+        added: "Reward added."
+        removed: "Reward removed."
       support:
         updated: "Ticket updated."
         replied: "Reply sent."
@@ -510,6 +532,7 @@ en:
       dashboard: "Dashboard"
       challenges: "Challenges"
       events: "Events"
+      seasons: "Seasons"
       support: "Messages"
     dashboard:
       title: "Dashboard"
@@ -521,6 +544,52 @@ en:
       participations: "Participations"
       users: "Users"
       recent_challenges: "Recent challenges"
+    seasons:
+      title: "Seasons"
+      new: "New season"
+      edit: "Edit season"
+      delete: "Delete"
+      view_public: "View"
+      confirm_delete: "Delete this season? This cannot be undone."
+      empty: "No seasons yet."
+      participants:
+        one: "1 participant"
+        other: "%{count} participants"
+      no_participants: "No participants yet."
+      fields:
+        name: "Name"
+        key: "Key (slug)"
+        description: "Description"
+        theme: "Theme"
+        status: "Status"
+        starts_at: "Starts at"
+        ends_at: "Ends at"
+        xp_multiplier: "XP multiplier"
+        image: "Image"
+        dates: "Dates"
+        actions: "Actions"
+      form:
+        save: "Save"
+        cancel: "Cancel"
+      challenges:
+        title: "Challenges"
+        empty: "No challenges attached yet."
+        remove: "Remove"
+        select: "Select a challenge…"
+        xp: "XP reward"
+        position: "Order"
+        required: "Required"
+        add: "Add challenge"
+      rewards:
+        title: "Rewards"
+        empty: "No rewards yet."
+        remove: "Remove"
+        level: "Level"
+        type: "Type"
+        key: "Reward key"
+        key_hint: "Title key (config/titles.yml), theme key, or a badge identifier."
+        name: "Display name"
+        add: "Add reward"
     support:
       title: "Messages"
       empty: "No messages yet."
@@ -749,6 +818,65 @@ en:
       km: "km"
       hours: "hours"
       times: "times"
+
+  # Seasons (user-facing)
+  seasons:
+    index:
+      title: "Seasons"
+      subtitle: "Limited-time campaigns. Complete challenges, earn XP and unlock rewards."
+      active: "Active season"
+      past: "Past seasons"
+      empty: "No active season right now. Check back soon!"
+    statuses:
+      upcoming: "Upcoming"
+      active: "Active"
+      ended: "Ended"
+    themes:
+      default: "Default"
+      summer: "Summer"
+      winter: "Winter"
+      spring: "Spring"
+      autumn: "Autumn"
+    reward_types:
+      title: "Title"
+      badge: "Badge"
+      theme: "Profile theme"
+    show:
+      back: "Back to seasons"
+      level: "Level"
+      xp: "XP"
+      rank: "Rank"
+      to_next_level: "%{xp} XP to next level"
+      max_level: "Max level reached!"
+      sign_in_prompt: "Sign in to join the season and track your progress."
+      sign_in: "Sign in"
+      challenges: "Season challenges"
+      required: "Required"
+      completed: "Completed"
+      no_challenges: "No challenges in this season yet."
+      rewards: "Rewards"
+      reward_at_level: "Level %{level}"
+      no_rewards: "No rewards configured yet."
+      leaderboard: "Leaderboard"
+      no_participants: "No participants yet. Be the first!"
+      recent_activity: "Recent activity"
+      no_activity: "No activity yet."
+    activity:
+      challenge_completed: "completed a challenge (%{challenge}) · +%{xp} XP"
+      level_up: "reached level %{level}"
+      reward_unlocked: "unlocked %{name}"
+
+  # Web Push notification copy
+  push:
+    achievement:
+      title: "Achievement unlocked! 🎉"
+      body: "You earned %{name}."
+    event:
+      title: "New event 🏁"
+      body: "%{title} was just added — check it out!"
+    season_level:
+      title: "Level up! ⚡"
+      body: "You reached level %{level} in %{season}."
 
   # Flash messages set by controllers
   flashes:

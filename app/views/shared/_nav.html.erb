@@ -19,24 +19,45 @@
         <%# Center: desktop nav links %>
         <nav class="hidden md:flex items-center gap-8">
           <% if user_signed_in? %>
-            <%= link_to challenges_path, class: "text-sm font-medium text-muted-foreground hover:text-primary transition-colors flex items-center gap-2" do %>
-              <i class="fa-solid fa-trophy"></i> <%= t('shared.nav.challenges') %>
-            <% end %>
-            <%= link_to events_path, class: "text-sm font-medium text-muted-foreground hover:text-primary transition-colors flex items-center gap-2" do %>
-              <i class="fa-solid fa-flag-checkered"></i> <%= t('shared.nav.events') %>
-            <% end %>
+            <%# Challenges + dropdown (Events, Seasons) %>
+            <div class="relative group">
+              <%= link_to challenges_path, class: "text-sm font-medium text-muted-foreground hover:text-primary transition-colors flex items-center gap-2 py-2" do %>
+                <i class="fa-solid fa-trophy"></i> <%= t('shared.nav.challenges') %>
+                <i class="fa-solid fa-chevron-down text-[10px] opacity-60"></i>
+              <% end %>
+              <div class="absolute left-0 top-full pt-2 hidden group-hover:block group-focus-within:block z-50">
+                <div class="w-48 bg-background border border-border rounded-lg shadow-lg py-1">
+                  <%= link_to events_path, class: "flex items-center gap-3 px-4 py-2.5 text-sm text-foreground hover:bg-muted hover:text-primary transition" do %>
+                    <i class="fa-solid fa-flag-checkered w-4 text-muted-foreground"></i> <%= t('shared.nav.events') %>
+                  <% end %>
+                  <%= link_to seasons_path, class: "flex items-center gap-3 px-4 py-2.5 text-sm text-foreground hover:bg-muted hover:text-primary transition" do %>
+                    <i class="fa-solid fa-ranking-star w-4 text-muted-foreground"></i> <%= t('shared.nav.seasons') %>
+                  <% end %>
+                </div>
+              </div>
+            </div>
+
             <%= link_to workouts_path, class: "text-sm font-medium text-muted-foreground hover:text-primary transition-colors flex items-center gap-2" do %>
               <i class="fa-solid fa-dumbbell"></i> <%= t('shared.nav.workouts') %>
             <% end %>
-            <%= link_to achievements_path, class: "text-sm font-medium text-muted-foreground hover:text-primary transition-colors flex items-center gap-2" do %>
-              <i class="fa-solid fa-medal"></i> <%= t('shared.nav.achievements') %>
-            <% end %>
-            <%= link_to clubs_path, class: "text-sm font-medium text-muted-foreground hover:text-primary transition-colors flex items-center gap-2" do %>
-              <i class="fa-solid fa-users"></i> <%= t('shared.nav.clubs') %>
-            <% end %>
-            <%= link_to profile_path, class: "text-sm font-medium text-muted-foreground hover:text-primary transition-colors flex items-center gap-2" do %>
-              <i class="fa-solid fa-user"></i> <%= t('shared.nav.profile') %>
-            <% end %>
+
+            <%# Profile + dropdown (Achievements, Clubs) %>
+            <div class="relative group">
+              <%= link_to profile_path, class: "text-sm font-medium text-muted-foreground hover:text-primary transition-colors flex items-center gap-2 py-2" do %>
+                <i class="fa-solid fa-user"></i> <%= t('shared.nav.profile') %>
+                <i class="fa-solid fa-chevron-down text-[10px] opacity-60"></i>
+              <% end %>
+              <div class="absolute left-0 top-full pt-2 hidden group-hover:block group-focus-within:block z-50">
+                <div class="w-48 bg-background border border-border rounded-lg shadow-lg py-1">
+                  <%= link_to achievements_path, class: "flex items-center gap-3 px-4 py-2.5 text-sm text-foreground hover:bg-muted hover:text-primary transition" do %>
+                    <i class="fa-solid fa-medal w-4 text-muted-foreground"></i> <%= t('shared.nav.achievements') %>
+                  <% end %>
+                  <%= link_to clubs_path, class: "flex items-center gap-3 px-4 py-2.5 text-sm text-foreground hover:bg-muted hover:text-primary transition" do %>
+                    <i class="fa-solid fa-users w-4 text-muted-foreground"></i> <%= t('shared.nav.clubs') %>
+                  <% end %>
+                </div>
+              </div>
+            </div>
             <% if current_user.admin? %>
               <%= link_to admin_root_path, class: "text-sm font-medium text-muted-foreground hover:text-primary transition-colors flex items-center gap-2" do %>
                 <i class="fa-solid fa-shield-halved"></i> <%= t('shared.nav.admin') %>
@@ -133,6 +154,9 @@
           <% end %>
           <%= link_to events_path, class: "flex items-center gap-3 px-4 py-3 rounded-lg text-foreground hover:bg-muted hover:text-primary transition", data: { action: "click->sidebar#close" } do %>
             <i class="fa-solid fa-flag-checkered w-5 text-muted-foreground"></i> <%= t('shared.nav.events') %>
+          <% end %>
+          <%= link_to seasons_path, class: "flex items-center gap-3 px-4 py-3 rounded-lg text-foreground hover:bg-muted hover:text-primary transition", data: { action: "click->sidebar#close" } do %>
+            <i class="fa-solid fa-trophy w-5 text-muted-foreground"></i> <%= t('shared.nav.seasons') %>
           <% end %>
           <%= link_to workouts_path, class: "flex items-center gap-3 px-4 py-3 rounded-lg text-foreground hover:bg-muted hover:text-primary transition", data: { action: "click->sidebar#close" } do %>
             <i class="fa-solid fa-dumbbell w-5 text-muted-foreground"></i> <%= t('shared.nav.workouts') %>

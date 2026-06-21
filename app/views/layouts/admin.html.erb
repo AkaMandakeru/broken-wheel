@@ -39,6 +39,7 @@
           <%= link_to t("admin.nav.dashboard"), admin_root_path, class: "text-gray-600 hover:text-[#FC4C02] transition" %>
           <%= link_to t("admin.nav.challenges"), admin_challenges_path, class: "text-gray-600 hover:text-[#FC4C02] transition" %>
           <%= link_to t("admin.nav.events"), admin_events_path, class: "text-gray-600 hover:text-[#FC4C02] transition" %>
+          <%= link_to t("admin.nav.seasons"), admin_seasons_path, class: "text-gray-600 hover:text-[#FC4C02] transition" %>
           <%= link_to admin_support_tickets_path, class: "text-gray-600 hover:text-[#FC4C02] transition flex items-center gap-1" do %>
             <%= t("admin.nav.support") %>
             <% open_tickets = SupportTicket.open_tickets.count %>

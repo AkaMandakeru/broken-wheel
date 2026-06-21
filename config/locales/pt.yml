@@ -58,6 +58,8 @@ pt:
       log_in: "Entrar"
       view: "Ver"
       join: "Participar"
+      season_cta: "Complete desafios para ganhar XP e recompensas da temporada."
+      view_season: "Ver temporada"
       filters:
         all: "Todos"
       none_for_filter: "Nenhum desafio deste tipo no momento."
@@ -253,6 +255,15 @@ pt:
       title: "Editar perfil"
       back: "Voltar ao perfil"
       cancel: "Cancelar"
+    notifications:
+      title: "Notificações push"
+      description: "Receba avisos de novas conquistas e eventos, mesmo com o app fechado."
+      enable: "Ativar notificações"
+      disable: "Desativar notificações"
+      enabled: "Notificações ativadas."
+      disabled: "Notificações desativadas."
+      denied: "As notificações estão bloqueadas nas configurações do navegador."
+      unsupported: "Seu navegador não suporta notificações push."
 
   # Home (página inicial)
   home:
@@ -349,6 +360,7 @@ pt:
       achievements: "Conquistas"
       clubs: "Clubes"
       events: "Eventos"
+      seasons: "Temporadas"
       profile: "Perfil"
       support: "Suporte"
       admin: "Admin"
@@ -473,6 +485,16 @@ pt:
         created: "Evento criado."
         updated: "Evento atualizado."
         destroyed: "Evento excluído."
+      seasons:
+        created: "Temporada criada."
+        updated: "Temporada atualizada."
+        destroyed: "Temporada excluída."
+      season_challenges:
+        added: "Desafio adicionado à temporada."
+        removed: "Desafio removido da temporada."
+      season_rewards:
+        added: "Recompensa adicionada."
+        removed: "Recompensa removida."
       support:
         updated: "Ticket atualizado."
         replied: "Resposta enviada."
@@ -482,6 +504,7 @@ pt:
       dashboard: "Painel"
       challenges: "Desafios"
       events: "Eventos"
+      seasons: "Temporadas"
       support: "Mensagens"
     dashboard:
       title: "Painel"
@@ -493,6 +516,52 @@ pt:
       participations: "Participações"
       users: "Usuários"
       recent_challenges: "Desafios recentes"
+    seasons:
+      title: "Temporadas"
+      new: "Nova temporada"
+      edit: "Editar temporada"
+      delete: "Excluir"
+      view_public: "Ver"
+      confirm_delete: "Excluir esta temporada? Esta ação não pode ser desfeita."
+      empty: "Nenhuma temporada ainda."
+      participants:
+        one: "1 participante"
+        other: "%{count} participantes"
+      no_participants: "Nenhum participante ainda."
+      fields:
+        name: "Nome"
+        key: "Chave (slug)"
+        description: "Descrição"
+        theme: "Tema"
+        status: "Status"
+        starts_at: "Início"
+        ends_at: "Término"
+        xp_multiplier: "Multiplicador de XP"
+        image: "Imagem"
+        dates: "Datas"
+        actions: "Ações"
+      form:
+        save: "Salvar"
+        cancel: "Cancelar"
+      challenges:
+        title: "Desafios"
+        empty: "Nenhum desafio adicionado ainda."
+        remove: "Remover"
+        select: "Selecione um desafio…"
+        xp: "Recompensa de XP"
+        position: "Ordem"
+        required: "Obrigatório"
+        add: "Adicionar desafio"
+      rewards:
+        title: "Recompensas"
+        empty: "Nenhuma recompensa ainda."
+        remove: "Remover"
+        level: "Nível"
+        type: "Tipo"
+        key: "Chave da recompensa"
+        key_hint: "Chave de título (config/titles.yml), chave de tema ou identificador de medalha."
+        name: "Nome de exibição"
+        add: "Adicionar recompensa"
     support:
       title: "Mensagens"
       empty: "Nenhuma mensagem ainda."
@@ -837,6 +906,65 @@ pt:
       times: "vezes"
 
   # Flash messages set by controllers
+  # Temporadas (voltado ao usuário)
+  seasons:
+    index:
+      title: "Temporadas"
+      subtitle: "Campanhas por tempo limitado. Complete desafios, ganhe XP e desbloqueie recompensas."
+      active: "Temporada ativa"
+      past: "Temporadas passadas"
+      empty: "Nenhuma temporada ativa agora. Volte em breve!"
+    statuses:
+      upcoming: "Em breve"
+      active: "Ativa"
+      ended: "Encerrada"
+    themes:
+      default: "Padrão"
+      summer: "Verão"
+      winter: "Inverno"
+      spring: "Primavera"
+      autumn: "Outono"
+    reward_types:
+      title: "Título"
+      badge: "Medalha"
+      theme: "Tema de perfil"
+    show:
+      back: "Voltar às temporadas"
+      level: "Nível"
+      xp: "XP"
+      rank: "Posição"
+      to_next_level: "%{xp} XP para o próximo nível"
+      max_level: "Nível máximo alcançado!"
+      sign_in_prompt: "Entre para participar da temporada e acompanhar seu progresso."
+      sign_in: "Entrar"
+      challenges: "Desafios da temporada"
+      required: "Obrigatório"
+      completed: "Concluído"
+      no_challenges: "Nenhum desafio nesta temporada ainda."
+      rewards: "Recompensas"
+      reward_at_level: "Nível %{level}"
+      no_rewards: "Nenhuma recompensa configurada ainda."
+      leaderboard: "Ranking"
+      no_participants: "Nenhum participante ainda. Seja o primeiro!"
+      recent_activity: "Atividade recente"
+      no_activity: "Nenhuma atividade ainda."
+    activity:
+      challenge_completed: "completou um desafio (%{challenge}) · +%{xp} XP"
+      level_up: "alcançou o nível %{level}"
+      reward_unlocked: "desbloqueou %{name}"
+
+  # Texto das notificações push
+  push:
+    achievement:
+      title: "Conquista desbloqueada! 🎉"
+      body: "Você ganhou %{name}."
+    event:
+      title: "Novo evento 🏁"
+      body: "%{title} acabou de ser adicionado — confira!"
+    season_level:
+      title: "Subiu de nível! ⚡"
+      body: "Você alcançou o nível %{level} em %{season}."
+
   flashes:
     support:
       created: "Mensagem enviada! Responderemos aqui em breve."

@@ -85,4 +85,22 @@
       </div>
     <% end %>
   </div>
+
+  <%# Push notifications opt-in %>
+  <div class="bg-white border border-gray-200 rounded-xl shadow-sm p-6 sm:p-8 max-w-xl mt-6"
+       data-controller="notifications"
+       data-notifications-enable-label-value="<%= t('profiles.notifications.enable') %>"
+       data-notifications-disable-label-value="<%= t('profiles.notifications.disable') %>"
+       data-notifications-enabled-status-value="<%= t('profiles.notifications.enabled') %>"
+       data-notifications-disabled-status-value="<%= t('profiles.notifications.disabled') %>"
+       data-notifications-denied-status-value="<%= t('profiles.notifications.denied') %>"
+       data-notifications-unsupported-status-value="<%= t('profiles.notifications.unsupported') %>">
+    <h2 class="text-lg font-semibold text-gray-900 mb-1"><%= t('profiles.notifications.title') %></h2>
+    <p class="text-sm text-gray-600 mb-4"><%= t('profiles.notifications.description') %></p>
+    <button type="button" data-notifications-target="button" data-action="notifications#toggle"
+            class="bg-[#FC4C02] text-white px-4 py-2 rounded-lg hover:bg-[#e04402] transition font-medium text-sm disabled:opacity-50 disabled:cursor-not-allowed">
+      <%= t('profiles.notifications.enable') %>
+    </button>
+    <p data-notifications-target="status" class="text-xs text-gray-400 mt-2"></p>
+  </div>
 </div>

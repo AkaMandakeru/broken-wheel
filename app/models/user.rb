@@ -12,6 +12,10 @@ class User < ApplicationRecord
   has_many :clubs, through: :club_memberships
   has_many :support_tickets, dependent: :destroy
   has_many :support_messages, dependent: :destroy
+  has_many :push_subscriptions, dependent: :destroy
+  has_many :season_participations, dependent: :destroy
+  has_many :seasons, through: :season_participations
+  has_many :season_activities, dependent: :destroy
 
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :validatable,
@@ -65,6 +69,20 @@ class User < ApplicationRecord
   # Localized label for the displayed title, or nil when none is set.
   def title_label
     title.present? ? Titles.label(title) : nil
+  end
+
+  # --- Unlockable cosmetic themes (granted by season rewards) ----------------
+
+  def unlocked_themes
+    Array(self[:unlocked_themes]).map(&:to_s)
+  end
+
+  def unlock_theme(key)
+    return false if key.blank?
+
+    stored = unlocked_themes
+    update_column(:unlocked_themes, stored + [ key.to_s ]) unless stored.include?(key.to_s)
+    true
   end
 
   private

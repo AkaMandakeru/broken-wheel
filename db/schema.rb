@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_06_08_150000) do
+ActiveRecord::Schema[8.1].define(version: 2026_06_08_170000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -142,12 +142,115 @@ ActiveRecord::Schema[8.1].define(version: 2026_06_08_150000) do
     t.datetime "event_date"
     t.integer "event_participations_count", default: 0, null: false
     t.string "location"
+    t.bigint "season_id"
     t.string "sport"
     t.string "status", default: "upcoming", null: false
     t.string "title", null: false
     t.datetime "updated_at", null: false
     t.index ["event_date"], name: "index_events_on_event_date"
+    t.index ["season_id"], name: "index_events_on_season_id"
     t.index ["status"], name: "index_events_on_status"
+  end
+
+  create_table "push_subscriptions", force: :cascade do |t|
+    t.string "auth_key", null: false
+    t.datetime "created_at", null: false
+    t.string "endpoint", null: false
+    t.string "p256dh_key", null: false
+    t.datetime "updated_at", null: false
+    t.string "user_agent"
+    t.bigint "user_id", null: false
+    t.index ["endpoint"], name: "index_push_subscriptions_on_endpoint", unique: true
+    t.index ["user_id"], name: "index_push_subscriptions_on_user_id"
+  end
+
+  create_table "season_activities", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.string "kind", null: false
+    t.jsonb "metadata", default: {}, null: false
+    t.bigint "season_id", null: false
+    t.datetime "updated_at", null: false
+    t.bigint "user_id", null: false
+    t.index ["season_id", "created_at"], name: "index_season_activities_on_season_id_and_created_at"
+    t.index ["season_id"], name: "index_season_activities_on_season_id"
+    t.index ["user_id"], name: "index_season_activities_on_user_id"
+  end
+
+  create_table "season_challenge_completions", force: :cascade do |t|
+    t.datetime "completed_at", null: false
+    t.datetime "created_at", null: false
+    t.bigint "season_challenge_id", null: false
+    t.bigint "season_participation_id", null: false
+    t.datetime "updated_at", null: false
+    t.integer "xp_awarded", default: 0, null: false
+    t.index ["season_challenge_id"], name: "index_season_challenge_completions_on_season_challenge_id"
+    t.index ["season_participation_id", "season_challenge_id"], name: "idx_season_completions_unique", unique: true
+    t.index ["season_participation_id"], name: "index_season_challenge_completions_on_season_participation_id"
+  end
+
+  create_table "season_challenges", force: :cascade do |t|
+    t.bigint "challenge_id", null: false
+    t.datetime "created_at", null: false
+    t.integer "position", default: 0, null: false
+    t.boolean "required", default: false, null: false
+    t.bigint "season_id", null: false
+    t.datetime "updated_at", null: false
+    t.integer "xp_reward", default: 0, null: false
+    t.index ["challenge_id"], name: "index_season_challenges_on_challenge_id"
+    t.index ["season_id", "challenge_id"], name: "index_season_challenges_on_season_id_and_challenge_id", unique: true
+    t.index ["season_id"], name: "index_season_challenges_on_season_id"
+  end
+
+  create_table "season_participations", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.datetime "last_recalculated_at"
+    t.integer "level", default: 1, null: false
+    t.bigint "season_id", null: false
+    t.datetime "updated_at", null: false
+    t.bigint "user_id", null: false
+    t.integer "xp", default: 0, null: false
+    t.jsonb "xp_breakdown", default: {}, null: false
+    t.index ["season_id", "user_id"], name: "index_season_participations_on_season_id_and_user_id", unique: true
+    t.index ["season_id"], name: "index_season_participations_on_season_id"
+    t.index ["user_id"], name: "index_season_participations_on_user_id"
+  end
+
+  create_table "season_reward_grants", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.datetime "granted_at", null: false
+    t.bigint "season_participation_id", null: false
+    t.bigint "season_reward_id", null: false
+    t.datetime "updated_at", null: false
+    t.index ["season_participation_id", "season_reward_id"], name: "idx_season_reward_grants_unique", unique: true
+    t.index ["season_participation_id"], name: "index_season_reward_grants_on_season_participation_id"
+    t.index ["season_reward_id"], name: "index_season_reward_grants_on_season_reward_id"
+  end
+
+  create_table "season_rewards", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.integer "level", null: false
+    t.string "name"
+    t.string "reward_key", null: false
+    t.string "reward_type", null: false
+    t.bigint "season_id", null: false
+    t.datetime "updated_at", null: false
+    t.index ["season_id", "level"], name: "index_season_rewards_on_season_id_and_level"
+    t.index ["season_id"], name: "index_season_rewards_on_season_id"
+  end
+
+  create_table "seasons", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.text "description"
+    t.datetime "ends_at"
+    t.string "key"
+    t.string "name", null: false
+    t.datetime "starts_at"
+    t.string "status", default: "upcoming", null: false
+    t.string "theme", default: "default", null: false
+    t.datetime "updated_at", null: false
+    t.decimal "xp_multiplier", precision: 5, scale: 2, default: "1.0", null: false
+    t.index ["key"], name: "index_seasons_on_key", unique: true
+    t.index ["status"], name: "index_seasons_on_status"
   end
 
   create_table "strava_tokens", force: :cascade do |t|
@@ -238,6 +341,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_06_08_150000) do
     t.integer "failed_attempts", default: 0, null: false
     t.string "first_name", null: false
     t.string "last_name", null: false
+    t.integer "lifetime_xp", default: 0, null: false
     t.datetime "locked_at"
     t.string "nickname"
     t.string "phone"
@@ -246,10 +350,12 @@ ActiveRecord::Schema[8.1].define(version: 2026_06_08_150000) do
     t.datetime "reset_password_sent_at"
     t.string "reset_password_token"
     t.jsonb "sports", default: []
+    t.string "theme"
     t.string "title"
     t.jsonb "titles", default: [], null: false
     t.string "unconfirmed_email"
     t.string "unlock_token"
+    t.jsonb "unlocked_themes", default: [], null: false
     t.datetime "updated_at", null: false
     t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true
     t.index ["email"], name: "index_users_on_email", unique: true
@@ -286,6 +392,19 @@ ActiveRecord::Schema[8.1].define(version: 2026_06_08_150000) do
   add_foreign_key "event_participations", "events"
   add_foreign_key "event_participations", "users"
   add_foreign_key "event_participations", "workouts"
+  add_foreign_key "events", "seasons"
+  add_foreign_key "push_subscriptions", "users"
+  add_foreign_key "season_activities", "seasons"
+  add_foreign_key "season_activities", "users"
+  add_foreign_key "season_challenge_completions", "season_challenges"
+  add_foreign_key "season_challenge_completions", "season_participations"
+  add_foreign_key "season_challenges", "challenges"
+  add_foreign_key "season_challenges", "seasons"
+  add_foreign_key "season_participations", "seasons"
+  add_foreign_key "season_participations", "users"
+  add_foreign_key "season_reward_grants", "season_participations"
+  add_foreign_key "season_reward_grants", "season_rewards"
+  add_foreign_key "season_rewards", "seasons"
   add_foreign_key "strava_tokens", "users"
   add_foreign_key "support_messages", "support_tickets"
   add_foreign_key "support_messages", "users"

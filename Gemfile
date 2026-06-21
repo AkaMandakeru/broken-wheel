@@ -61,6 +61,9 @@ gem "strava-ruby-client"
 gem "omniauth-rails_csrf_protection"
 gem "httparty"
 
+# Web Push notifications (VAPID)
+gem "web-push"
+
 # Analytics
 gem "posthog-ruby"
 

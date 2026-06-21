@@ -11,6 +11,40 @@
     </div>
   <% end %>
 
+  <%# Current active season %>
+  <% if @active_season %>
+    <%= link_to season_path(@active_season), class: "block rounded-2xl overflow-hidden bg-white shadow-sm border border-gray-200 hover:shadow-md transition mb-8" do %>
+      <div class="h-2 bg-linear-to-r <%= season_theme_classes(@active_season.theme) %>"></div>
+      <div class="p-5 sm:p-6">
+        <div class="flex items-start justify-between gap-4">
+          <div class="min-w-0">
+            <span class="text-xs font-semibold uppercase tracking-wider text-[#FC4C02]"><%= t('seasons.index.active') %></span>
+            <h2 class="text-xl font-extrabold text-gray-900 mt-1"><%= @active_season.name %></h2>
+            <% if @active_season.starts_at && @active_season.ends_at %>
+              <p class="text-sm text-gray-500 mt-0.5"><%= @active_season.starts_at.strftime("%b %-d") %> – <%= @active_season.ends_at.strftime("%b %-d, %Y") %></p>
+            <% end %>
+          </div>
+          <i class="fa-solid fa-ranking-star text-2xl text-[#FC4C02]/70 shrink-0"></i>
+        </div>
+
+        <% if @season_participation %>
+          <% pct = Leveling.progress_percent(@season_participation.xp) %>
+          <div class="mt-4">
+            <div class="flex justify-between text-xs text-gray-500 mb-1">
+              <span class="font-semibold text-gray-700"><%= t('seasons.show.level') %> <%= @season_participation.level %> · <%= @season_participation.xp %> <%= t('seasons.show.xp') %></span>
+              <span><%= t('seasons.show.rank') %> #<%= @season_participation.rank %></span>
+            </div>
+            <div class="h-2 bg-gray-200 rounded-full overflow-hidden">
+              <div class="h-full bg-[#FC4C02] rounded-full" style="width: <%= pct %>%"></div>
+            </div>
+          </div>
+        <% else %>
+          <p class="text-sm text-gray-600 mt-3"><%= t('challenges.index.season_cta') %> <span class="text-[#FC4C02] font-medium"><%= t('challenges.index.view_season') %> →</span></p>
+        <% end %>
+      </div>
+    <% end %>
+  <% end %>
+
   <%# Filter by challenge type %>
   <div class="flex flex-wrap gap-2 mb-6 text-sm">
     <%= link_to t('challenges.index.filters.all'), challenges_path,

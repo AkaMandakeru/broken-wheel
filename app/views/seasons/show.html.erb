@@ -1,0 +1,155 @@
+<div class="pt-8">
+  <%= link_to seasons_path, class: "text-sm text-gray-500 hover:text-[#FC4C02] flex items-center gap-1 mb-3" do %>
+    <i class="fa-solid fa-arrow-left text-xs"></i> <%= t("seasons.show.back") %>
+  <% end %>
+
+  <%# Themed header — gradient accent bar, app-standard text colors %>
+  <div class="rounded-2xl overflow-hidden bg-white border border-gray-200 shadow-sm mb-6">
+    <div class="h-2.5 bg-linear-to-r <%= season_theme_classes(@season.theme) %>"></div>
+    <div class="p-6 sm:p-8">
+      <div class="flex items-start justify-between gap-3">
+        <div>
+          <h1 class="text-3xl font-extrabold text-gray-900"><%= @season.name %></h1>
+          <% if @season.starts_at && @season.ends_at %>
+            <p class="text-sm text-gray-500 mt-1"><%= @season.starts_at.strftime("%b %-d") %> – <%= @season.ends_at.strftime("%b %-d, %Y") %></p>
+          <% end %>
+        </div>
+        <span class="text-xs px-2 py-1 rounded-full whitespace-nowrap <%= season_status_badge_class(@season.status) %>"><%= t("seasons.statuses.#{@season.status}", default: @season.status.capitalize) %></span>
+      </div>
+      <% if @season.description.present? %>
+        <p class="text-gray-600 mt-3 max-w-2xl"><%= @season.description %></p>
+      <% end %>
+    </div>
+  </div>
+
+  <%# Your progress %>
+  <% if @participation %>
+    <% pct = Leveling.progress_percent(@participation.xp) %>
+    <% next_floor = Leveling.next_floor(@participation.xp) %>
+    <div class="bg-white rounded-2xl shadow-sm border border-gray-200 p-6 mb-6">
+      <div class="grid grid-cols-3 gap-4 mb-4 text-center">
+        <div>
+          <p class="text-3xl font-extrabold text-primary">⚡ <%= @participation.level %></p>
+          <p class="text-xs text-gray-500"><%= t("seasons.show.level") %></p>
+        </div>
+        <div>
+          <p class="text-3xl font-extrabold text-gray-900"><%= @participation.xp %></p>
+          <p class="text-xs text-gray-500"><%= t("seasons.show.xp") %></p>
+        </div>
+        <div>
+          <p class="text-3xl font-extrabold text-gray-900">#<%= @participation.rank %></p>
+          <p class="text-xs text-gray-500"><%= t("seasons.show.rank") %></p>
+        </div>
+      </div>
+      <div class="h-3 bg-gray-200 rounded-full overflow-hidden">
+        <div class="h-full bg-primary rounded-full transition-all" style="width: <%= pct %>%"></div>
+      </div>
+      <p class="text-xs text-gray-500 mt-1 text-right">
+        <% if next_floor %>
+          <%= t("seasons.show.to_next_level", xp: next_floor - @participation.xp) %>
+        <% else %>
+          <%= t("seasons.show.max_level") %>
+        <% end %>
+      </p>
+    </div>
+  <% elsif !user_signed_in? %>
+    <div class="bg-white rounded-2xl shadow-sm border border-gray-200 p-6 mb-6 text-center">
+      <p class="text-gray-600 mb-3"><%= t("seasons.show.sign_in_prompt") %></p>
+      <%= link_to t("seasons.show.sign_in"), new_user_session_path, class: "bg-[#FC4C02] text-white px-6 py-2.5 rounded-lg hover:bg-[#e04402] transition font-medium" %>
+    </div>
+  <% end %>
+
+  <div class="grid lg:grid-cols-2 gap-6">
+    <%# Active challenges %>
+    <div>
+      <h2 class="text-lg font-semibold text-gray-900 mb-3"><%= t("seasons.show.challenges") %></h2>
+      <div class="space-y-3">
+        <% @season_challenges.each do |sc| %>
+          <% challenge = sc.challenge %>
+          <% mine = @my_challenge_progress[sc.challenge_id] %>
+          <div class="bg-white rounded-lg border border-gray-200 p-4">
+            <div class="flex items-start justify-between gap-3">
+              <div class="min-w-0">
+                <%= link_to challenge.display_title, challenge_path(challenge), class: "font-medium text-gray-900 hover:text-[#FC4C02]" %>
+                <p class="text-xs text-gray-500 mt-0.5">
+                  <%= challenge.target_value %> <%= t("enums.target_units.#{challenge.target_unit}", default: challenge.target_unit) %>
+                  <% if sc.required %><span class="ml-1 text-[#FC4C02] font-medium">· <%= t("seasons.show.required") %></span><% end %>
+                </p>
+              </div>
+              <span class="text-xs font-semibold text-accent whitespace-nowrap">+<%= sc.xp_reward %> XP</span>
+            </div>
+            <% if mine %>
+              <% cpct = challenge.target_value.to_f.positive? ? [100, (mine.progress_value.to_f / challenge.target_value.to_f * 100).round].min : 0 %>
+              <div class="mt-2 h-1.5 bg-gray-200 rounded-full overflow-hidden">
+                <div class="h-full <%= mine.completed_at ? 'bg-green-500' : 'bg-[#FC4C02]' %> rounded-full" style="width: <%= cpct %>%"></div>
+              </div>
+              <p class="text-xs text-gray-400 mt-1"><%= mine.completed_at ? t("seasons.show.completed") : "#{cpct}%" %></p>
+            <% end %>
+          </div>
+        <% end %>
+        <% if @season_challenges.empty? %>
+          <p class="text-gray-500 text-sm"><%= t("seasons.show.no_challenges") %></p>
+        <% end %>
+      </div>
+    </div>
+
+    <%# Rewards track %>
+    <div>
+      <h2 class="text-lg font-semibold text-gray-900 mb-3"><%= t("seasons.show.rewards") %></h2>
+      <div class="space-y-3">
+        <% @rewards.each do |reward| %>
+          <% unlocked = @granted_reward_ids.include?(reward.id) %>
+          <div class="flex items-center gap-3 bg-white rounded-lg border <%= unlocked ? 'border-green-200' : 'border-gray-200' %> p-4">
+            <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-full <%= unlocked ? 'bg-green-100 text-green-600' : 'bg-gray-100 text-gray-400' %>">
+              <i class="fa-solid <%= unlocked ? 'fa-circle-check' : 'fa-lock' %>"></i>
+            </div>
+            <div class="flex-1 min-w-0">
+              <p class="font-medium text-gray-900"><%= season_reward_label(reward) %></p>
+              <p class="text-xs text-gray-500"><%= t("seasons.show.reward_at_level", level: reward.level) %> · <%= t("seasons.reward_types.#{reward.reward_type}", default: reward.reward_type) %></p>
+            </div>
+          </div>
+        <% end %>
+        <% if @rewards.empty? %>
+          <p class="text-gray-500 text-sm"><%= t("seasons.show.no_rewards") %></p>
+        <% end %>
+      </div>
+    </div>
+  </div>
+
+  <div class="grid lg:grid-cols-2 gap-6 mt-6">
+    <%# Leaderboard %>
+    <div>
+      <h2 class="text-lg font-semibold text-gray-900 mb-3"><%= t("seasons.show.leaderboard") %></h2>
+      <div class="bg-white rounded-lg border border-gray-200 overflow-hidden">
+        <% @leaderboard.each_with_index do |p, i| %>
+          <div class="flex items-center justify-between px-4 py-3 text-sm <%= 'bg-orange-50' if user_signed_in? && p.user_id == current_user.id %> <%= 'border-t border-gray-100' unless i.zero? %>">
+            <span class="flex items-center gap-3 text-gray-800">
+              <span class="text-gray-400 w-5"><%= i + 1 %></span>
+              <%= p.user.first_name %> <%= p.user.last_name %>
+            </span>
+            <span class="font-semibold text-gray-900"><%= p.xp %> XP · L<%= p.level %></span>
+          </div>
+        <% end %>
+        <% if @leaderboard.empty? %>
+          <p class="text-gray-500 text-sm p-4"><%= t("seasons.show.no_participants") %></p>
+        <% end %>
+      </div>
+    </div>
+
+    <%# Recent activity %>
+    <div>
+      <h2 class="text-lg font-semibold text-gray-900 mb-3"><%= t("seasons.show.recent_activity") %></h2>
+      <div class="space-y-2">
+        <% @activities.each do |activity| %>
+          <div class="bg-white rounded-lg border border-gray-200 p-3 text-sm text-gray-700">
+            <span class="font-medium text-gray-900"><%= activity.user.first_name %></span>
+            <%= season_activity_text(activity) %>
+          </div>
+        <% end %>
+        <% if @activities.empty? %>
+          <p class="text-gray-500 text-sm"><%= t("seasons.show.no_activity") %></p>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>

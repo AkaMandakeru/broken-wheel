@@ -51,10 +51,18 @@ Rails.application.routes.draw do
     resources :messages, only: [:create], controller: "support_messages"
   end
 
+  resource :push_subscription, only: [:create, :destroy]
+
+  resources :seasons, only: [:index, :show]
+
   namespace :admin do
     root "dashboard#index"
     resources :challenges
     resources :events
+    resources :seasons do
+      resources :season_challenges, only: [:create, :destroy]
+      resources :season_rewards, only: [:create, :destroy]
+    end
     resources :support_tickets, only: [:index, :show, :update] do
       resources :messages, only: [:create], controller: "support_messages"
     end

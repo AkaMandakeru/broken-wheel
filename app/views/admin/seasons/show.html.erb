@@ -1,0 +1,118 @@
+<div class="pt-8">
+  <div class="flex items-start justify-between mb-6">
+    <div>
+      <%= link_to admin_seasons_path, class: "text-sm text-gray-500 hover:text-[#FC4C02] flex items-center gap-1 mb-2" do %>
+        <i class="fa-solid fa-arrow-left text-xs"></i> <%= t("admin.seasons.title") %>
+      <% end %>
+      <h1 class="text-2xl font-bold text-gray-900"><%= @season.name %></h1>
+      <p class="text-sm text-gray-500 mt-1">
+        <span class="px-2 py-0.5 rounded-full text-xs <%= season_status_badge_class(@season.status) %>"><%= t("seasons.statuses.#{@season.status}", default: @season.status.capitalize) %></span>
+        · ×<%= @season.xp_multiplier %> XP
+        · <%= @season.starts_at&.strftime("%b %-d") %> – <%= @season.ends_at&.strftime("%b %-d, %Y") %>
+      </p>
+    </div>
+    <div class="flex items-center gap-2">
+      <%= link_to t("admin.seasons.edit"), edit_admin_season_path(@season), class: "bg-[#FC4C02] text-white px-4 py-2 rounded-lg hover:bg-[#e04402] transition font-medium text-sm" %>
+      <%= link_to t("admin.seasons.view_public"), season_path(@season), class: "border border-gray-300 px-4 py-2 rounded-lg hover:bg-gray-50 transition font-medium text-sm" %>
+    </div>
+  </div>
+
+  <div class="grid lg:grid-cols-2 gap-6">
+    <%# Challenges %>
+    <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+      <h2 class="text-lg font-semibold text-gray-900 mb-4"><%= t("admin.seasons.challenges.title") %></h2>
+      <div class="space-y-2 mb-5">
+        <% @season_challenges.each do |sc| %>
+          <div class="flex items-center justify-between border border-gray-100 rounded-lg px-3 py-2 text-sm">
+            <div>
+              <span class="font-medium text-gray-900"><%= sc.challenge.display_title %></span>
+              <span class="text-gray-400">· +<%= sc.xp_reward %> XP<%= " · #{t('seasons.show.required')}" if sc.required %></span>
+            </div>
+            <%= button_to t("admin.seasons.challenges.remove"), admin_season_season_challenge_path(@season, sc), method: :delete, form: { class: "inline" }, class: "text-red-600 hover:text-red-800 text-xs cursor-pointer" %>
+          </div>
+        <% end %>
+        <% if @season_challenges.empty? %>
+          <p class="text-gray-400 text-sm"><%= t("admin.seasons.challenges.empty") %></p>
+        <% end %>
+      </div>
+
+      <% if @available_challenges.any? %>
+        <%= form_with url: admin_season_season_challenges_path(@season), scope: :season_challenge, class: "border-t border-gray-100 pt-4 space-y-3" do |f| %>
+          <%= f.select :challenge_id, @available_challenges.map { |c| [c.display_title, c.id] }, { prompt: t("admin.seasons.challenges.select") }, class: "block w-full rounded-lg border border-gray-300 px-3 py-2 text-sm" %>
+          <div class="grid grid-cols-2 gap-3">
+            <div>
+              <%= f.label :xp_reward, t("admin.seasons.challenges.xp"), class: "block text-xs text-gray-500 mb-1" %>
+              <%= f.number_field :xp_reward, value: 100, min: 0, class: "block w-full rounded-lg border border-gray-300 px-3 py-2 text-sm" %>
+            </div>
+            <div>
+              <%= f.label :position, t("admin.seasons.challenges.position"), class: "block text-xs text-gray-500 mb-1" %>
+              <%= f.number_field :position, value: @season_challenges.size, min: 0, class: "block w-full rounded-lg border border-gray-300 px-3 py-2 text-sm" %>
+            </div>
+          </div>
+          <label class="flex items-center gap-2 text-sm text-gray-700">
+            <%= f.check_box :required, class: "rounded text-[#FC4C02]" %> <%= t("admin.seasons.challenges.required") %>
+          </label>
+          <%= f.submit t("admin.seasons.challenges.add"), class: "bg-gray-900 text-white px-4 py-2 rounded-lg hover:bg-gray-700 transition font-medium text-sm cursor-pointer" %>
+        <% end %>
+      <% end %>
+    </div>
+
+    <%# Rewards %>
+    <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+      <h2 class="text-lg font-semibold text-gray-900 mb-4"><%= t("admin.seasons.rewards.title") %></h2>
+      <div class="space-y-2 mb-5">
+        <% @season.season_rewards.each do |reward| %>
+          <div class="flex items-center justify-between border border-gray-100 rounded-lg px-3 py-2 text-sm">
+            <div>
+              <span class="font-medium text-gray-900"><%= t("seasons.show.reward_at_level", level: reward.level) %></span>
+              <span class="text-gray-400">· <%= reward.reward_type %> · <%= reward.name.presence || reward.reward_key %></span>
+            </div>
+            <%= button_to t("admin.seasons.rewards.remove"), admin_season_season_reward_path(@season, reward), method: :delete, form: { class: "inline" }, class: "text-red-600 hover:text-red-800 text-xs cursor-pointer" %>
+          </div>
+        <% end %>
+        <% if @season.season_rewards.empty? %>
+          <p class="text-gray-400 text-sm"><%= t("admin.seasons.rewards.empty") %></p>
+        <% end %>
+      </div>
+
+      <%= form_with url: admin_season_season_rewards_path(@season), scope: :season_reward, class: "border-t border-gray-100 pt-4 space-y-3" do |f| %>
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <%= f.label :level, t("admin.seasons.rewards.level"), class: "block text-xs text-gray-500 mb-1" %>
+            <%= f.number_field :level, value: 2, min: 1, max: Leveling::MAX_LEVEL, class: "block w-full rounded-lg border border-gray-300 px-3 py-2 text-sm" %>
+          </div>
+          <div>
+            <%= f.label :reward_type, t("admin.seasons.rewards.type"), class: "block text-xs text-gray-500 mb-1" %>
+            <%= f.select :reward_type, SeasonReward::REWARD_TYPES.map { |rt| [t("seasons.reward_types.#{rt}", default: rt), rt] }, {}, class: "block w-full rounded-lg border border-gray-300 px-3 py-2 text-sm" %>
+          </div>
+        </div>
+        <div>
+          <%= f.label :reward_key, t("admin.seasons.rewards.key"), class: "block text-xs text-gray-500 mb-1" %>
+          <%= f.text_field :reward_key, placeholder: "trail_hunter", class: "block w-full rounded-lg border border-gray-300 px-3 py-2 text-sm" %>
+          <p class="text-xs text-gray-400 mt-1"><%= t("admin.seasons.rewards.key_hint") %></p>
+        </div>
+        <div>
+          <%= f.label :name, t("admin.seasons.rewards.name"), class: "block text-xs text-gray-500 mb-1" %>
+          <%= f.text_field :name, class: "block w-full rounded-lg border border-gray-300 px-3 py-2 text-sm" %>
+        </div>
+        <%= f.submit t("admin.seasons.rewards.add"), class: "bg-gray-900 text-white px-4 py-2 rounded-lg hover:bg-gray-700 transition font-medium text-sm cursor-pointer" %>
+      <% end %>
+    </div>
+  </div>
+
+  <%# Participants %>
+  <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-6 mt-6">
+    <h2 class="text-lg font-semibold text-gray-900 mb-4"><%= t("admin.seasons.participants", count: @season.season_participations.size) %></h2>
+    <div class="space-y-1">
+      <% @participations.each_with_index do |p, i| %>
+        <div class="flex items-center justify-between text-sm py-1">
+          <span class="text-gray-700"><%= i + 1 %>. <%= p.user.first_name %> <%= p.user.last_name %></span>
+          <span class="font-medium text-gray-900"><%= p.xp %> XP · L<%= p.level %></span>
+        </div>
+      <% end %>
+      <% if @participations.empty? %>
+        <p class="text-gray-400 text-sm"><%= t("admin.seasons.no_participants") %></p>
+      <% end %>
+    </div>
+  </div>
+</div>

@@ -17,6 +17,8 @@ class Event < ApplicationRecord
   scope :upcoming, -> { where(status: "upcoming") }
   scope :by_date, -> { order(event_date: :asc) }
 
+  after_create_commit :push_new_event_notification
+
   # Accepts checkbox values and/or a comma/space separated string, and stores a
   # clean, de-duplicated, sorted list of distances (in km) as numbers.
   def distances=(value)
@@ -41,5 +43,16 @@ class Event < ApplicationRecord
     event_participations.where.not(selected_distance_km: nil)
                         .group(:selected_distance_km).count
                         .transform_keys(&:to_f)
+  end
+
+  private
+
+  def push_new_event_notification
+    PushNotifier.broadcast(
+      title: I18n.t("push.event.title"),
+      body: I18n.t("push.event.body", title: title),
+      path: Rails.application.routes.url_helpers.event_path(self),
+      tag: "event-#{id}"
+    )
   end
 end
