@@ -11,10 +11,10 @@ class SeasonRewardGranter
 
   def grant_up_to(level)
     @season.season_rewards.where(level: ..level).find_each do |reward|
-      next if @participation.season_reward_grants.exists?(season_reward: reward)
+      # The unique index is the gate — concurrent recalcs can't double-grant.
+      next unless claim(reward)
 
       apply(reward)
-      @participation.season_reward_grants.create!(season_reward: reward, granted_at: Time.current)
       SeasonActivity.create!(
         season: @season,
         user: @user,
@@ -25,6 +25,15 @@ class SeasonRewardGranter
   end
 
   private
+
+  def claim(reward)
+    return false if @participation.season_reward_grants.exists?(season_reward: reward)
+
+    @participation.season_reward_grants.create!(season_reward: reward, granted_at: Time.current)
+    true
+  rescue ActiveRecord::RecordNotUnique, ActiveRecord::RecordInvalid
+    false # already granted (concurrent recalc)
+  end
 
   def apply(reward)
     case reward.reward_type

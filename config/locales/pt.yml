@@ -492,6 +492,9 @@ pt:
       season_challenges:
         added: "Desafio adicionado à temporada."
         removed: "Desafio removido da temporada."
+      season_objectives:
+        added: "Objetivo adicionado à temporada."
+        removed: "Objetivo removido da temporada."
       season_rewards:
         added: "Recompensa adicionada."
         removed: "Recompensa removida."
@@ -552,6 +555,16 @@ pt:
         position: "Ordem"
         required: "Obrigatório"
         add: "Adicionar desafio"
+      objectives:
+        title: "Objetivos de clube"
+        hint: "Metas baseadas em ações, como entrar em um clube ou treinar como membro."
+        empty: "Nenhum objetivo ainda."
+        remove: "Remover"
+        kind: "Objetivo"
+        xp: "Recompensa de XP"
+        target: "Meta"
+        target_hint: "A meta vale para objetivos repetíveis (ex.: número de treinos com o clube). Use 1 para objetivos únicos como entrar em um clube."
+        add: "Adicionar objetivo"
       rewards:
         title: "Recompensas"
         empty: "Nenhuma recompensa ainda."
@@ -938,6 +951,7 @@ pt:
       sign_in_prompt: "Entre para participar da temporada e acompanhar seu progresso."
       sign_in: "Entrar"
       challenges: "Desafios da temporada"
+      objectives: "Objetivos"
       required: "Obrigatório"
       completed: "Concluído"
       no_challenges: "Nenhum desafio nesta temporada ainda."
@@ -950,8 +964,18 @@ pt:
       no_activity: "Nenhuma atividade ainda."
     activity:
       challenge_completed: "completou um desafio (%{challenge}) · +%{xp} XP"
+      objective_completed: "completou um objetivo (%{objective}) · +%{xp} XP"
       level_up: "alcançou o nível %{level}"
       reward_unlocked: "desbloqueou %{name}"
+    objectives:
+      kinds:
+        join_club: "Entrar em um clube"
+        club_workout: "Treino com o clube"
+      descriptions:
+        join_club: "Entre em qualquer clube"
+        club_workout:
+          one: "Registre 1 treino como membro de um clube"
+          other: "Registre %{count} treinos como membro de um clube"
 
   # Texto das notificações push
   push:
@@ -964,6 +988,9 @@ pt:
     season_level:
       title: "Subiu de nível! ⚡"
       body: "Você alcançou o nível %{level} em %{season}."
+    workout_xp:
+      title: "Treino importado 💪"
+      body: "Você ganhou %{xp} XP!"
 
   flashes:
     support:

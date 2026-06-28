@@ -63,38 +63,42 @@ DEFAULT_CHALLENGES = [
 DEFAULT_CHALLENGES.each { |attrs| upsert_default_challenge(**attrs) }
 
 # ---------------------------------------------------------------------------
-# Example Season (Summer Miles) — groups existing challenges with XP + rewards
+# Example Season (Summer Miles) — DEVELOPMENT ONLY.
+#   Real seasons are created by admins in /admin/seasons, so this demo season
+#   is never seeded in production.
 # ---------------------------------------------------------------------------
 
-season = Season.find_or_initialize_by(key: "summer_miles")
-season.update!(
-  name: "Summer Miles",
-  description: "Rack up the miles this month. Complete challenges, climb the ranks and unlock summer rewards.",
-  theme: "summer",
-  status: "active",
-  starts_at: Date.current.beginning_of_month,
-  ends_at: Date.current.end_of_month,
-  xp_multiplier: 1.0
-)
+if Rails.env.development?
+  season = Season.find_or_initialize_by(key: "summer_miles")
+  season.update!(
+    name: "Summer Miles",
+    description: "Rack up the miles this month. Complete challenges, climb the ranks and unlock summer rewards.",
+    theme: "summer",
+    status: "active",
+    starts_at: Date.current.beginning_of_month,
+    ends_at: Date.current.end_of_month,
+    xp_multiplier: 1.0
+  )
 
-{
-  "weekly_distance_run" => { position: 0, xp_reward: 150, required: true },
-  "monthly_distance_run" => { position: 1, xp_reward: 300, required: true },
-  "weekly_count_run" => { position: 2, xp_reward: 120, required: false }
-}.each do |challenge_key, attrs|
-  challenge = Challenge.find_by(key: challenge_key)
-  next unless challenge
+  {
+    "weekly_distance_run" => { position: 0, xp_reward: 150, required: true },
+    "monthly_distance_run" => { position: 1, xp_reward: 300, required: true },
+    "weekly_count_run" => { position: 2, xp_reward: 120, required: false }
+  }.each do |challenge_key, attrs|
+    challenge = Challenge.find_by(key: challenge_key)
+    next unless challenge
 
-  sc = season.season_challenges.find_or_initialize_by(challenge: challenge)
-  sc.update!(attrs)
-end
+    sc = season.season_challenges.find_or_initialize_by(challenge: challenge)
+    sc.update!(attrs)
+  end
 
-[
-  { level: 2, reward_type: "title", reward_key: "trail_hunter", name: "Trail Hunter" },
-  { level: 3, reward_type: "badge", reward_key: "summer_miles_finisher", name: "Summer Miles Badge" },
-  { level: 5, reward_type: "theme", reward_key: "summer", name: "Summer Profile Theme" }
-].each do |attrs|
-  season.season_rewards.find_or_initialize_by(level: attrs[:level], reward_type: attrs[:reward_type]).update!(attrs)
+  [
+    { level: 2, reward_type: "title", reward_key: "trail_hunter", name: "Trail Hunter" },
+    { level: 3, reward_type: "badge", reward_key: "summer_miles_finisher", name: "Summer Miles Badge" },
+    { level: 5, reward_type: "theme", reward_key: "summer", name: "Summer Profile Theme" }
+  ].each do |attrs|
+    season.season_rewards.find_or_initialize_by(level: attrs[:level], reward_type: attrs[:reward_type]).update!(attrs)
+  end
 end
 
 # ---------------------------------------------------------------------------

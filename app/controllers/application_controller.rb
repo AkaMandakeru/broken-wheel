@@ -59,8 +59,15 @@ class ApplicationController < ActionController::Base
   end
 
   def after_sign_in_path_for(resource)
-    stored_location_for(resource) || challenges_path
+    stored_location_for(resource) || logged_in_home_path
   end
+
+  # Signed-in users land on the active season (or the seasons index if none).
+  def logged_in_home_path
+    active_season = Season.active.by_recent.first
+    active_season ? season_path(active_season) : seasons_path
+  end
+  helper_method :logged_in_home_path
 
   def private_or_loopback?(ip)
     addr = IPAddr.new(ip)

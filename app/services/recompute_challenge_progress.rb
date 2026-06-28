@@ -18,12 +18,22 @@ class RecomputeChallengeProgress
   def computed_progress
     case @challenge.target_unit
     when "km"
-      @participation.workouts.sum(:distance_km)
+      qualifying_workouts.sum(:distance_km)
     when "times"
-      @participation.workouts.count
+      qualifying_workouts.count
     else
-      @participation.workouts.sum(:duration_minutes).to_f / 60
+      qualifying_workouts.sum(:duration_minutes).to_f / 60
     end
+  end
+
+  # Every workout the user logged that fits this challenge's window and sport —
+  # regardless of which challenge it was "assigned" to. This lets a single
+  # workout count toward every challenge it qualifies for.
+  def qualifying_workouts
+    window = @challenge.workout_window
+    scope = window ? @user.workouts.where(workout_date: window) : @user.workouts.none
+    scope = scope.where(sport: @challenge.sport) if @challenge.sport.present?
+    scope
   end
 
   def newly_completed?
@@ -47,10 +57,18 @@ class RecomputeChallengeProgress
                    .where(challenge_id: @challenge.id, seasons: { status: "active" })
                    .find_each do |season_challenge|
       participation = SeasonProgressService.ensure_participation(@user, season_challenge.season)
-      completion = participation.season_challenge_completions.find_or_initialize_by(season_challenge: season_challenge)
-      next if completion.persisted?
+      next if participation.season_challenge_completions.exists?(season_challenge: season_challenge)
 
-      completion.update!(xp_awarded: season_challenge.xp_reward, completed_at: Time.current)
+      begin
+        participation.season_challenge_completions.create!(
+          season_challenge: season_challenge,
+          xp_awarded: season_challenge.xp_reward,
+          completed_at: Time.current
+        )
+      rescue ActiveRecord::RecordNotUnique, ActiveRecord::RecordInvalid
+        next # already recorded by a concurrent recalc
+      end
+
       SeasonActivity.create!(
         season: season_challenge.season,
         user: @user,

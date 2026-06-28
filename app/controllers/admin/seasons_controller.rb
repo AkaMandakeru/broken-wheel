@@ -11,6 +11,7 @@ module Admin
     def show
       @season_challenges = @season.season_challenges.includes(:challenge)
       @season_challenge = SeasonChallenge.new
+      @season_objective = SeasonObjective.new
       @season_reward = SeasonReward.new
       @available_challenges = Challenge.where.not(id: @season.challenges.select(:id)).order(:title)
       @participations = @season.season_participations.by_rank.includes(:user).limit(20)

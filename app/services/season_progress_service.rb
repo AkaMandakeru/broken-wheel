@@ -4,6 +4,7 @@
 # the durable completion ledger plus time-based bonuses, so it survives weekly
 # challenge resets and can be re-run safely at any time.
 class SeasonProgressService
+  WORKOUT_XP              = 20
   STREAK_XP_PER_WEEK      = 10
   STREAK_CAP_WEEKS        = 10
   CONSISTENCY_XP_PER_WEEK = 15
@@ -20,12 +21,17 @@ class SeasonProgressService
   end
 
   def recalculate
+    # Record any action-based objectives that are now complete (join club, …).
+    SeasonObjectives.evaluate(@participation)
+
     challenges_xp  = @participation.season_challenge_completions.sum(:xp_awarded)
+    objectives_xp  = @participation.season_objective_completions.sum(:xp_awarded)
+    workouts_xp    = season_workouts_count * WORKOUT_XP
     streak_xp      = [ streak_weeks, STREAK_CAP_WEEKS ].min * STREAK_XP_PER_WEEK
     consistency_xp = consistency_weeks * CONSISTENCY_XP_PER_WEEK
     club_xp        = @user.club_memberships.exists? ? CLUB_BONUS : 0
 
-    base  = challenges_xp + streak_xp + consistency_xp + club_xp
+    base  = challenges_xp + objectives_xp + workouts_xp + streak_xp + consistency_xp + club_xp
     total = (base * @season.xp_multiplier).round
     new_level = Leveling.level_for(total)
     old_level = @participation.level
@@ -35,6 +41,8 @@ class SeasonProgressService
       level: new_level,
       xp_breakdown: {
         challenges: challenges_xp,
+        objectives: objectives_xp,
+        workouts: workouts_xp,
         streak: streak_xp,
         consistency: consistency_xp,
         clubs: club_xp,
@@ -52,6 +60,13 @@ class SeasonProgressService
 
   def streak_weeks
     AchievementChecker.user_stats(@user)[:streak].to_i
+  end
+
+  # Every workout logged within the season window earns base XP.
+  def season_workouts_count
+    return 0 unless @season.window
+
+    @user.workouts.where(workout_date: @season.starts_at.to_date..@season.ends_at.to_date).count
   end
 
   def consistency_weeks

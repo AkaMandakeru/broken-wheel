@@ -86,9 +86,12 @@ class WorkoutsController < ApplicationController
     params.require(:workout).permit(:sport, :distance_km_input, :distance_m_input, :duration_hours_input, :duration_minutes_input, :duration_seconds_input, :workout_date, :challenge_participation_id)
   end
 
-  def update_participation_progress(workout)
-    return unless workout.challenge_participation_id
-
-    RecomputeChallengeProgress.new(workout.challenge_participation).call
+  def update_participation_progress(_workout)
+    # Recompute every active challenge the user is in — a workout counts toward
+    # all challenges it qualifies for, not just the one it was attached to.
+    current_user.challenge_participations
+                .joins(:challenge)
+                .where(challenges: { status: "active" }, completed_at: nil)
+                .find_each { |participation| RecomputeChallengeProgress.new(participation).call }
   end
 end

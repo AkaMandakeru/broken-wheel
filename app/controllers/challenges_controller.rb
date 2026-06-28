@@ -22,20 +22,9 @@ class ChallengesController < ApplicationController
       return
     end
 
-    participation = current_user.challenge_participations.create!(challenge: @challenge)
+    ChallengeEnroller.call(current_user, @challenge)
 
     Analytics.track(user: current_user, event: "challenge_joined", properties: { challenge_id: @challenge.id, challenge_type: @challenge.challenge_type, sport: @challenge.sport })
-
-    window = @challenge.workout_window
-    workouts = window ? current_user.workouts.where(workout_date: window) : current_user.workouts.none
-
-    workouts = workouts.where(sport: @challenge.sport) if @challenge.sport.present?
-    workouts_to_assign = workouts.where(challenge_participation_id: nil)
-
-    if workouts_to_assign.any?
-      workouts_to_assign.update_all(challenge_participation_id: participation.id)
-      RecomputeChallengeProgress.new(participation).call
-    end
 
     notice = if current_user.connected_to_strava?
                 t("flashes.challenges.joined")

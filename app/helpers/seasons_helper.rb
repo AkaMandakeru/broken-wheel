@@ -25,6 +25,8 @@ module SeasonsHelper
     case activity.kind
     when "challenge_completed"
       t("seasons.activity.challenge_completed", challenge: meta["challenge"], xp: meta["xp"])
+    when "objective_completed"
+      t("seasons.activity.objective_completed", objective: meta["objective"], xp: meta["xp"])
     when "level_up"
       t("seasons.activity.level_up", level: meta["level"])
     when "reward_unlocked"

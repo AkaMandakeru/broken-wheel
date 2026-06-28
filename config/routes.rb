@@ -61,6 +61,7 @@ Rails.application.routes.draw do
     resources :events
     resources :seasons do
       resources :season_challenges, only: [:create, :destroy]
+      resources :season_objectives, only: [:create, :destroy]
       resources :season_rewards, only: [:create, :destroy]
     end
     resources :support_tickets, only: [:index, :show, :update] do

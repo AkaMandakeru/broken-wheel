@@ -3,6 +3,7 @@ class Season < ApplicationRecord
 
   has_many :season_challenges, -> { order(:position) }, dependent: :destroy
   has_many :challenges, through: :season_challenges
+  has_many :season_objectives, -> { order(:position) }, dependent: :destroy
   has_many :season_participations, dependent: :destroy
   has_many :season_rewards, -> { order(:level) }, dependent: :destroy
   has_many :season_activities, dependent: :destroy

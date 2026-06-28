@@ -520,6 +520,9 @@ en:
       season_challenges:
         added: "Challenge added to season."
         removed: "Challenge removed from season."
+      season_objectives:
+        added: "Objective added to season."
+        removed: "Objective removed from season."
       season_rewards:
         added: "Reward added."
         removed: "Reward removed."
@@ -580,6 +583,16 @@ en:
         position: "Order"
         required: "Required"
         add: "Add challenge"
+      objectives:
+        title: "Club objectives"
+        hint: "Action-based goals like joining a club or working out as a member."
+        empty: "No objectives yet."
+        remove: "Remove"
+        kind: "Objective"
+        xp: "XP reward"
+        target: "Target"
+        target_hint: "Target applies to repeatable objectives (e.g. number of club workouts). Use 1 for one-off objectives like joining a club."
+        add: "Add objective"
       rewards:
         title: "Rewards"
         empty: "No rewards yet."
@@ -851,6 +864,7 @@ en:
       sign_in_prompt: "Sign in to join the season and track your progress."
       sign_in: "Sign in"
       challenges: "Season challenges"
+      objectives: "Objectives"
       required: "Required"
       completed: "Completed"
       no_challenges: "No challenges in this season yet."
@@ -863,8 +877,18 @@ en:
       no_activity: "No activity yet."
     activity:
       challenge_completed: "completed a challenge (%{challenge}) · +%{xp} XP"
+      objective_completed: "completed an objective (%{objective}) · +%{xp} XP"
       level_up: "reached level %{level}"
       reward_unlocked: "unlocked %{name}"
+    objectives:
+      kinds:
+        join_club: "Join a club"
+        club_workout: "Club workout"
+      descriptions:
+        join_club: "Join any club"
+        club_workout:
+          one: "Log 1 workout as a club member"
+          other: "Log %{count} workouts as a club member"
 
   # Web Push notification copy
   push:
@@ -877,6 +901,9 @@ en:
     season_level:
       title: "Level up! ⚡"
       body: "You reached level %{level} in %{season}."
+    workout_xp:
+      title: "Workout imported 💪"
+      body: "You earned %{xp} XP!"
 
   # Flash messages set by controllers
   flashes:

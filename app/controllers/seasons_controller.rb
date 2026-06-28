@@ -20,6 +20,8 @@ class SeasonsController < ApplicationController
 
     @season_challenges = @season.season_challenges.includes(:challenge)
     @my_challenge_progress = my_challenge_progress
+    @season_objectives = @season.season_objectives
+    @completed_objective_ids = @participation&.season_objective_completions&.pluck(:season_objective_id) || []
     @rewards = @season.season_rewards
     @granted_reward_ids = @participation&.granted_reward_ids || []
     @leaderboard = @season.season_participations.by_rank.includes(:user).limit(10)

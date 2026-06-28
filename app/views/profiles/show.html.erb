@@ -68,9 +68,19 @@
   <div class="mt-10">
     <h2 class="text-lg font-semibold text-gray-900 mb-2"><%= t('profiles.show.connected_apps') %></h2>
     <p class="text-gray-600 text-sm mb-3"><%= t('profiles.show.connect_apps_description') %></p>
-    <%= link_to integrations_path, class: "text-sm font-medium bg-[#FC4C02] text-white px-3 py-1.5 rounded-lg hover:bg-[#e04402] transition inline-flex items-center gap-2" do %>
-      <i class="fa-solid fa-plug"></i>
-      <%= t('profiles.show.manage_apps') %>
+    <% if current_user.connected_to_strava? %>
+      <div class="inline-flex items-center gap-2 text-sm font-medium text-gray-800 bg-gray-100 rounded-lg px-3 py-1.5 mb-3">
+        <i class="fa-brands fa-strava text-[#FC4C02]"></i> Strava
+        <i class="fa-solid fa-circle-check text-green-500"></i>
+      </div>
+      <div>
+        <%= link_to t('profiles.show.manage_apps'), integrations_path, class: "text-sm font-medium text-[#FC4C02] hover:underline" %>
+      </div>
+    <% else %>
+      <%= link_to integrations_path, class: "text-sm font-medium bg-[#FC4C02] text-white px-3 py-1.5 rounded-lg hover:bg-[#e04402] transition inline-flex items-center gap-2" do %>
+        <i class="fa-solid fa-plug"></i>
+        <%= t('profiles.show.connect_strava') %>
+      <% end %>
     <% end %>
   </div>
 

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_06_08_170000) do
+ActiveRecord::Schema[8.1].define(version: 2026_06_21_120000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -199,6 +199,31 @@ ActiveRecord::Schema[8.1].define(version: 2026_06_08_170000) do
     t.index ["challenge_id"], name: "index_season_challenges_on_challenge_id"
     t.index ["season_id", "challenge_id"], name: "index_season_challenges_on_season_id_and_challenge_id", unique: true
     t.index ["season_id"], name: "index_season_challenges_on_season_id"
+  end
+
+  create_table "season_objective_completions", force: :cascade do |t|
+    t.datetime "completed_at", null: false
+    t.datetime "created_at", null: false
+    t.bigint "season_objective_id", null: false
+    t.bigint "season_participation_id", null: false
+    t.datetime "updated_at", null: false
+    t.integer "xp_awarded", default: 0, null: false
+    t.index ["season_objective_id"], name: "index_season_objective_completions_on_season_objective_id"
+    t.index ["season_participation_id", "season_objective_id"], name: "idx_season_objective_completions_unique", unique: true
+    t.index ["season_participation_id"], name: "index_season_objective_completions_on_season_participation_id"
+  end
+
+  create_table "season_objectives", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.string "kind", null: false
+    t.string "name"
+    t.integer "position", default: 0, null: false
+    t.boolean "required", default: false, null: false
+    t.bigint "season_id", null: false
+    t.integer "target", default: 1, null: false
+    t.datetime "updated_at", null: false
+    t.integer "xp_reward", default: 0, null: false
+    t.index ["season_id"], name: "index_season_objectives_on_season_id"
   end
 
   create_table "season_participations", force: :cascade do |t|
@@ -400,6 +425,9 @@ ActiveRecord::Schema[8.1].define(version: 2026_06_08_170000) do
   add_foreign_key "season_challenge_completions", "season_participations"
   add_foreign_key "season_challenges", "challenges"
   add_foreign_key "season_challenges", "seasons"
+  add_foreign_key "season_objective_completions", "season_objectives"
+  add_foreign_key "season_objective_completions", "season_participations"
+  add_foreign_key "season_objectives", "seasons"
   add_foreign_key "season_participations", "seasons"
   add_foreign_key "season_participations", "users"
   add_foreign_key "season_reward_grants", "season_participations"
