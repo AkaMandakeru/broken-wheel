@@ -18,7 +18,15 @@ class WorkoutsController < ApplicationController
   end
 
   def index
-    @participations = current_user.challenge_participations.joins(:challenge).where(challenges: { status: "active" }).includes(:challenge)
+    # A challenge can be live in more than one season, so a user may hold
+    # several participations for it. The picker shows each challenge once.
+    @participations = current_user.challenge_participations
+                                  .joins(:challenge)
+                                  .where(challenges: { status: "active" })
+                                  .includes(:challenge)
+                                  .order(Arel.sql("season_id IS NULL"))
+                                  .to_a
+                                  .uniq(&:challenge_id)
     @workouts = current_user.workouts.order(workout_date: :desc).limit(20)
     @workout_count = current_user.workouts.count
     @unique_days = current_user.workouts.distinct.count(:workout_date)

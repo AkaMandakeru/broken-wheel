@@ -1,7 +1,10 @@
 # frozen_string_literal: true
 
-# Evaluates action-based season objectives (join a club, club workouts, …) and
-# records durable completions when their target is met.
+# Evaluates season objectives — the club/action goals and the five Legacy
+# Missions — and records durable completions when their target is met.
+#
+# Progress resolves through ChallengeMetrics, so adding an objective type is a
+# blueprint entry rather than a new branch here.
 module SeasonObjectives
   module_function
 
@@ -10,53 +13,77 @@ module SeasonObjectives
   def enqueue_for(user, kinds:)
     season_ids = SeasonObjective.where(kind: kinds).distinct.pluck(:season_id)
     Season.active.where(id: season_ids).find_each do |season|
-      SeasonRecalcJob.perform_later(user.id, season.id)
+      SeasonRecalcJob.enqueue_debounced(user.id, season.id)
     end
   end
 
   # Record any newly-met objective completions for this participation. Durable
   # (one row per participation+objective), so XP never regresses.
-  def evaluate(participation)
+  def evaluate(participation, context: nil)
     season = participation.season
     user = participation.user
+    context ||= ChallengeMetrics::Context.new(
+      user: user, window: season.date_window, season: season, participation: participation
+    )
 
-    season.season_objectives.find_each do |objective|
-      next if participation.season_objective_completions.exists?(season_objective: objective)
-      next unless progress(objective, user, season) >= objective.target
+    completed_ids = participation.season_objective_completions.pluck(:season_objective_id).to_set
 
-      begin
-        participation.season_objective_completions.create!(
-          season_objective: objective,
-          xp_awarded: objective.xp_reward,
-          completed_at: Time.current
-        )
-      rescue ActiveRecord::RecordNotUnique, ActiveRecord::RecordInvalid
-        next # already recorded by a concurrent recalc
-      end
+    season.season_objectives.each do |objective|
+      next if completed_ids.include?(objective.id)
+      next unless satisfied?(objective, context)
 
-      SeasonActivity.create!(
-        season: season,
-        user: user,
-        kind: "objective_completed",
-        metadata: { objective: I18n.t("seasons.objectives.kinds.#{objective.kind}", default: objective.kind), xp: objective.xp_reward }
-      )
+      record_completion(participation, objective, season, user)
     end
   end
 
-  def progress(objective, user, season)
-    case objective.kind
-    when "join_club"    then user.club_memberships.exists? ? 1 : 0
-    when "club_workout" then club_workouts_count(user, season)
-    else 0
-    end
+  def satisfied?(objective, context)
+    value = progress(objective, context)
+    ChallengeMetrics.satisfied?(objective.metric_key, value, objective.target)
   end
 
-  # Workouts logged within the season window while the user belongs to a club.
-  def club_workouts_count(user, season)
-    return 0 unless user.club_memberships.exists?
+  def progress(objective, context)
+    ChallengeMetrics.call(objective.metric_key, context.rescope(options: objective.options))
+  end
 
-    scope = user.workouts
-    scope = scope.where(workout_date: season.starts_at.to_date..season.ends_at.to_date) if season.window
-    scope.count
+  # Value for display, without recording anything.
+  def progress_for(participation, objective, context: nil)
+    context ||= ChallengeMetrics::Context.new(
+      user: participation.user,
+      window: participation.season.date_window,
+      season: participation.season,
+      participation: participation
+    )
+    progress(objective, context)
+  end
+
+  def record_completion(participation, objective, season, user)
+    participation.season_objective_completions.create!(
+      season_objective: objective,
+      xp_awarded: objective.xp_reward,
+      completed_at: Time.current
+    )
+
+    credit_coins(user, participation, objective, season)
+
+    SeasonActivity.create!(
+      season: season,
+      user: user,
+      kind: objective.legacy? ? "legacy_mission_completed" : "objective_completed",
+      metadata: { objective: objective.display_name, xp: objective.xp_reward, track: objective.track }
+    )
+  rescue ActiveRecord::RecordNotUnique, ActiveRecord::RecordInvalid
+    nil # already recorded by a concurrent recalc
+  end
+
+  def credit_coins(user, participation, objective, season)
+    return if objective.coin_reward.to_i.zero?
+
+    Wallet.credit(
+      user,
+      amount: objective.coin_reward,
+      reason: "season_objective",
+      reason_key: "season_objective:#{objective.id}:#{participation.id}",
+      metadata: { season_id: season.id, objective: objective.display_name }
+    )
   end
 end

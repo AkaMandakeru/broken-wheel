@@ -1,0 +1,62 @@
+<% challenge = season_challenge.challenge %>
+<% locked = season_challenge.locked_for?(participation) %>
+<% completed = mine&.completed_at.present? %>
+<div class="bg-white rounded-lg border p-4 <%= completed ? 'border-green-200' : 'border-gray-200' %> <%= 'opacity-70' if locked %>">
+  <div class="flex items-start justify-between gap-3">
+    <div class="min-w-0">
+      <%= link_to challenge.display_title, challenge_path(challenge), class: "font-medium text-gray-900 hover:text-[#FC4C02]" %>
+      <% if season_challenge.hidden? %>
+        <span class="ml-1 text-[10px] px-1.5 py-0.5 rounded-full bg-purple-100 text-purple-700"><%= t("seasons.show.secret") %></span>
+      <% end %>
+      <% if season_challenge.week_index %>
+        <span class="ml-1 text-[10px] px-1.5 py-0.5 rounded-full bg-gray-100 text-gray-600">
+          <%= t("seasons.show.week_n", n: season_challenge.week_index) %>
+        </span>
+      <% end %>
+    </div>
+    <div class="text-right whitespace-nowrap">
+      <span class="text-xs font-semibold text-accent">+<%= season_challenge.xp_reward %> XP</span>
+      <% if season_challenge.coin_reward.positive? %>
+        <span class="block text-[11px] text-amber-600"><i class="fa-solid fa-coins"></i> <%= season_challenge.coin_reward %></span>
+      <% end %>
+    </div>
+  </div>
+
+  <% if locked %>
+    <p class="text-xs text-gray-500 mt-2">
+      <i class="fa-solid fa-lock mr-1"></i><%= t("seasons.show.unlocks_at_level", level: season_challenge.unlock_level) %>
+    </p>
+  <% end %>
+
+  <%# One row per requirement — a compound challenge shows all of its conditions. %>
+  <% if mine %>
+    <div class="mt-3 space-y-2">
+      <% mine.requirement_status.each do |status| %>
+        <% requirement = status[:requirement] %>
+        <div>
+          <div class="flex items-center justify-between text-xs">
+            <span class="<%= status[:met] ? 'text-green-600' : 'text-gray-600' %>">
+              <i class="fa-solid <%= status[:met] ? 'fa-circle-check' : 'fa-circle' %> text-[9px] mr-1"></i>
+              <%= requirement.label %>
+            </span>
+            <span class="text-gray-400 tabular-nums">
+              <%= format_metric_value(status[:value], requirement.display_unit) %>
+            </span>
+          </div>
+          <div class="mt-1 h-1.5 bg-gray-200 rounded-full overflow-hidden">
+            <div class="h-full <%= status[:met] ? 'bg-green-500' : 'bg-[#FC4C02]' %> rounded-full" style="width: <%= status[:percent] %>%"></div>
+          </div>
+        </div>
+      <% end %>
+    </div>
+    <p class="text-xs text-gray-400 mt-2">
+      <%= completed ? t("seasons.show.completed") : "#{mine.percent_complete}%" %>
+    </p>
+  <% else %>
+    <div class="mt-2 space-y-1">
+      <% challenge.challenge_requirements.each do |requirement| %>
+        <p class="text-xs text-gray-500"><i class="fa-solid fa-circle text-[9px] mr-1"></i><%= requirement.label %></p>
+      <% end %>
+    </div>
+  <% end %>
+</div>

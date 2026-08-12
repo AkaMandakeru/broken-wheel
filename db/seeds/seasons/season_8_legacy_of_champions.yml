@@ -1,0 +1,380 @@
+# Season 8 — Legacy of Champions
+#
+# Import with: rails 'seasons:import[season_8_legacy_of_champions]'
+# The importer upserts by key and never deletes, so re-running after an edit
+# updates the season in place without disturbing player progress.
+#
+# Every challenge here is `custom` with fixed dates. A `weekly` challenge_type
+# would be rolled forward and zeroed by ResetWeeklyChallengesJob, erasing each
+# named week the moment it ended.
+
+key: season_8_legacy_of_champions
+name: Legacy of Champions
+slogan: Every kilometer tells a story. Build your legacy.
+description: >-
+  Legends are not born from one great race. They are built through thousands of
+  small victories. Ten levels, four weeks, and one month to build something
+  that lasts.
+theme: legacy
+status: active
+starts_at: 2026-08-01
+ends_at: 2026-08-31
+time_zone: America/Sao_Paulo
+xp_multiplier: 1.0
+# Level count is a pacing choice; top_level_xp is the difficulty. Change
+# max_level freely — the curve is respread across the same XP range, so a
+# 10-level season is not an easier one, just one that levels up less often.
+max_level: 10
+top_level_xp: 17110
+curve_exponent: 1.5
+
+# ---------------------------------------------------------------------------
+# Cosmetics catalogue
+#   `renderable: false` items are awarded and collected now, and become
+#   equippable once their art exists — see docs/SEASON_BATTLE_PASS_PLAN.md (D2).
+# ---------------------------------------------------------------------------
+cosmetics:
+  - { key: winter_banner,        kind: banner,     name: Winter Banner,        rarity: common,    css_class: "bg-gradient-to-r from-slate-800 via-blue-900 to-slate-700" }
+  - { key: frost_banner,         kind: banner,     name: Frost Banner,         rarity: rare,      css_class: "bg-gradient-to-r from-sky-900 via-cyan-800 to-slate-900" }
+  - { key: animated_aurora_banner, kind: banner,   name: Aurora Banner,        rarity: legendary, css_class: "bg-gradient-to-r from-indigo-900 via-emerald-700 to-sky-800", animated: true }
+  - { key: silver_frame,         kind: frame,      name: Silver Frame,         rarity: rare,      css_class: "ring-4 ring-slate-300" }
+  - { key: legendary_frame,      kind: frame,      name: Legendary Frame,      rarity: legendary, css_class: "ring-4 ring-amber-400" }
+  - { key: premium_frame,        kind: frame,      name: Champion Frame,       rarity: epic,      css_class: "ring-4 ring-yellow-500" }
+  - { key: gold_name,            kind: name_color, name: Gold Name,            rarity: epic,      css_class: "text-amber-500" }
+  - { key: frost_name,           kind: name_color, name: Frost Name,           rarity: rare,      css_class: "text-cyan-400" }
+  - { key: august_legend_border, kind: border,     name: August Legend Border, rarity: legendary, css_class: "ring-4 ring-offset-2 ring-amber-400" }
+  - { key: silver_shoe_trail,    kind: trail,      name: Silver Shoe Trail,    rarity: rare,      renderable: false }
+  - { key: golden_shoe_trail,    kind: trail,      name: Golden Shoe Trail,    rarity: legendary, renderable: false }
+  - { key: aurora_footsteps,     kind: effect,     name: Aurora Footsteps,     rarity: legendary, renderable: false, animated: true }
+  - { key: golden_footsteps,     kind: effect,     name: Golden Footsteps,     rarity: legendary, renderable: false, animated: true }
+  - { key: champion_avatar,      kind: avatar,     name: Champion Avatar,      rarity: epic,      renderable: false }
+  - { key: legend_august_outfit, kind: outfit,     name: Legend of August,     rarity: legendary, renderable: false, animated: true }
+  - { key: victory_pose,         kind: effect,     name: Victory Pose,         rarity: epic,      renderable: false }
+  - { key: champion_emoji_pack,  kind: emoji_pack, name: Champion Emoji Pack,  rarity: rare,      renderable: false }
+
+# ---------------------------------------------------------------------------
+# Challenges
+# ---------------------------------------------------------------------------
+challenges:
+  # --- Weekly: the four named weeks ----------------------------------------
+  - key: s8_week1_beginning
+    title: "Week 1 · The Beginning"
+    category: weekly
+    week_index: 1
+    starts_at: 2026-08-01
+    ends_at: 2026-08-07
+    xp_reward: 1000
+    coin_reward: 200
+    fragment_reward: 10
+    sport: run
+    requirements:
+      - { metric: distance_km,         target: 15 }
+      - { metric: activity_count,      target: 4 }
+      - { metric: longest_activity_km, target: 6 }
+
+  - key: s8_week2_momentum
+    title: "Week 2 · Momentum"
+    category: weekly
+    week_index: 2
+    starts_at: 2026-08-08
+    ends_at: 2026-08-14
+    xp_reward: 1000
+    coin_reward: 200
+    fragment_reward: 10
+    sport: run
+    requirements:
+      - { metric: distance_km,      target: 20 }
+      - { metric: consecutive_days, target: 3 }
+      - { metric: personal_record,  target: 1, options: { kind: distance } }
+
+  - key: s8_week3_endurance
+    title: "Week 3 · Endurance"
+    category: weekly
+    week_index: 3
+    starts_at: 2026-08-15
+    ends_at: 2026-08-21
+    xp_reward: 1000
+    coin_reward: 200
+    fragment_reward: 10
+    sport: run
+    requirements:
+      - { metric: distance_km,        target: 25 }
+      - { metric: activities_over_km, target: 1, options: { km: 10 } }
+      - { metric: activity_count,     target: 5 }
+
+  - key: s8_week4_champion
+    title: "Week 4 · The Champion"
+    category: weekly
+    week_index: 4
+    starts_at: 2026-08-22
+    ends_at: 2026-08-31
+    xp_reward: 1200
+    coin_reward: 300
+    fragment_reward: 15
+    sport: run
+    requirements:
+      - { metric: distance_km,        target: 30 }
+      - { metric: activities_over_km, target: 2, options: { km: 10 } }
+      - { metric: activity_count,     target: 7 }
+
+  # --- Monthly: the four pillars -------------------------------------------
+  - key: s8_month_mountain
+    title: "The Mountain"
+    category: monthly
+    xp_reward: 750
+    coin_reward: 250
+    fragment_reward: 15
+    sport: run
+    requirements:
+      - { metric: distance_km, target: 100 }
+
+  - key: s8_month_warrior
+    title: "The Warrior"
+    category: monthly
+    xp_reward: 750
+    coin_reward: 250
+    fragment_reward: 15
+    requirements:
+      - { metric: activity_count, target: 25 }
+
+  - key: s8_month_collector
+    title: "The Collector"
+    category: monthly
+    xp_reward: 900
+    coin_reward: 300
+    fragment_reward: 20
+    requirements:
+      - { metric: completed_weeklies, target: 4 }
+
+  - key: s8_month_unstoppable
+    title: "The Unstoppable"
+    category: monthly
+    xp_reward: 750
+    coin_reward: 250
+    fragment_reward: 15
+    requirements:
+      - { metric: weeks_with_activity, target: 5 }
+
+  # --- Elite: unlocked at battle pass level 20 -----------------------------
+  #   Progress accrues before the unlock and pays out on reaching it, so a late
+  #   arrival at level 20 is never punished for work already done.
+  - key: s8_elite_150km
+    title: "Elite · 150 km"
+    category: elite
+    unlock_level: 7
+    xp_reward: 1000
+    coin_reward: 400
+    fragment_reward: 20
+    sport: run
+    requirements:
+      - { metric: distance_km, target: 150 }
+
+  - key: s8_elite_20_days
+    title: "Elite · 20 Consecutive Days"
+    category: elite
+    unlock_level: 7
+    xp_reward: 1000
+    coin_reward: 400
+    fragment_reward: 20
+    requirements:
+      - { metric: consecutive_days, target: 20 }
+
+  - key: s8_elite_half_marathon
+    title: "Elite · Half Marathon"
+    category: elite
+    unlock_level: 7
+    xp_reward: 1000
+    coin_reward: 400
+    fragment_reward: 20
+    sport: run
+    requirements:
+      - { metric: longest_activity_km, target: 21.1 }
+
+  - key: s8_elite_three_tens
+    title: "Elite · Three 10 km Runs"
+    category: elite
+    unlock_level: 7
+    xp_reward: 1000
+    coin_reward: 400
+    fragment_reward: 20
+    sport: run
+    requirements:
+      - { metric: activities_over_km, target: 3, options: { km: 10 } }
+
+  # 5,000 m, not the 50,000 m in the original brief — that is roughly six
+  # Everests of climbing in a month and would never be completed by anyone.
+  - key: s8_elite_elevation
+    title: "Elite · 5,000 m of Climbing"
+    category: elite
+    unlock_level: 7
+    xp_reward: 1000
+    coin_reward: 400
+    fragment_reward: 20
+    requirements:
+      - { metric: elevation_gain_m, target: 5000 }
+
+  # --- Hidden: secret achievements -----------------------------------------
+  - key: s8_secret_early_bird
+    title: "🥶 Early Bird"
+    category: hidden
+    hidden: true
+    xp_reward: 300
+    coin_reward: 150
+    fragment_reward: 5
+    requirements:
+      - { metric: start_before_hour, target: 1, options: { hour: 5, minute: 30 } }
+
+  - key: s8_secret_night_owl
+    title: "🌙 Night Owl"
+    category: hidden
+    hidden: true
+    xp_reward: 300
+    coin_reward: 150
+    fragment_reward: 5
+    requirements:
+      - { metric: start_after_hour, target: 1, options: { hour: 23 } }
+
+  - key: s8_secret_fire_within
+    title: "🔥 Fire Within"
+    category: hidden
+    hidden: true
+    xp_reward: 400
+    coin_reward: 200
+    fragment_reward: 5
+    requirements:
+      - { metric: consecutive_days, target: 7 }
+
+  # Judged only on days the user was actually assigned dailies, so joining
+  # mid-month does not make a perfect month impossible.
+  - key: s8_secret_perfect_month
+    title: "💯 Perfect Month"
+    category: hidden
+    hidden: true
+    xp_reward: 800
+    coin_reward: 400
+    fragment_reward: 15
+    requirements:
+      - { metric: perfect_daily_days, target: 20 }
+
+  - key: s8_secret_trailblazer
+    title: "🗺 Trailblazer"
+    category: hidden
+    hidden: true
+    xp_reward: 300
+    coin_reward: 150
+    fragment_reward: 5
+    requirements:
+      - { metric: new_route, target: 5 }
+
+  - key: s8_secret_unbroken
+    title: "⛓ Unbroken"
+    category: hidden
+    hidden: true
+    xp_reward: 300
+    coin_reward: 150
+    fragment_reward: 5
+    sport: run
+    requirements:
+      - { metric: uninterrupted_activity, target: 1, options: { min_km: 5 } }
+
+# ---------------------------------------------------------------------------
+# Battle pass — 30 levels, free and premium tracks
+# ---------------------------------------------------------------------------
+rewards:
+  # Free track — one meaningful unlock at nearly every level.
+  - { level: 1,  track: free, reward_type: badge,    reward_key: s8_august_badge,   name: August Badge }
+  - { level: 2,  track: free, reward_type: coins,    reward_key: s8_coins_500,      name: 500 Coins, coins: 500 }
+  - { level: 3,  track: free, reward_type: cosmetic, reward_key: winter_banner,     name: Winter Banner }
+  - { level: 4,  track: free, reward_type: cosmetic, reward_key: frost_name,        name: Frost Name Colour }
+  - { level: 5,  track: free, reward_type: xp_boost, reward_key: s8_xp_boost_1d,    name: XP Boost (1 day), payload: { hours: 24, multiplier: 2.0 } }
+  - { level: 6,  track: free, reward_type: cosmetic, reward_key: silver_shoe_trail, name: Silver Shoe Trail }
+  - { level: 8,  track: free, reward_type: coins,    reward_key: s8_coins_1000,     name: 1000 Coins, coins: 1000 }
+  - { level: 9,  track: free, reward_type: cosmetic, reward_key: legendary_frame,   name: Legendary Frame }
+  - { level: 10, track: free, reward_type: title,    reward_key: champion,          name: Champion }
+
+  # Premium track — granted by an admin today; see plan decision D1.
+  - { level: 1,  track: premium, reward_type: cosmetic, reward_key: silver_frame,           name: Silver Frame }
+  - { level: 2,  track: premium, reward_type: cosmetic, reward_key: frost_banner,           name: Frost Banner }
+  - { level: 3,  track: premium, reward_type: cosmetic, reward_key: gold_name,              name: Gold Name Colour }
+  - { level: 4,  track: premium, reward_type: cosmetic, reward_key: golden_shoe_trail,      name: Golden Shoe Trail }
+  - { level: 5,  track: premium, reward_type: cosmetic, reward_key: champion_emoji_pack,    name: Champion Emoji Pack }
+  - { level: 6,  track: premium, reward_type: cosmetic, reward_key: aurora_footsteps,       name: Aurora Footsteps }
+  - { level: 7,  track: premium, reward_type: cosmetic, reward_key: champion_avatar,        name: Champion Avatar }
+  - { level: 8,  track: premium, reward_type: cosmetic, reward_key: animated_aurora_banner, name: Aurora Banner }
+  - { level: 9,  track: premium, reward_type: cosmetic, reward_key: victory_pose,           name: Victory Pose }
+  - { level: 10, track: premium, reward_type: cosmetic, reward_key: legend_august_outfit,   name: "Legend of August Outfit" }
+
+  # Legacy missions — all five completed
+  - { unlock_kind: legacy, unlock_value: 5, track: free, reward_type: cosmetic, reward_key: golden_footsteps, name: Golden Footsteps }
+
+  # End-of-season completion tiers — participation, not just the podium
+  - { unlock_kind: completion_tier, unlock_value: 25,  track: free, reward_type: badge, reward_key: s8_bronze_medal,  name: Bronze Medal }
+  - { unlock_kind: completion_tier, unlock_value: 50,  track: free, reward_type: badge, reward_key: s8_silver_medal,  name: Silver Medal }
+  - { unlock_kind: completion_tier, unlock_value: 75,  track: free, reward_type: badge, reward_key: s8_gold_medal,    name: Gold Medal }
+  - { unlock_kind: completion_tier, unlock_value: 100, track: free, reward_type: badge, reward_key: s8_diamond_trophy, name: Diamond Trophy }
+  - { unlock_kind: completion_tier, unlock_value: 100, track: free, reward_type: title, reward_key: august_legend_2026, name: "August Legend 2026" }
+  - { unlock_kind: completion_tier, unlock_value: 100, track: free, reward_type: cosmetic, reward_key: august_legend_border, name: August Legend Border }
+
+  # Champion Medal fragments
+  - { unlock_kind: medal_fragments, unlock_value: 25,  track: free, reward_type: badge, reward_key: s8_fragments_bronze,  name: Bronze Champion Medal }
+  - { unlock_kind: medal_fragments, unlock_value: 60,  track: free, reward_type: badge, reward_key: s8_fragments_silver,  name: Silver Champion Medal }
+  - { unlock_kind: medal_fragments, unlock_value: 120, track: free, reward_type: badge, reward_key: s8_fragments_gold,    name: Gold Champion Medal }
+  - { unlock_kind: medal_fragments, unlock_value: 200, track: free, reward_type: cosmetic, reward_key: aurora_footsteps,  name: Diamond Champion Medal }
+
+  # Community milestones
+  - { unlock_kind: community, unlock_value: 20,  track: free, reward_type: coins,    reward_key: s8_community_coins,  name: Community Coins, coins: 300 }
+  - { unlock_kind: community, unlock_value: 40,  track: free, reward_type: xp_boost, reward_key: s8_community_boost,  name: XP Weekend, payload: { hours: 48, multiplier: 2.0 } }
+  - { unlock_kind: community, unlock_value: 60,  track: free, reward_type: cosmetic, reward_key: champion_avatar,     name: Community Avatar }
+  - { unlock_kind: community, unlock_value: 80,  track: free, reward_type: cosmetic, reward_key: frost_banner,        name: Community Banner }
+  - { unlock_kind: community, unlock_value: 100, track: free, reward_type: badge,    reward_key: s8_community_legend, name: Legendary Community Badge }
+
+# ---------------------------------------------------------------------------
+# Legacy Missions — five values, one rare reward
+# ---------------------------------------------------------------------------
+legacy_missions:
+  - { key: discipline, metric: activity_count,    target: 10, xp_reward: 400, coin_reward: 150, fragment_reward: 10, icon: "fa-solid fa-list-check" }
+  - { key: courage,    metric: personal_record,   target: 1,  xp_reward: 400, coin_reward: 150, fragment_reward: 10, icon: "fa-solid fa-bolt", options: { kind: distance } }
+  - { key: resilience, metric: consecutive_days,  target: 7,  xp_reward: 400, coin_reward: 150, fragment_reward: 10, icon: "fa-solid fa-shield-heart" }
+  - { key: strength,   metric: distance_km,       target: 80, xp_reward: 400, coin_reward: 150, fragment_reward: 10, icon: "fa-solid fa-dumbbell" }
+  - { key: legacy,     metric: battle_pass_level, target: 10, xp_reward: 400, coin_reward: 150, fragment_reward: 10, icon: "fa-solid fa-crown" }
+
+# ---------------------------------------------------------------------------
+# Community event — the August Marathon
+#   Scaled to the community rather than a fixed 10,000,000 km: an unreachable
+#   bar stops motivating in week one. See plan decision D3.
+# ---------------------------------------------------------------------------
+community_goal:
+  key: august_marathon
+  metric: distance_km
+  target_mode: per_participant
+  per_participant: 60
+  target_value: 60
+  # Clearing a tier doubles the target and opens the next one, so a community
+  # that finishes early keeps climbing until the season ends. Repeat tiers pay
+  # coins (scaled by tier) rather than re-issuing one-time cosmetics.
+  tier_coin_reward: 200
+  milestones:
+    - { percent: 20,  reward_key: s8_community_coins }
+    - { percent: 40,  reward_key: s8_community_boost }
+    - { percent: 60,  reward_key: champion_avatar }
+    - { percent: 80,  reward_key: frost_banner }
+    - { percent: 100, reward_key: s8_community_legend }
+
+# ---------------------------------------------------------------------------
+# Daily challenge pool — three drawn per user per day
+#   "Walk 5,000 steps" and "Storm Runner" from the brief are absent: no
+#   provider gives us step counts or weather. See plan decisions D4 and D5.
+# ---------------------------------------------------------------------------
+daily_templates:
+  - { key: run_3km,        metric: distance_km,            target: 3,   sport: run, weight: 3, xp_reward: 50, coin_reward: 25 }
+  - { key: run_5km,        metric: distance_km,            target: 5,   sport: run, weight: 2, xp_reward: 70, coin_reward: 35 }
+  - { key: one_activity,   metric: activity_count,         target: 1,   weight: 3, xp_reward: 40, coin_reward: 20 }
+  - { key: two_activities, metric: activity_count,         target: 2,   weight: 1, xp_reward: 80, coin_reward: 40 }
+  - { key: before_8am,     metric: start_before_hour,      target: 1,   options: { hour: 8 },  weight: 2, xp_reward: 60, coin_reward: 30, requires_start_time: true }
+  - { key: after_6pm,      metric: start_after_hour,       target: 1,   options: { hour: 18 }, weight: 2, xp_reward: 60, coin_reward: 30, requires_start_time: true }
+  - { key: beat_yesterday, metric: beat_previous_day,      target: 1,   weight: 2, xp_reward: 70, coin_reward: 35 }
+  - { key: burn_300kcal,   metric: calories,               target: 300, weight: 2, xp_reward: 60, coin_reward: 30 }
+  - { key: no_stopping,    metric: uninterrupted_activity, target: 1,   weight: 1, xp_reward: 70, coin_reward: 35 }
+  - { key: new_route,      metric: new_route,              target: 1,   weight: 1, xp_reward: 80, coin_reward: 40 }
+  - { key: climb_100m,     metric: elevation_gain_m,       target: 100, weight: 1, xp_reward: 60, coin_reward: 30 }
+  - { key: share_workout,  metric: timeline_posts,         target: 1,   weight: 1, xp_reward: 50, coin_reward: 25 }

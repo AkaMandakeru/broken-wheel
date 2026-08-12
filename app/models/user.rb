@@ -16,6 +16,12 @@ class User < ApplicationRecord
   has_many :season_participations, dependent: :destroy
   has_many :seasons, through: :season_participations
   has_many :season_activities, dependent: :destroy
+  has_many :timeline_posts, dependent: :destroy
+  has_many :daily_challenge_assignments, dependent: :destroy
+  has_many :coin_transactions, dependent: :destroy
+  has_many :user_cosmetics, dependent: :destroy
+  has_many :cosmetics, through: :user_cosmetics
+  has_many :user_xp_boosts, dependent: :destroy
 
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :validatable,
@@ -83,6 +89,43 @@ class User < ApplicationRecord
     stored = unlocked_themes
     update_column(:unlocked_themes, stored + [ key.to_s ]) unless stored.include?(key.to_s)
     true
+  end
+
+  # --- Cosmetics -------------------------------------------------------------
+
+  # { "frame" => "legendary_frame", "name_color" => "gold", ... }
+  def equipped
+    (self[:equipped_cosmetics] || {}).with_indifferent_access
+  end
+
+  def equipped_cosmetic(kind)
+    key = equipped[kind.to_s]
+    return nil if key.blank?
+
+    cosmetics.find_by(key: key, kind: kind.to_s)
+  end
+
+  # Equipping is restricted to cosmetics the user owns and that we can actually
+  # render — an unrenderable item stays in the collection until its art lands.
+  def equip_cosmetic!(kind, key)
+    cosmetic = cosmetics.find_by(key: key, kind: kind.to_s)
+    return false if cosmetic.nil? || !cosmetic.renderable?
+
+    update!(equipped_cosmetics: equipped.merge(kind.to_s => key.to_s))
+    true
+  end
+
+  def unequip_cosmetic!(kind)
+    update!(equipped_cosmetics: equipped.except(kind.to_s))
+  end
+
+  def owns_cosmetic?(key)
+    cosmetics.exists?(key: key.to_s)
+  end
+
+  # Multiplier in force at a given moment, from any active XP boost.
+  def xp_multiplier_at(time)
+    user_xp_boosts.select { |boost| boost.covers?(time) }.map(&:multiplier).max&.to_f || 1.0
   end
 
   private

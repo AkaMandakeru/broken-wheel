@@ -1,0 +1,38 @@
+<div class="bg-white rounded-2xl shadow-sm border border-gray-200 p-5 sm:p-6 mb-6">
+  <div class="flex items-center justify-between mb-4">
+    <h2 class="text-lg font-semibold text-gray-900">
+      <i class="fa-solid fa-sun text-amber-500 mr-1"></i><%= t("seasons.show.today") %>
+    </h2>
+    <span class="text-xs text-gray-500">
+      <%= t("seasons.show.dailies_done", done: assignments.count(&:completed?), total: assignments.size) %>
+    </span>
+  </div>
+
+  <div class="grid sm:grid-cols-3 gap-3">
+    <% assignments.each do |assignment| %>
+      <% value = progress[assignment] %>
+      <% pct = assignment.percent_of(value) %>
+      <% done = assignment.completed? %>
+      <div class="rounded-xl border p-4 <%= done ? 'border-green-200 bg-green-50' : 'border-gray-200' %>">
+        <div class="flex items-start justify-between gap-2">
+          <p class="font-medium text-gray-900 text-sm"><%= assignment.display_title %></p>
+          <% if done %>
+            <i class="fa-solid fa-circle-check text-green-600"></i>
+          <% end %>
+        </div>
+        <p class="text-xs text-gray-500 mt-0.5"><%= assignment.display_description %></p>
+
+        <div class="mt-3 h-1.5 bg-gray-200 rounded-full overflow-hidden">
+          <div class="h-full <%= done ? 'bg-green-500' : 'bg-primary' %> rounded-full transition-all" style="width: <%= pct %>%"></div>
+        </div>
+
+        <div class="flex items-center justify-between mt-1.5">
+          <span class="text-[11px] text-gray-400"><%= pct %>%</span>
+          <span class="text-[11px] font-semibold text-accent">
+            +<%= assignment.xp_reward %> XP · <i class="fa-solid fa-coins text-amber-500"></i> <%= assignment.coin_reward %>
+          </span>
+        </div>
+      </div>
+    <% end %>
+  </div>
+</div>

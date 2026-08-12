@@ -21,7 +21,8 @@ module Admin
     private
 
     def season_reward_params
-      params.require(:season_reward).permit(:level, :reward_type, :reward_key, :name)
+      params.require(:season_reward).permit(:level, :reward_type, :reward_key, :name,
+                                            :track, :coins, :unlock_kind, :unlock_value, :position)
     end
   end
 end

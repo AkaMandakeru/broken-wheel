@@ -10,8 +10,8 @@ class EnrollSeasonParticipantsJob < ApplicationJob
     return unless season_challenge
 
     season_challenge.season.season_participations.find_each do |participation|
-      ChallengeEnroller.call(participation.user, season_challenge.challenge)
-      SeasonRecalcJob.perform_later(participation.user_id, season_challenge.season_id)
+      ChallengeEnroller.call(participation.user, season_challenge.challenge, season: season_challenge.season)
+      SeasonRecalcJob.enqueue_debounced(participation.user_id, season_challenge.season_id)
     end
   end
 end

@@ -1,0 +1,65 @@
+<% pct = participation.progress_percent %>
+<% to_next = participation.xp_to_next_level %>
+<div class="bg-white rounded-2xl shadow-sm border border-gray-200 p-6 mb-6">
+  <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-4 text-center">
+    <div>
+      <p class="text-3xl font-extrabold text-primary">⚡ <%= participation.level %></p>
+      <p class="text-xs text-gray-500"><%= t("seasons.show.level") %> / <%= season.max_level %></p>
+    </div>
+    <div>
+      <p class="text-3xl font-extrabold text-gray-900"><%= number_with_delimiter(participation.xp) %></p>
+      <p class="text-xs text-gray-500"><%= t("seasons.show.xp") %></p>
+    </div>
+    <div>
+      <p class="text-3xl font-extrabold text-gray-900">#<%= participation.rank %></p>
+      <p class="text-xs text-gray-500"><%= t("seasons.show.rank") %></p>
+    </div>
+    <div>
+      <p class="text-3xl font-extrabold text-amber-500"><i class="fa-solid fa-coins text-2xl"></i> <%= number_with_delimiter(current_user.coins) %></p>
+      <p class="text-xs text-gray-500"><%= t("seasons.show.coins") %></p>
+    </div>
+  </div>
+
+  <div class="h-3 bg-gray-200 rounded-full overflow-hidden">
+    <div class="h-full bg-primary rounded-full transition-all" style="width: <%= pct %>%"></div>
+  </div>
+  <p class="text-xs text-gray-500 mt-1 text-right">
+    <% if to_next.positive? %>
+      <%= t("seasons.show.to_next_level", xp: number_with_delimiter(to_next)) %>
+    <% else %>
+      <%= t("seasons.show.max_level") %>
+    <% end %>
+  </p>
+
+  <%# Season stats and medal progress %>
+  <div class="mt-5 pt-4 border-t border-gray-100 grid grid-cols-2 sm:grid-cols-5 gap-3 text-center">
+    <div>
+      <p class="text-sm font-bold text-gray-900"><%= number_with_precision(participation.total_distance_km, precision: 1) %> km</p>
+      <p class="text-[11px] text-gray-500"><%= t("seasons.stats.distance") %></p>
+    </div>
+    <div>
+      <p class="text-sm font-bold text-gray-900"><%= participation.activities_count %></p>
+      <p class="text-[11px] text-gray-500"><%= t("seasons.stats.activities") %></p>
+    </div>
+    <div>
+      <p class="text-sm font-bold text-gray-900"><%= participation.longest_streak_days %></p>
+      <p class="text-[11px] text-gray-500"><%= t("seasons.stats.streak") %></p>
+    </div>
+    <div>
+      <p class="text-sm font-bold text-gray-900"><%= participation.completion_percent %>%</p>
+      <p class="text-[11px] text-gray-500"><%= t("seasons.stats.completion") %></p>
+    </div>
+    <div>
+      <p class="text-sm font-bold text-gray-900">
+        <% if participation.medal_tier %>
+          <span class="px-2 py-0.5 rounded-full text-[11px] <%= medal_tier_classes(participation.medal_tier) %>">
+            <%= t("seasons.medals.#{participation.medal_tier}") %>
+          </span>
+        <% else %>
+          <%= participation.medal_fragments %>
+        <% end %>
+      </p>
+      <p class="text-[11px] text-gray-500"><%= t("seasons.stats.fragments") %></p>
+    </div>
+  </div>
+</div>

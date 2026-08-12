@@ -30,6 +30,32 @@
 
 /* Rails Blocks - form input base class */
 @layer components {
+  /* The battle pass track scrolls sideways. macOS hides overlay scrollbars
+     until you scroll, so without a visible one the track reads as clipped
+     rather than scrollable. */
+  .battle-pass-track {
+    scrollbar-width: thin;
+    scrollbar-color: var(--color-gray-300) transparent;
+    scroll-behavior: smooth;
+  }
+
+  .battle-pass-track::-webkit-scrollbar {
+    height: 6px;
+  }
+
+  .battle-pass-track::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  .battle-pass-track::-webkit-scrollbar-thumb {
+    background: var(--color-gray-300);
+    border-radius: 9999px;
+  }
+
+  .battle-pass-track::-webkit-scrollbar-thumb:hover {
+    background: var(--color-gray-400);
+  }
+
   .form-control {
     @apply block w-full rounded-lg bg-white border-0 px-3 py-2 text-base text-neutral-900 shadow-sm ring-1 ring-inset ring-neutral-300 placeholder:text-neutral-500 focus:outline-none focus:ring-2 focus:ring-neutral-600 dark:bg-neutral-700 dark:text-white dark:placeholder-neutral-300 dark:ring-neutral-600 dark:focus:ring-neutral-500;
   }

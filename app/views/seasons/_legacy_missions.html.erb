@@ -1,0 +1,33 @@
+<div class="bg-white rounded-2xl shadow-sm border border-gray-200 p-5 sm:p-6">
+  <div class="flex items-center justify-between mb-4">
+    <h2 class="text-lg font-semibold text-gray-900">
+      <i class="fa-solid fa-monument text-amber-500 mr-1"></i><%= t("seasons.show.legacy_missions") %>
+    </h2>
+    <span class="text-xs text-gray-500"><%= completed_count %>/<%= missions.size %></span>
+  </div>
+
+  <div class="h-2 bg-gray-200 rounded-full overflow-hidden mb-4">
+    <div class="h-full bg-linear-to-r from-amber-400 to-amber-600 rounded-full transition-all"
+         style="width: <%= missions.any? ? ((completed_count.to_f / missions.size) * 100).round : 0 %>%"></div>
+  </div>
+
+  <div class="space-y-2">
+    <% missions.each do |mission| %>
+      <% done = completed_ids.include?(mission.id) %>
+      <div class="flex items-center gap-3 rounded-lg border p-3 <%= done ? 'border-amber-200 bg-amber-50' : 'border-gray-200' %>">
+        <div class="flex h-9 w-9 shrink-0 items-center justify-center rounded-full <%= done ? 'bg-amber-100 text-amber-600' : 'bg-gray-100 text-gray-400' %>">
+          <i class="<%= mission.icon.presence || 'fa-solid fa-star' %>"></i>
+        </div>
+        <div class="flex-1 min-w-0">
+          <p class="font-medium text-gray-900 text-sm"><%= t("seasons.legacy.#{mission.name}.title", default: mission.name.to_s.humanize) %></p>
+          <p class="text-xs text-gray-500"><%= t("seasons.legacy.#{mission.name}.description", count: mission.target, default: "") %></p>
+        </div>
+        <span class="text-xs font-semibold whitespace-nowrap <%= done ? 'text-amber-600' : 'text-accent' %>">
+          <%= done ? t("seasons.show.completed") : "+#{mission.xp_reward} XP" %>
+        </span>
+      </div>
+    <% end %>
+  </div>
+
+  <p class="text-xs text-gray-500 mt-3"><%= t("seasons.show.legacy_hint") %></p>
+</div>

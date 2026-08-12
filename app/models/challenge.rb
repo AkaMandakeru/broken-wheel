@@ -4,9 +4,15 @@ class Challenge < ApplicationRecord
   has_many :challenge_participations
   has_many :participants, through: :challenge_participations, source: :user
   has_many :timeline_posts
+  has_many :challenge_requirements, -> { ordered }, dependent: :destroy
+  has_many :season_challenges, dependent: :destroy
 
-  SPORTS = %w[run soccer].freeze
-  CHALLENGE_TYPES = %w[weekly biweekly monthly annually custom].freeze
+  accepts_nested_attributes_for :challenge_requirements, allow_destroy: true
+
+  # Must stay in sync with Strava::ActivityImporter::SPORT_MAP — a sport the
+  # importer can produce but a challenge can't reference is silently unmatchable.
+  SPORTS = %w[run bike soccer].freeze
+  CHALLENGE_TYPES = %w[weekly biweekly monthly annually custom specific_day].freeze
   TARGET_UNITS = %w[km hours times].freeze
   STATUSES = %w[active completed].freeze
 
@@ -31,6 +37,9 @@ class Challenge < ApplicationRecord
     case challenge_type
     when "weekly"  then self.class.current_week_window(today: today)
     when "monthly" then today.beginning_of_month..today.end_of_month
+    when "specific_day"
+      # Completed by doing the activity on the configured day (starts_at).
+      starts_at ? (starts_at.to_date..starts_at.to_date) : nil
     else
       starts_at && ends_at ? (starts_at.to_date..ends_at.to_date) : nil
     end
@@ -41,6 +50,16 @@ class Challenge < ApplicationRecord
   # the title/description provided by their creator.
   def default?
     key.present?
+  end
+
+  # The headline requirement, used wherever a single number stands in for the
+  # whole challenge (cards, progress bars, the legacy target_value column).
+  def primary_requirement
+    challenge_requirements.first
+  end
+
+  def multi_requirement?
+    challenge_requirements.size > 1
   end
 
   def display_title

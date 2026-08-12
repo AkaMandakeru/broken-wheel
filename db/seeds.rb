@@ -99,6 +99,14 @@ if Rails.env.development?
   ].each do |attrs|
     season.season_rewards.find_or_initialize_by(level: attrs[:level], reward_type: attrs[:reward_type]).update!(attrs)
   end
+
+  # ---------------------------------------------------------------------------
+  # Battle pass season (Season 8 — Legacy of Champions)
+  #   Built from db/seeds/seasons/*.yml. The importer is idempotent, so this is
+  #   safe to re-run, and a new month is a new blueprint file rather than code.
+  # ---------------------------------------------------------------------------
+  Seasons::BlueprintImporter.call("season_8_legacy_of_champions")
+  puts "🏆 Season 8 (Legacy of Champions) imported."
 end
 
 # ---------------------------------------------------------------------------

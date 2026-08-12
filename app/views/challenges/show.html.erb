@@ -9,7 +9,11 @@
     <div class="flex gap-4 mt-4 text-sm text-gray-500">
       <span><%= t("enums.sports.#{@challenge.sport}", default: @challenge.sport&.capitalize.to_s) %></span>
       <span><%= t('challenges.show.target') %>: <%= @challenge.target_value %> <%= t("enums.target_units.#{@challenge.target_unit}", default: @challenge.target_unit.to_s) %></span>
-      <span><%= @challenge.starts_at&.strftime("%b %d") %> - <%= @challenge.ends_at&.strftime("%b %d, %Y") %></span>
+      <% if @challenge.challenge_type == "specific_day" %>
+        <span><i class="fa-solid fa-calendar-day mr-1"></i><%= @challenge.starts_at&.strftime("%b %-d, %Y") %></span>
+      <% else %>
+        <span><%= @challenge.starts_at&.strftime("%b %d") %> - <%= @challenge.ends_at&.strftime("%b %d, %Y") %></span>
+      <% end %>
     </div>
 
     <div class="flex gap-4 mt-6">

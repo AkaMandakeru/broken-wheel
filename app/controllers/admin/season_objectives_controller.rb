@@ -21,7 +21,8 @@ module Admin
     private
 
     def season_objective_params
-      params.require(:season_objective).permit(:kind, :xp_reward, :target, :position, :required, :name)
+      params.require(:season_objective).permit(:kind, :xp_reward, :target, :position, :required, :name,
+                                               :track, :metric, :icon, :coin_reward, :fragment_reward)
     end
   end
 end

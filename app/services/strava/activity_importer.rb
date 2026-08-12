@@ -35,7 +35,7 @@ module Strava
         end
       end
 
-      achievements = check_achievements_and_challenges!
+      achievements = finalize!
 
       Result.new(imported: imported, skipped: skipped, achievements: achievements)
     end
@@ -43,8 +43,16 @@ module Strava
     def import_one(activity)
       return false unless upsert(activity)
 
-      check_achievements_and_challenges!
+      finalize!
       true
+    end
+
+    # Imports a batch and recomputes progress exactly once at the end, rather
+    # than once per activity. A 40-activity import used to fan out 40 recalcs.
+    def import_many(activities)
+      imported = activities.count { |activity| upsert(activity) }
+      achievements = finalize!
+      Result.new(imported: imported, skipped: activities.size - imported, achievements: achievements)
     end
 
     private
@@ -62,6 +70,15 @@ module Strava
         distance_km: distance_km(activity),
         duration_minutes: duration_minutes(activity),
         workout_date: workout_date(activity),
+        started_at_local: started_at_local(activity),
+        started_at: started_at_utc(activity),
+        start_time_known: started_at_local(activity).present?,
+        start_minute_of_day: Workout.minute_of_day_from(started_at_local(activity)),
+        elevation_gain_m: field(activity, :total_elevation_gain),
+        calories: field(activity, :calories),
+        moving_time_seconds: field(activity, :moving_time),
+        elapsed_time_seconds: field(activity, :elapsed_time),
+        route_signature: route_signature(activity),
         raw_data: activity.to_h
       )
 
@@ -82,8 +99,9 @@ module Strava
       workout.challenge_participation = participation if participation
     end
 
-    def check_achievements_and_challenges!
+    def finalize!
       recompute_active_challenges!
+      Season.active.find_each { |season| SeasonRecalcJob.enqueue_debounced(@user.id, season.id) }
       AchievementChecker.new(@user).check_all!
     end
 
@@ -110,7 +128,28 @@ module Strava
     end
 
     def workout_date(activity)
-      (activity.start_date_local || activity.start_date)&.to_date || Date.current
+      (raw_time(activity, :start_date_local) || raw_time(activity, :start_date))&.to_date || Date.current
+    end
+
+    def started_at_local(activity)
+      @started_at_local ||= {}
+      @started_at_local[activity.id] ||= raw_time(activity, :start_date_local) || raw_time(activity, :start_date)
+    end
+
+    def started_at_utc(activity)
+      raw_time(activity, :start_date) || started_at_local(activity)
+    end
+
+    def route_signature(activity)
+      Seasons::RawPayload.route_signature(activity)
+    end
+
+    def raw_time(activity, key)
+      Seasons::RawPayload.time(field(activity, key))
+    end
+
+    def field(activity, key)
+      Seasons::RawPayload.field(activity, key)
     end
   end
 end

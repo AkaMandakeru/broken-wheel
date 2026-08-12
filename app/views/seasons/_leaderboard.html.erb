@@ -1,0 +1,46 @@
+<div>
+  <h2 class="text-lg font-semibold text-gray-900 mb-3"><%= t("seasons.show.leaderboard") %></h2>
+
+  <%# Six boards, so a beginner who will never top distance can still lead a
+      table. They wrap rather than scroll: this column is half-width on desktop,
+      and a scrolled row would leave the last board clipped and easy to miss. %>
+  <div class="flex flex-wrap gap-1.5 mb-3">
+    <% SeasonLeaderboard.boards.each do |key| %>
+      <%= link_to season_path(season, board: key),
+                  class: "shrink-0 text-xs px-3 py-1.5 rounded-full transition #{board == key ? 'bg-primary text-white' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'}" do %>
+        <%= t("seasons.leaderboards.#{key}") %>
+      <% end %>
+    <% end %>
+  </div>
+
+  <div class="bg-white rounded-lg border border-gray-200 overflow-hidden">
+    <% rows.each_with_index do |row, i| %>
+      <div class="flex items-center justify-between px-4 py-3 text-sm <%= 'bg-orange-50' if user_signed_in? && row.user_id == current_user.id %> <%= 'border-t border-gray-100' unless i.zero? %>">
+        <span class="flex items-center gap-3 text-gray-800 min-w-0">
+          <span class="text-gray-400 w-5 shrink-0"><%= i + 1 %></span>
+          <span class="truncate"><%= row.user.first_name %> <%= row.user.last_name %></span>
+        </span>
+        <span class="font-semibold text-gray-900 whitespace-nowrap">
+          <%= leaderboard_value_label(board, leaderboard.value_for(row)) %>
+        </span>
+      </div>
+    <% end %>
+
+    <% if rows.empty? %>
+      <p class="text-gray-500 text-sm p-4"><%= t("seasons.show.no_participants") %></p>
+    <% end %>
+
+    <%# Someone outside the top ten still needs to see where they stand. %>
+    <% if participation && my_position && my_position > rows.size %>
+      <div class="flex items-center justify-between px-4 py-3 text-sm bg-orange-50 border-t-2 border-gray-200">
+        <span class="flex items-center gap-3 text-gray-800 min-w-0">
+          <span class="text-gray-400 w-5 shrink-0"><%= my_position %></span>
+          <span class="truncate"><%= t("seasons.show.you") %></span>
+        </span>
+        <span class="font-semibold text-gray-900 whitespace-nowrap">
+          <%= leaderboard_value_label(board, leaderboard.value_for(participation)) %>
+        </span>
+      </div>
+    <% end %>
+  </div>
+</div>

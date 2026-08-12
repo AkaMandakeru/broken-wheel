@@ -69,7 +69,8 @@
             </div>
           </div>
           <% if user_signed_in? %>
-            <% participation = current_user.challenge_participations.find_by(challenge_id: challenge.id) %>
+            <%# Preloaded in the controller — a per-row lookup here would query once per challenge. %>
+            <% participation = @my_participations[challenge.id] %>
             <% if participation %>
               <%= link_to t('challenges.index.view'), challenge_path(challenge), class: "bg-gray-100 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-200 transition font-medium" %>
             <% else %>

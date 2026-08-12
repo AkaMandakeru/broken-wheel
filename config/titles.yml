@@ -35,3 +35,16 @@ slacker:
   name:
     en: "Slacker"
     pt: "Folgado"
+
+# --- Season 8 · Legacy of Champions -----------------------------------------
+# Granted by season rewards. A title key missing from this file is silently
+# refused by User#add_title, so every title a blueprint awards must live here.
+champion:
+  name:
+    en: "Champion"
+    pt: "Campeão"
+
+august_legend_2026:
+  name:
+    en: "August Legend 2026"
+    pt: "Lenda de Agosto 2026"

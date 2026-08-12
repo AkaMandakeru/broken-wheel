@@ -165,7 +165,14 @@ RSpec.describe Strava::ActivityImporter do
     end
 
     it "recomputes challenge progress after import" do
-      run_import(strava_activity(id: 203, sport_type: "Run", distance: 5000.0))
+      # Dated inside the challenge's current-week window. A fixed calendar date
+      # here silently stops counting once that week passes.
+      in_window = Date.current.beginning_of_week(:monday) + 1
+      run_import(strava_activity(
+        id: 203, sport_type: "Run", distance: 5000.0,
+        start_date_local: in_window.to_time(:utc) + 8.hours,
+        start_date: in_window.to_time(:utc) + 11.hours
+      ))
       expect(participation.reload.progress_value.to_f).to eq(5.0)
     end
   end

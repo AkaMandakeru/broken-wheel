@@ -78,6 +78,99 @@ en:
       monthly_count_run:
         title: "Monthly Run · 16 workouts"
         description: "Complete 16 runs this month."
+      s8_week1_beginning:
+        title: "Week 1 · The Beginning"
+        description: "Run 15 km, complete 4 workouts, and finish one run over 6 km."
+      s8_week2_momentum:
+        title: "Week 2 · Momentum"
+        description: "Run 20 km, train 3 days in a row, and beat a personal record."
+      s8_week3_endurance:
+        title: "Week 3 · Endurance"
+        description: "Run 25 km, complete one 10 km run, and finish five activities."
+      s8_week4_champion:
+        title: "Week 4 · The Champion"
+        description: "Run 30 km, complete two long runs, and finish seven activities."
+      s8_month_mountain:
+        title: "The Mountain"
+        description: "Run 100 km during August."
+      s8_month_warrior:
+        title: "The Warrior"
+        description: "Complete 25 activities during August."
+      s8_month_collector:
+        title: "The Collector"
+        description: "Complete all four weekly challenges."
+      s8_month_unstoppable:
+        title: "The Unstoppable"
+        description: "Run at least once every week of August."
+      s8_elite_150km:
+        title: "Elite · 150 km"
+        description: "Run 150 km during the season."
+      s8_elite_20_days:
+        title: "Elite · 20 Consecutive Days"
+        description: "Train 20 days in a row."
+      s8_elite_half_marathon:
+        title: "Elite · Half Marathon"
+        description: "Finish a single run of 21.1 km."
+      s8_elite_three_tens:
+        title: "Elite · Three 10 km Runs"
+        description: "Complete three runs of 10 km or more."
+      s8_elite_elevation:
+        title: "Elite · 5,000 m of Climbing"
+        description: "Accumulate 5,000 m of elevation gain."
+      s8_secret_early_bird:
+        title: "🥶 Early Bird"
+        description: "Start a run before 05:30."
+      s8_secret_night_owl:
+        title: "🌙 Night Owl"
+        description: "Start a run after 23:00."
+      s8_secret_fire_within:
+        title: "🔥 Fire Within"
+        description: "Train seven days in a row."
+      s8_secret_perfect_month:
+        title: "💯 Perfect Month"
+        description: "Complete every daily challenge on 20 days."
+      s8_secret_trailblazer:
+        title: "🗺 Trailblazer"
+        description: "Run five routes you have never run before."
+      s8_secret_unbroken:
+        title: "⛓ Unbroken"
+        description: "Finish a run of 5 km or more without stopping."
+    # Sentences for a challenge's conditions, keyed by metric (ChallengeMetrics).
+    requirements:
+      distance_km: "Run %{target} km"
+      duration_hours: "Train for %{target} hours"
+      activity_count:
+        one: "Complete 1 activity"
+        other: "Complete %{count} activities"
+      active_days:
+        one: "Train on 1 day"
+        other: "Train on %{count} different days"
+      longest_activity_km: "Finish one activity of %{target} km or more"
+      activities_over_km:
+        one: "Complete 1 activity of %{km} km or more"
+        other: "Complete %{count} activities of %{km} km or more"
+      consecutive_days: "Train %{target} days in a row"
+      weeks_with_activity: "Train in %{target} different weeks"
+      elevation_gain_m: "Climb %{target} m"
+      calories: "Burn %{target} kcal"
+      start_before_hour: "Start an activity before %{hour}"
+      start_after_hour: "Start an activity after %{hour}"
+      beat_previous_day: "Beat the previous day's distance"
+      personal_record: "Set a personal record"
+      fastest_5k_seconds: "Run 5 km in %{target} seconds or less"
+      uninterrupted_activity: "Finish an activity without stopping"
+      new_route:
+        one: "Run a new route"
+        other: "Run %{count} new routes"
+      club_member: "Join a club"
+      club_workout_count:
+        one: "Log 1 workout as a club member"
+        other: "Log %{count} workouts as a club member"
+      battle_pass_level: "Reach battle pass level %{target}"
+      completed_weeklies: "Complete all %{target} weekly challenges"
+      daily_challenges_done: "Complete %{target} daily challenges"
+      perfect_daily_days: "Complete every daily on %{target} days"
+      timeline_posts: "Share %{target} workout(s) to the timeline"
     index:
       title: "Challenges"
       browse_signed_in: "Browse and join challenges to compete with friends."
@@ -547,6 +640,44 @@ en:
       participations: "Participations"
       users: "Users"
       recent_challenges: "Recent challenges"
+    season_imports:
+      action: "Import season"
+      title: "Import a season"
+      subtitle: "Build a whole season from one YAML blueprint. Start from the template, from a season you already ran, or paste your own."
+      download_template: "Download template"
+      validate: "Validate only"
+      import: "Import season"
+      valid: "Blueprint is valid."
+      warnings: "Worth checking"
+      idempotent_hint: "Importing twice is safe — it updates in place and never touches player progress."
+      imported: "Imported %{name}."
+      bundled:
+        title: "1 · Start from a bundled blueprint"
+        hint: "Blueprints in db/seeds/seasons. Re-importing one updates that season rather than creating a new one."
+        already_imported: "Already imported"
+      upload:
+        title: "2 · Upload a file"
+        hint: "A .yml file exported from a season, or your own."
+      paste:
+        title: "3 · Paste the YAML"
+        hint: "Takes priority over the options above, so you can edit before importing."
+      counts:
+        challenges: "Challenges"
+        rewards: "Rewards"
+        legacy_missions: "Legacy missions"
+        daily_templates: "Daily templates"
+        cosmetics: "Cosmetics"
+        community_goal: "Community goal"
+      errors:
+        empty: "Choose a blueprint, upload a file, or paste some YAML."
+        found:
+          one: "1 problem to fix before importing"
+          other: "%{count} problems to fix before importing"
+        invalid:
+          one: "The blueprint has 1 problem — nothing was imported."
+          other: "The blueprint has %{count} problems — nothing was imported."
+        failed: "Import failed and was rolled back: %{message}"
+        no_template: "No template file found."
     seasons:
       title: "Seasons"
       new: "New season"
@@ -568,9 +699,25 @@ en:
         starts_at: "Starts at"
         ends_at: "Ends at"
         xp_multiplier: "XP multiplier"
+        slogan: "Slogan"
+        max_level: "Number of levels"
+        top_level_xp: "XP to reach the top level"
+        top_level_xp_hint: "How hard the pass is. The level count only changes how often players level up — thresholds are respread across this same XP range."
+        curve_exponent: "Curve steepness"
+        time_zone: "Time zone"
         image: "Image"
         dates: "Dates"
         actions: "Actions"
+      warnings:
+        unreachable_rewards: "%{count} reward(s) sit above level %{max}. Lower their level or raise the level count — they can never be granted."
+        unreachable_challenges: "%{count} challenge(s) unlock above level %{max} and can never open."
+      export:
+        title: "Reuse this season"
+        hint: "Download it as a blueprint, change the key and dates, then import it as next month's season."
+        new_key: "New key"
+        new_name: "New name"
+        shift_to: "Shift dates to start"
+        download: "Download blueprint"
       form:
         save: "Save"
         cancel: "Cancel"
@@ -582,6 +729,11 @@ en:
         xp: "XP reward"
         position: "Order"
         required: "Required"
+        category: "Category"
+        unlock_level: "Unlock at level"
+        coins: "Coins"
+        fragments: "Medal fragments"
+        hidden: "Secret challenge"
         add: "Add challenge"
       objectives:
         title: "Club objectives"
@@ -602,6 +754,8 @@ en:
         key: "Reward key"
         key_hint: "Title key (config/titles.yml), theme key, or a badge identifier."
         name: "Display name"
+        track: "Track"
+        coins: "Coins"
         add: "Add reward"
     support:
       title: "Messages"
@@ -827,10 +981,72 @@ en:
       monthly: "Monthly"
       annually: "Annually"
       custom: "Custom"
+      specific_day: "Specific day"
     target_units:
       km: "km"
       hours: "hours"
       times: "times"
+    metric_units:
+      km: "km"
+      m: "m"
+      hours: "hours"
+      count: ""
+      days: "days"
+      weeks: "weeks"
+      activities: "activities"
+      challenges: "challenges"
+      posts: "posts"
+      seconds: "s"
+      kcal: "kcal"
+      level: "level"
+      boolean: ""
+
+  # Daily challenges (pool drawn per user per day)
+  dailies:
+    run_3km:
+      title: "Run 3 km"
+      description: "Complete a 3 km run today."
+    run_5km:
+      title: "Run 5 km"
+      description: "Complete a 5 km run today."
+    one_activity:
+      title: "One activity"
+      description: "Log at least one activity today."
+    two_activities:
+      title: "Two activities"
+      description: "Log two activities today."
+    before_8am:
+      title: "Early start"
+      description: "Start an activity before 08:00."
+    after_6pm:
+      title: "Evening run"
+      description: "Start an activity after 18:00."
+    beat_yesterday:
+      title: "Beat yesterday"
+      description: "Run further than you did the day before."
+    burn_300kcal:
+      title: "Burn 300 kcal"
+      description: "Burn 300 kcal today."
+    no_stopping:
+      title: "No stopping"
+      description: "Finish an activity without interruptions."
+    new_route:
+      title: "New route"
+      description: "Run somewhere you never have before."
+    climb_100m:
+      title: "Climb 100 m"
+      description: "Gain 100 m of elevation today."
+    share_workout:
+      title: "Share it"
+      description: "Post a workout to the timeline."
+
+  # Cosmetics
+  cosmetics:
+    rarities:
+      common: "Common"
+      rare: "Rare"
+      epic: "Epic"
+      legendary: "Legendary"
 
   # Seasons (user-facing)
   seasons:
@@ -850,19 +1066,98 @@ en:
       winter: "Winter"
       spring: "Spring"
       autumn: "Autumn"
+      legacy: "Legacy"
     reward_types:
       title: "Title"
       badge: "Badge"
       theme: "Profile theme"
+      coins: "Coins"
+      cosmetic: "Cosmetic"
+      xp_boost: "XP boost"
+    tracks:
+      free: "Free"
+      premium: "Premium"
+    categories:
+      weekly: "Weekly"
+      monthly: "Monthly"
+      elite: "Elite"
+      hidden: "Secrets"
+      daily: "Daily"
+      standard: "Challenges"
+    unlock_kinds:
+      level: "Level %{value}"
+      legacy: "Complete %{value} legacy missions"
+      completion_tier: "%{value}% of the season completed"
+      medal_fragments: "%{value} medal fragments"
+      community: "Community goal: %{value}%"
+    medals:
+      bronze: "Bronze"
+      silver: "Silver"
+      gold: "Gold"
+      diamond: "Diamond"
+    stats:
+      distance: "Distance"
+      activities: "Activities"
+      streak: "Streak"
+      completion: "Completion"
+      fragments: "Fragments"
+    leaderboards:
+      xp: "XP"
+      distance: "Distance"
+      activities: "Activities"
+      streak: "Streak"
+      fastest_5k: "Fastest 5 km"
+      elevation: "Elevation"
+      days:
+        one: "1 day"
+        other: "%{count} days"
+      activities_count:
+        one: "1 activity"
+        other: "%{count} activities"
+    rewards:
+      coins:
+        one: "1 coin"
+        other: "%{count} coins"
+    community:
+      tier: "Level %{tier}"
+      tiers_cleared:
+        one: "1 level cleared"
+        other: "%{count} levels cleared"
+      next_tier_hint: "Clear this to unlock Level %{tier}: %{target} %{unit}"
+      milestones_reached:
+        one: "1 milestone reached"
+        other: "%{count} milestones reached"
+      goals:
+        august_marathon:
+          title: "August Marathon"
+          description: "The whole community contributes. Every kilometre counts."
+    legacy:
+      discipline:
+        title: "Discipline"
+        description: "Complete %{count} activities"
+      courage:
+        title: "Courage"
+        description: "Beat your personal best distance"
+      resilience:
+        title: "Resilience"
+        description: "Hold a %{count}-day streak"
+      strength:
+        title: "Strength"
+        description: "Accumulate %{count} km during the season"
+      legacy:
+        title: "Legacy"
+        description: "Reach battle pass level %{count}"
     show:
       back: "Back to seasons"
       level: "Level"
       xp: "XP"
       rank: "Rank"
+      coins: "Coins"
       to_next_level: "%{xp} XP to next level"
       max_level: "Max level reached!"
       sign_in_prompt: "Sign in to join the season and track your progress."
       sign_in: "Sign in"
+      import_workouts: "Import workouts"
       challenges: "Season challenges"
       objectives: "Objectives"
       required: "Required"
@@ -875,15 +1170,38 @@ en:
       no_participants: "No participants yet. Be the first!"
       recent_activity: "Recent activity"
       no_activity: "No activity yet."
+      battle_pass: "Battle pass"
+      premium: "Premium"
+      premium_locked: "Premium rewards require the premium pass."
+      today: "Today's challenges"
+      dailies_done: "%{done} of %{total} complete"
+      legacy_missions: "Legacy missions"
+      legacy_hint: "Complete all five to unlock an extremely rare cosmetic."
+      bonus_rewards: "Bonus rewards"
+      secret: "Secret"
+      week_n: "Week %{n}"
+      unlocks_at_level: "Unlocks at level %{level}"
+      community: "Community"
+      you: "You"
+      done: "Done"
+      not_yet: "Not yet"
     activity:
       challenge_completed: "completed a challenge (%{challenge}) · +%{xp} XP"
       objective_completed: "completed an objective (%{objective}) · +%{xp} XP"
       level_up: "reached level %{level}"
       reward_unlocked: "unlocked %{name}"
+      daily_completed: "completed a daily challenge (%{daily}) · +%{xp} XP"
+      secret_discovered: "discovered a secret (%{challenge}) · +%{xp} XP"
+      legacy_mission_completed: "completed the legacy mission (%{objective}) · +%{xp} XP"
+      community_milestone: "reached %{percent}% of the %{goal} goal"
+      community_tier_cleared: "cleared %{goal} Level %{tier} — Level %{next_tier} is now open at %{next_target}"
+      season_finalized: "finished the season at level %{level} with %{percent}% complete"
     objectives:
       kinds:
         join_club: "Join a club"
         club_workout: "Club workout"
+        legacy: "Legacy mission"
+        custom: "Objective"
       descriptions:
         join_club: "Join any club"
         club_workout:

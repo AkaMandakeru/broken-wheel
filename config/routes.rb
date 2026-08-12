@@ -60,9 +60,13 @@ Rails.application.routes.draw do
     resources :challenges
     resources :events
     resources :seasons do
+      member { get :export }
       resources :season_challenges, only: [:create, :destroy]
       resources :season_objectives, only: [:create, :destroy]
       resources :season_rewards, only: [:create, :destroy]
+    end
+    resources :season_imports, only: [:new, :create] do
+      collection { get :template }
     end
     resources :support_tickets, only: [:index, :show, :update] do
       resources :messages, only: [:create], controller: "support_messages"

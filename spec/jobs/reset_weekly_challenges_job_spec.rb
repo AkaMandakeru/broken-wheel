@@ -106,7 +106,8 @@ RSpec.describe ResetWeeklyChallengesJob, type: :job do
   end
 
   it "skips inactive weekly challenges" do
-    weekly_challenge.update!(status: "archived")
+    # "archived" is not a Challenge::STATUSES value, so this never saved.
+    weekly_challenge.update!(status: "completed")
     original_starts_at = weekly_challenge.starts_at
 
     described_class.new.perform

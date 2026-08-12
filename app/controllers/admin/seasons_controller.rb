@@ -2,7 +2,7 @@
 
 module Admin
   class SeasonsController < BaseController
-    before_action :set_season, only: [ :show, :edit, :update, :destroy ]
+    before_action :set_season, only: [ :show, :edit, :update, :destroy, :export ]
 
     def index
       @seasons = Season.by_recent
@@ -41,6 +41,20 @@ module Admin
       end
     end
 
+    # Downloads the season as a blueprint. Next month starts by exporting the
+    # season that worked, shifting the dates and importing it back.
+    def export
+      shift_to = params[:shift_to].presence && (Date.parse(params[:shift_to]) rescue nil)
+      yaml = Seasons::BlueprintExporter.call(
+        @season,
+        key: params[:new_key].presence,
+        name: params[:new_name].presence,
+        shift_to: shift_to
+      )
+      send_data yaml, filename: "#{@season.key.presence || 'season'}_blueprint.yml",
+                      type: "text/yaml", disposition: "attachment"
+    end
+
     def destroy
       @season.destroy
       redirect_to admin_seasons_path, notice: t("admin.flashes.seasons.destroyed")
@@ -53,7 +67,9 @@ module Admin
     end
 
     def season_params
-      params.require(:season).permit(:key, :name, :description, :theme, :status, :starts_at, :ends_at, :xp_multiplier, :image)
+      params.require(:season).permit(:key, :name, :description, :theme, :status, :starts_at, :ends_at,
+                                     :xp_multiplier, :image, :slogan, :max_level, :time_zone,
+                                     :top_level_xp, :curve_exponent)
     end
   end
 end

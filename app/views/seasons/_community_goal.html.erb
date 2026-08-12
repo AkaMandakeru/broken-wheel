@@ -1,0 +1,49 @@
+<% pct = goal.percent_complete %>
+<div class="bg-white rounded-2xl shadow-sm border border-gray-200 p-5 sm:p-6 mb-6">
+  <div class="flex items-start justify-between gap-3 mb-3">
+    <div class="min-w-0">
+      <h2 class="text-lg font-semibold text-gray-900">
+        <i class="fa-solid fa-earth-americas text-blue-500 mr-1"></i><%= goal.display_title %>
+        <span class="ml-1 text-xs px-2 py-0.5 rounded-full bg-blue-100 text-blue-700 align-middle">
+          <%= t("seasons.community.tier", tier: goal.tier) %>
+        </span>
+      </h2>
+      <p class="text-xs text-gray-500 mt-0.5"><%= goal.display_description %></p>
+      <% if goal.tiers_cleared.positive? %>
+        <p class="text-xs text-amber-600 mt-1">
+          <i class="fa-solid fa-trophy mr-1"></i><%= t("seasons.community.tiers_cleared", count: goal.tiers_cleared) %>
+        </p>
+      <% end %>
+    </div>
+    <span class="text-sm font-bold text-gray-900 whitespace-nowrap"><%= pct %>%</span>
+  </div>
+
+  <div class="relative">
+    <div class="h-4 bg-gray-200 rounded-full overflow-hidden">
+      <div class="h-full bg-linear-to-r from-blue-500 to-cyan-400 rounded-full transition-all" style="width: <%= pct %>%"></div>
+    </div>
+    <%# Milestone pips sit on the bar so the next payout is always visible. %>
+    <% goal.current_milestones.each do |milestone| %>
+      <span class="absolute top-1/2 -translate-y-1/2 -translate-x-1/2 h-3 w-3 rounded-full border-2 border-white
+                   <%= milestone.reached? ? 'bg-amber-400' : 'bg-gray-400' %>"
+            style="left: <%= milestone.percent %>%"
+            title="<%= milestone.percent %>%"></span>
+    <% end %>
+  </div>
+
+  <div class="flex items-center justify-between mt-2 text-xs text-gray-500">
+    <span>
+      <%= number_with_delimiter(goal.tier_progress.round) %> / <%= number_with_delimiter(goal.effective_target.round) %> <%= goal.unit %>
+    </span>
+    <span><%= t("seasons.community.milestones_reached", count: goal.current_milestones.count(&:reached?)) %></span>
+  </div>
+
+  <%# Clearing a tier doubles the goal, so the community always has a next target. %>
+  <p class="text-xs text-gray-400 mt-2">
+    <i class="fa-solid fa-arrow-trend-up mr-1"></i>
+    <%= t("seasons.community.next_tier_hint",
+          tier: goal.tier + 1,
+          target: number_with_delimiter((goal.effective_target * SeasonCommunityGoal::TIER_MULTIPLIER).round),
+          unit: goal.unit) %>
+  </p>
+</div>

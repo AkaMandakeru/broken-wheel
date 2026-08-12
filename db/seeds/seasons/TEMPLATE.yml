@@ -1,0 +1,232 @@
+# =============================================================================
+# SEASON BLUEPRINT TEMPLATE
+# =============================================================================
+#
+# One file describes a whole season: its battle pass, challenges, rewards,
+# missions, daily pool and community goal.
+#
+# HOW TO USE
+#   1. Copy this file, or export a season you liked from /admin/seasons/:id.
+#   2. Change `key` (must be unique — reusing one edits that season instead).
+#   3. Set the dates, then edit whatever you want.
+#   4. Import at /admin/season_imports/new — paste it, upload it, or drop it in
+#      db/seeds/seasons/ and run: rails 'seasons:import[your_key]'
+#
+# The import is validated before anything is written, and runs in a transaction,
+# so a mistake never leaves a half-built season behind. It is also idempotent:
+# re-importing after an edit updates in place and never touches player progress.
+#
+# Delete any section you do not want. Only `key`, `name`, `starts_at` and
+# `ends_at` are required.
+# =============================================================================
+
+# --- Identity ----------------------------------------------------------------
+key: my_season_2026_09          # unique, lowercase, underscores. The upsert key.
+name: My Season
+slogan: A short line shown under the title.
+description: >-
+  A couple of sentences shown on the season page. Keep it about what the month
+  asks of the player.
+
+theme: legacy                   # default | summer | winter | spring | autumn | legacy
+status: upcoming                # upcoming | active | ended  (set active to go live)
+starts_at: 2026-09-01
+ends_at: 2026-09-30
+time_zone: America/Sao_Paulo    # the day boundary for dailies and hour challenges
+xp_multiplier: 1.0
+
+# --- Battle pass shape -------------------------------------------------------
+# max_level is pacing (how often players level up).
+# top_level_xp is difficulty (what it costs to max out).
+# They are independent: dropping from 30 levels to 10 respreads the same XP
+# range, so the season does not get easier — players just level up less often.
+# Run `rails 'seasons:simulate[your_key]'` after importing to check the balance.
+max_level: 10
+top_level_xp: 17110
+curve_exponent: 1.5             # >1 front-loads early levels. 1.5 is a good default.
+
+# --- Cosmetics ---------------------------------------------------------------
+# Any cosmetic referenced by a reward must be defined here or already exist.
+# kind: banner | avatar | frame | trail | name_color | effect | emoji_pack | outfit | border
+# rarity: common | rare | epic | legendary
+# renderable: false for items you can award but not draw yet — they sit in the
+# player's collection until the art exists.
+cosmetics:
+  - { key: example_banner, kind: banner,     name: Example Banner, rarity: common, css_class: "bg-gradient-to-r from-slate-800 to-blue-900" }
+  - { key: example_frame,  kind: frame,      name: Example Frame,  rarity: rare,   css_class: "ring-4 ring-slate-300" }
+  - { key: example_name,   kind: name_color, name: Example Name,   rarity: epic,   css_class: "text-amber-500" }
+  - { key: example_trail,  kind: trail,      name: Example Trail,  rarity: legendary, renderable: false }
+
+# --- Challenges --------------------------------------------------------------
+# category: weekly | monthly | elite | hidden | standard
+#   weekly   — grouped and ordered by week_index
+#   elite    — set unlock_level; progress still accrues below it and pays out
+#              the moment the player reaches that level
+#   hidden   — a secret; stays off the challenge list until completed
+#
+# starts_at / ends_at are OPTIONAL and must fall inside the season. Leave them
+# out and the challenge is scored over the whole season — which is what lets you
+# reuse a challenge next month without it measuring last month's dates.
+#
+# Every requirement must be met for the challenge to complete.
+#
+# AVAILABLE METRICS
+#   distance_km               total distance
+#   duration_hours            total moving time
+#   activity_count            number of activities
+#   active_days               distinct days with an activity
+#   longest_activity_km       longest single activity
+#   activities_over_km        count of activities >= options.km
+#   consecutive_days          longest back-to-back day streak
+#   weeks_with_activity       distinct calendar weeks touched
+#   elevation_gain_m          total climbing
+#   calories                  total kcal
+#   start_before_hour         activities started before options.hour[:minute]
+#   start_after_hour          activities started at/after options.hour[:minute]
+#   beat_previous_day         beat the previous day's distance (1 = done)
+#   personal_record           beat a pre-season best (options.kind: distance|pace)
+#   fastest_5k_seconds        best 5 km time — LOWER IS BETTER, comparator lte
+#   uninterrupted_activity    finished without stopping (options.min_km)
+#   new_route                 activities on a never-run route (needs GPS)
+#   club_member               belongs to a club (1 = yes)
+#   club_workout_count        activities logged while in a club
+#   battle_pass_level         current level in this season
+#   completed_weeklies        weekly challenges finished this season
+#   daily_challenges_done     daily challenges completed this season
+#   perfect_daily_days        days where every assigned daily was completed
+#   timeline_posts            workouts shared to a challenge timeline
+#
+# NOTE: hour-based metrics only count activities with a real recorded start
+# time, so manually-logged workouts never satisfy them.
+challenges:
+  - key: example_week_1
+    title: "Week 1 · The Start"
+    category: weekly
+    week_index: 1
+    starts_at: 2026-09-01       # narrower window inside the season
+    ends_at: 2026-09-07
+    sport: run                  # run | bike | soccer — omit to accept any
+    xp_reward: 1000
+    coin_reward: 200
+    fragment_reward: 10         # medal fragments toward bronze/silver/gold/diamond
+    requirements:
+      - { metric: distance_km,         target: 15 }
+      - { metric: activity_count,      target: 4 }
+      - { metric: longest_activity_km, target: 6 }
+
+  - key: example_monthly
+    title: The Long Haul
+    category: monthly
+    xp_reward: 750
+    coin_reward: 250
+    fragment_reward: 15
+    requirements:
+      - { metric: distance_km, target: 100 }
+
+  - key: example_elite
+    title: "Elite · 150 km"
+    category: elite
+    unlock_level: 7             # must be <= max_level
+    xp_reward: 1000
+    coin_reward: 400
+    fragment_reward: 20
+    requirements:
+      - { metric: distance_km, target: 150 }
+
+  - key: example_secret
+    title: "🥶 Early Bird"
+    category: hidden
+    hidden: true
+    xp_reward: 300
+    coin_reward: 150
+    fragment_reward: 5
+    requirements:
+      - { metric: start_before_hour, target: 1, options: { hour: 5, minute: 30 } }
+
+# --- Rewards -----------------------------------------------------------------
+# reward_type: title | badge | theme | coins | cosmetic | xp_boost
+# track:       free | premium   (premium is granted by an admin today)
+#
+# unlock_kind defaults to `level` and then needs `level`. The other kinds run in
+# parallel to the pass and need `unlock_value`:
+#   legacy           — number of legacy missions completed
+#   completion_tier  — percent of the season's content completed (25/50/75/100)
+#   medal_fragments  — fragments collected
+#   community        — percent of the community goal reached
+rewards:
+  - { level: 1,  track: free, reward_type: badge,    reward_key: example_badge,  name: Season Badge }
+  - { level: 3,  track: free, reward_type: coins,    reward_key: example_coins,  name: 500 Coins, coins: 500 }
+  - { level: 5,  track: free, reward_type: cosmetic, reward_key: example_banner, name: Example Banner }
+  - { level: 7,  track: free, reward_type: xp_boost, reward_key: example_boost,  name: XP Boost (1 day), payload: { hours: 24, multiplier: 2.0 } }
+  - { level: 10, track: free, reward_type: title,    reward_key: champion,       name: Champion }
+
+  - { level: 2,  track: premium, reward_type: cosmetic, reward_key: example_frame, name: Example Frame }
+  - { level: 10, track: premium, reward_type: cosmetic, reward_key: example_trail, name: Example Trail }
+
+  - { unlock_kind: legacy,          unlock_value: 5,   track: free, reward_type: cosmetic, reward_key: example_name, name: Rare Name Colour }
+  - { unlock_kind: completion_tier, unlock_value: 25,  track: free, reward_type: badge, reward_key: example_bronze,  name: Bronze Medal }
+  - { unlock_kind: completion_tier, unlock_value: 50,  track: free, reward_type: badge, reward_key: example_silver,  name: Silver Medal }
+  - { unlock_kind: completion_tier, unlock_value: 75,  track: free, reward_type: badge, reward_key: example_gold,    name: Gold Medal }
+  - { unlock_kind: completion_tier, unlock_value: 100, track: free, reward_type: badge, reward_key: example_diamond, name: Diamond Trophy }
+  - { unlock_kind: medal_fragments, unlock_value: 25,  track: free, reward_type: badge, reward_key: example_frag_1,  name: Bronze Champion Medal }
+  - { unlock_kind: community,       unlock_value: 100, track: free, reward_type: badge, reward_key: example_comm,    name: Community Badge }
+
+# --- Legacy missions ---------------------------------------------------------
+# A five-step track running parallel to the pass. Completing all of them can
+# grant a reward via `unlock_kind: legacy`.
+legacy_missions:
+  - { key: discipline, metric: activity_count,    target: 10, xp_reward: 400, coin_reward: 150, fragment_reward: 10, icon: "fa-solid fa-list-check" }
+  - { key: courage,    metric: personal_record,   target: 1,  xp_reward: 400, coin_reward: 150, fragment_reward: 10, icon: "fa-solid fa-bolt", options: { kind: distance } }
+  - { key: resilience, metric: consecutive_days,  target: 7,  xp_reward: 400, coin_reward: 150, fragment_reward: 10, icon: "fa-solid fa-shield-heart" }
+  - { key: strength,   metric: distance_km,       target: 80, xp_reward: 400, coin_reward: 150, fragment_reward: 10, icon: "fa-solid fa-dumbbell" }
+  - { key: legacy,     metric: battle_pass_level, target: 10, xp_reward: 400, coin_reward: 150, fragment_reward: 10, icon: "fa-solid fa-crown" }
+
+# --- Community goal ----------------------------------------------------------
+# One target the whole community pushes toward. Clearing it DOUBLES the target
+# and opens the next level, repeating until the season ends.
+#
+# target_mode:
+#   per_participant — target = participants × per_participant (recommended; it
+#                     stays reachable as the community grows)
+#   fixed           — target = target_value
+#
+# metric must be summable across people: distance_km, activity_count,
+# elevation_gain_m, calories, active_days.
+#
+# Repeat levels pay coins (tier_coin_reward × level). One-time cosmetics belong
+# on level 1 only — re-awarding them does nothing.
+community_goal:
+  key: example_goal
+  metric: distance_km
+  target_mode: per_participant
+  per_participant: 60
+  target_value: 60
+  tier_coin_reward: 200
+  # max_tiers: 5                # omit to keep doubling until the season ends
+  milestones:
+    - { percent: 25 }
+    - { percent: 50 }
+    - { percent: 75 }
+    - { percent: 100, reward_key: example_comm }
+
+# --- Daily challenges --------------------------------------------------------
+# Three are drawn per player per day from this pool. The draw is seeded per
+# (player, season, day), so it is stable — a player never sees their dailies
+# change under them.
+#
+# weight raises how often a template is picked.
+# requires_start_time templates are withheld from players whose workouts carry
+# no clock time, so nobody is handed a daily they cannot win.
+#
+# Aim for 8+ templates: with only three, everyone sees the same set every day.
+daily_templates:
+  - { key: run_3km,        metric: distance_km,            target: 3,   sport: run, weight: 3, xp_reward: 50, coin_reward: 25 }
+  - { key: run_5km,        metric: distance_km,            target: 5,   sport: run, weight: 2, xp_reward: 70, coin_reward: 35 }
+  - { key: one_activity,   metric: activity_count,         target: 1,   weight: 3, xp_reward: 40, coin_reward: 20 }
+  - { key: two_activities, metric: activity_count,         target: 2,   weight: 1, xp_reward: 80, coin_reward: 40 }
+  - { key: before_8am,     metric: start_before_hour,      target: 1,   options: { hour: 8 },  weight: 2, xp_reward: 60, coin_reward: 30, requires_start_time: true }
+  - { key: after_6pm,      metric: start_after_hour,       target: 1,   options: { hour: 18 }, weight: 2, xp_reward: 60, coin_reward: 30, requires_start_time: true }
+  - { key: beat_yesterday, metric: beat_previous_day,      target: 1,   weight: 2, xp_reward: 70, coin_reward: 35 }
+  - { key: burn_300kcal,   metric: calories,               target: 300, weight: 2, xp_reward: 60, coin_reward: 30 }
+  - { key: no_stopping,    metric: uninterrupted_activity, target: 1,   weight: 1, xp_reward: 70, coin_reward: 35 }
+  - { key: climb_100m,     metric: elevation_gain_m,       target: 100, weight: 1, xp_reward: 60, coin_reward: 30 }

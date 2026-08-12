@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_06_21_120000) do
+ActiveRecord::Schema[8.1].define(version: 2026_08_11_120100) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -74,12 +74,32 @@ ActiveRecord::Schema[8.1].define(version: 2026_06_21_120000) do
     t.bigint "invited_by_id"
     t.integer "points", default: 0, null: false
     t.decimal "progress_value", precision: 10, scale: 2, default: "0.0"
+    t.jsonb "requirement_progress", default: {}, null: false
+    t.bigint "season_id"
     t.datetime "updated_at", null: false
     t.bigint "user_id", null: false
     t.index ["challenge_id"], name: "index_challenge_participations_on_challenge_id"
     t.index ["invite_code"], name: "index_challenge_participations_on_invite_code", unique: true
     t.index ["invited_by_id"], name: "index_challenge_participations_on_invited_by_id"
+    t.index ["season_id"], name: "index_challenge_participations_on_season_id"
+    t.index ["user_id", "challenge_id", "season_id"], name: "idx_challenge_participations_user_challenge_season", unique: true, where: "(season_id IS NOT NULL)"
+    t.index ["user_id", "challenge_id"], name: "idx_challenge_participations_user_challenge_standalone", unique: true, where: "(season_id IS NULL)"
     t.index ["user_id"], name: "index_challenge_participations_on_user_id"
+  end
+
+  create_table "challenge_requirements", force: :cascade do |t|
+    t.bigint "challenge_id", null: false
+    t.string "comparator", default: "gte", null: false
+    t.datetime "created_at", null: false
+    t.string "label_key"
+    t.string "metric", null: false
+    t.jsonb "options", default: {}, null: false
+    t.integer "position", default: 0, null: false
+    t.decimal "target", precision: 12, scale: 2, null: false
+    t.string "unit"
+    t.datetime "updated_at", null: false
+    t.index ["challenge_id", "position"], name: "index_challenge_requirements_on_challenge_id_and_position"
+    t.index ["challenge_id"], name: "index_challenge_requirements_on_challenge_id"
   end
 
   create_table "challenges", force: :cascade do |t|
@@ -117,6 +137,68 @@ ActiveRecord::Schema[8.1].define(version: 2026_06_21_120000) do
     t.string "sport"
     t.datetime "updated_at", null: false
     t.index ["created_by_id"], name: "index_clubs_on_created_by_id"
+  end
+
+  create_table "coin_transactions", force: :cascade do |t|
+    t.integer "amount", null: false
+    t.datetime "created_at", null: false
+    t.jsonb "metadata", default: {}, null: false
+    t.string "reason", null: false
+    t.string "reason_key", null: false
+    t.datetime "updated_at", null: false
+    t.bigint "user_id", null: false
+    t.index ["user_id", "reason_key"], name: "index_coin_transactions_on_user_id_and_reason_key", unique: true
+    t.index ["user_id"], name: "index_coin_transactions_on_user_id"
+  end
+
+  create_table "cosmetics", force: :cascade do |t|
+    t.boolean "animated", default: false, null: false
+    t.datetime "created_at", null: false
+    t.string "css_class"
+    t.string "icon"
+    t.string "key", null: false
+    t.string "kind", null: false
+    t.string "name"
+    t.string "rarity", default: "common", null: false
+    t.boolean "renderable", default: true, null: false
+    t.datetime "updated_at", null: false
+    t.index ["key"], name: "index_cosmetics_on_key", unique: true
+    t.index ["kind"], name: "index_cosmetics_on_kind"
+  end
+
+  create_table "daily_challenge_assignments", force: :cascade do |t|
+    t.date "challenge_date", null: false
+    t.integer "coin_awarded", default: 0, null: false
+    t.datetime "completed_at"
+    t.datetime "created_at", null: false
+    t.bigint "daily_challenge_template_id", null: false
+    t.bigint "season_id", null: false
+    t.datetime "updated_at", null: false
+    t.bigint "user_id", null: false
+    t.integer "xp_awarded", default: 0, null: false
+    t.index ["daily_challenge_template_id"], name: "idx_daily_assignments_template"
+    t.index ["season_id", "challenge_date"], name: "idx_on_season_id_challenge_date_dfeac51cb3"
+    t.index ["season_id"], name: "index_daily_challenge_assignments_on_season_id"
+    t.index ["user_id", "challenge_date", "daily_challenge_template_id"], name: "idx_daily_assignments_unique", unique: true
+    t.index ["user_id"], name: "index_daily_challenge_assignments_on_user_id"
+  end
+
+  create_table "daily_challenge_templates", force: :cascade do |t|
+    t.boolean "active", default: true, null: false
+    t.integer "coin_reward", default: 25, null: false
+    t.datetime "created_at", null: false
+    t.string "key", null: false
+    t.string "metric", null: false
+    t.jsonb "options", default: {}, null: false
+    t.boolean "requires_start_time", default: false, null: false
+    t.bigint "season_id"
+    t.string "sport"
+    t.decimal "target", precision: 12, scale: 2, null: false
+    t.datetime "updated_at", null: false
+    t.integer "weight", default: 1, null: false
+    t.integer "xp_reward", default: 50, null: false
+    t.index ["season_id", "key"], name: "index_daily_challenge_templates_on_season_id_and_key", unique: true
+    t.index ["season_id"], name: "index_daily_challenge_templates_on_season_id"
   end
 
   create_table "event_participations", force: :cascade do |t|
@@ -170,7 +252,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_06_21_120000) do
     t.jsonb "metadata", default: {}, null: false
     t.bigint "season_id", null: false
     t.datetime "updated_at", null: false
-    t.bigint "user_id", null: false
+    t.bigint "user_id"
     t.index ["season_id", "created_at"], name: "index_season_activities_on_season_id_and_created_at"
     t.index ["season_id"], name: "index_season_activities_on_season_id"
     t.index ["user_id"], name: "index_season_activities_on_user_id"
@@ -189,16 +271,59 @@ ActiveRecord::Schema[8.1].define(version: 2026_06_21_120000) do
   end
 
   create_table "season_challenges", force: :cascade do |t|
+    t.string "category", default: "standard", null: false
     t.bigint "challenge_id", null: false
+    t.integer "coin_reward", default: 0, null: false
     t.datetime "created_at", null: false
+    t.datetime "ends_at"
+    t.integer "fragment_reward", default: 0, null: false
+    t.boolean "hidden", default: false, null: false
     t.integer "position", default: 0, null: false
     t.boolean "required", default: false, null: false
     t.bigint "season_id", null: false
+    t.datetime "starts_at"
+    t.integer "unlock_level", default: 0, null: false
     t.datetime "updated_at", null: false
+    t.integer "week_index"
     t.integer "xp_reward", default: 0, null: false
     t.index ["challenge_id"], name: "index_season_challenges_on_challenge_id"
+    t.index ["season_id", "category"], name: "index_season_challenges_on_season_id_and_category"
     t.index ["season_id", "challenge_id"], name: "index_season_challenges_on_season_id_and_challenge_id", unique: true
     t.index ["season_id"], name: "index_season_challenges_on_season_id"
+  end
+
+  create_table "season_community_goals", force: :cascade do |t|
+    t.decimal "base_target_value", precision: 14, scale: 2
+    t.datetime "computed_at"
+    t.datetime "created_at", null: false
+    t.decimal "current_value", precision: 14, scale: 2, default: "0.0", null: false
+    t.string "key", null: false
+    t.integer "max_tiers"
+    t.string "metric", null: false
+    t.decimal "per_participant", precision: 10, scale: 2
+    t.bigint "season_id", null: false
+    t.string "target_mode", default: "fixed", null: false
+    t.decimal "target_value", precision: 14, scale: 2, null: false
+    t.integer "tier", default: 1, null: false
+    t.integer "tier_coin_reward", default: 0, null: false
+    t.decimal "tier_started_value", precision: 14, scale: 2, default: "0.0", null: false
+    t.datetime "updated_at", null: false
+    t.index ["season_id", "key"], name: "index_season_community_goals_on_season_id_and_key", unique: true
+    t.index ["season_id"], name: "index_season_community_goals_on_season_id"
+  end
+
+  create_table "season_community_milestones", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.integer "percent", null: false
+    t.datetime "reached_at"
+    t.bigint "season_community_goal_id", null: false
+    t.bigint "season_reward_id"
+    t.decimal "threshold", precision: 14, scale: 2, null: false
+    t.integer "tier", default: 1, null: false
+    t.datetime "updated_at", null: false
+    t.index ["season_community_goal_id", "tier", "percent"], name: "idx_community_milestones_unique", unique: true
+    t.index ["season_community_goal_id"], name: "idx_community_milestones_goal"
+    t.index ["season_reward_id"], name: "index_season_community_milestones_on_season_reward_id"
   end
 
   create_table "season_objective_completions", force: :cascade do |t|
@@ -214,28 +339,51 @@ ActiveRecord::Schema[8.1].define(version: 2026_06_21_120000) do
   end
 
   create_table "season_objectives", force: :cascade do |t|
+    t.integer "coin_reward", default: 0, null: false
     t.datetime "created_at", null: false
+    t.integer "fragment_reward", default: 0, null: false
+    t.string "icon"
     t.string "kind", null: false
+    t.string "metric"
     t.string "name"
+    t.jsonb "options", default: {}, null: false
     t.integer "position", default: 0, null: false
     t.boolean "required", default: false, null: false
     t.bigint "season_id", null: false
     t.integer "target", default: 1, null: false
+    t.string "track", default: "standard", null: false
     t.datetime "updated_at", null: false
     t.integer "xp_reward", default: 0, null: false
+    t.index ["season_id", "track"], name: "index_season_objectives_on_season_id_and_track"
     t.index ["season_id"], name: "index_season_objectives_on_season_id"
   end
 
   create_table "season_participations", force: :cascade do |t|
+    t.integer "activities_count", default: 0, null: false
+    t.integer "best_5k_seconds"
+    t.integer "coins_earned", default: 0, null: false
+    t.integer "completion_percent", default: 0, null: false
     t.datetime "created_at", null: false
+    t.decimal "elevation_gain_m", precision: 10, scale: 1, default: "0.0", null: false
     t.datetime "last_recalculated_at"
     t.integer "level", default: 1, null: false
+    t.integer "longest_streak_days", default: 0, null: false
+    t.integer "medal_fragments", default: 0, null: false
+    t.boolean "premium", default: false, null: false
+    t.datetime "premium_granted_at"
     t.bigint "season_id", null: false
+    t.decimal "total_distance_km", precision: 10, scale: 2, default: "0.0", null: false
     t.datetime "updated_at", null: false
     t.bigint "user_id", null: false
     t.integer "xp", default: 0, null: false
     t.jsonb "xp_breakdown", default: {}, null: false
+    t.index ["season_id", "activities_count"], name: "index_season_participations_on_season_id_and_activities_count"
+    t.index ["season_id", "best_5k_seconds"], name: "index_season_participations_on_season_id_and_best_5k_seconds"
+    t.index ["season_id", "elevation_gain_m"], name: "index_season_participations_on_season_id_and_elevation_gain_m"
+    t.index ["season_id", "longest_streak_days"], name: "idx_on_season_id_longest_streak_days_a9b4b574a4"
+    t.index ["season_id", "total_distance_km"], name: "index_season_participations_on_season_id_and_total_distance_km"
     t.index ["season_id", "user_id"], name: "index_season_participations_on_season_id_and_user_id", unique: true
+    t.index ["season_id", "xp"], name: "index_season_participations_on_season_id_and_xp"
     t.index ["season_id"], name: "index_season_participations_on_season_id"
     t.index ["user_id"], name: "index_season_participations_on_user_id"
   end
@@ -252,26 +400,40 @@ ActiveRecord::Schema[8.1].define(version: 2026_06_21_120000) do
   end
 
   create_table "season_rewards", force: :cascade do |t|
+    t.integer "coins", default: 0, null: false
     t.datetime "created_at", null: false
-    t.integer "level", null: false
+    t.integer "level"
     t.string "name"
+    t.jsonb "payload", default: {}, null: false
+    t.integer "position", default: 0, null: false
     t.string "reward_key", null: false
     t.string "reward_type", null: false
     t.bigint "season_id", null: false
+    t.string "track", default: "free", null: false
+    t.string "unlock_kind", default: "level", null: false
+    t.integer "unlock_value"
     t.datetime "updated_at", null: false
     t.index ["season_id", "level"], name: "index_season_rewards_on_season_id_and_level"
+    t.index ["season_id", "unlock_kind", "unlock_value"], name: "index_season_rewards_on_unlock"
     t.index ["season_id"], name: "index_season_rewards_on_season_id"
   end
 
   create_table "seasons", force: :cascade do |t|
     t.datetime "created_at", null: false
+    t.decimal "curve_exponent", precision: 4, scale: 2, default: "1.5", null: false
     t.text "description"
     t.datetime "ends_at"
+    t.datetime "finalized_at"
     t.string "key"
+    t.jsonb "level_curve", default: [], null: false
+    t.integer "max_level", default: 5, null: false
     t.string "name", null: false
+    t.string "slogan"
     t.datetime "starts_at"
     t.string "status", default: "upcoming", null: false
     t.string "theme", default: "default", null: false
+    t.string "time_zone", default: "America/Sao_Paulo", null: false
+    t.integer "top_level_xp"
     t.datetime "updated_at", null: false
     t.decimal "xp_multiplier", precision: 5, scale: 2, default: "1.0", null: false
     t.index ["key"], name: "index_seasons_on_key", unique: true
@@ -352,10 +514,35 @@ ActiveRecord::Schema[8.1].define(version: 2026_06_21_120000) do
     t.index ["user_id"], name: "index_user_badges_on_user_id"
   end
 
+  create_table "user_cosmetics", force: :cascade do |t|
+    t.bigint "cosmetic_id", null: false
+    t.datetime "created_at", null: false
+    t.string "source"
+    t.datetime "unlocked_at", null: false
+    t.datetime "updated_at", null: false
+    t.bigint "user_id", null: false
+    t.index ["cosmetic_id"], name: "index_user_cosmetics_on_cosmetic_id"
+    t.index ["user_id", "cosmetic_id"], name: "index_user_cosmetics_on_user_id_and_cosmetic_id", unique: true
+    t.index ["user_id"], name: "index_user_cosmetics_on_user_id"
+  end
+
+  create_table "user_xp_boosts", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.datetime "ends_at", null: false
+    t.decimal "multiplier", precision: 4, scale: 2, default: "2.0", null: false
+    t.string "source_key", null: false
+    t.datetime "starts_at", null: false
+    t.datetime "updated_at", null: false
+    t.bigint "user_id", null: false
+    t.index ["user_id", "source_key"], name: "index_user_xp_boosts_on_user_id_and_source_key", unique: true
+    t.index ["user_id"], name: "index_user_xp_boosts_on_user_id"
+  end
+
   create_table "users", force: :cascade do |t|
     t.string "address"
     t.boolean "admin", default: false, null: false
     t.string "blood_type"
+    t.integer "coins", default: 0, null: false
     t.datetime "confirmation_sent_at"
     t.string "confirmation_token"
     t.datetime "confirmed_at"
@@ -363,6 +550,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_06_21_120000) do
     t.string "document"
     t.string "email", default: "", null: false
     t.string "encrypted_password", default: "", null: false
+    t.jsonb "equipped_cosmetics", default: {}, null: false
     t.integer "failed_attempts", default: 0, null: false
     t.string "first_name", null: false
     t.string "last_name", null: false
@@ -389,19 +577,30 @@ ActiveRecord::Schema[8.1].define(version: 2026_06_21_120000) do
   end
 
   create_table "workouts", force: :cascade do |t|
+    t.integer "calories"
     t.bigint "challenge_participation_id"
     t.datetime "created_at", null: false
     t.decimal "distance_km"
     t.integer "duration_minutes"
+    t.integer "elapsed_time_seconds"
+    t.decimal "elevation_gain_m", precision: 8, scale: 1
     t.string "external_id"
+    t.integer "moving_time_seconds"
     t.string "provider"
     t.jsonb "raw_data"
+    t.string "route_signature"
     t.string "sport"
+    t.integer "start_minute_of_day"
+    t.boolean "start_time_known", default: false, null: false
+    t.datetime "started_at"
+    t.datetime "started_at_local"
     t.datetime "updated_at", null: false
     t.bigint "user_id", null: false
     t.date "workout_date"
     t.index ["challenge_participation_id"], name: "index_workouts_on_challenge_participation_id"
     t.index ["user_id", "provider", "external_id"], name: "index_workouts_on_user_provider_external_id", unique: true, where: "((provider IS NOT NULL) AND (external_id IS NOT NULL))"
+    t.index ["user_id", "started_at_local"], name: "index_workouts_on_user_id_and_started_at_local"
+    t.index ["user_id", "workout_date"], name: "index_workouts_on_user_id_and_workout_date"
     t.index ["user_id"], name: "index_workouts_on_user_id"
   end
 
@@ -409,11 +608,18 @@ ActiveRecord::Schema[8.1].define(version: 2026_06_21_120000) do
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "analytics_events", "users"
   add_foreign_key "challenge_participations", "challenges"
+  add_foreign_key "challenge_participations", "seasons"
   add_foreign_key "challenge_participations", "users"
   add_foreign_key "challenge_participations", "users", column: "invited_by_id"
+  add_foreign_key "challenge_requirements", "challenges"
   add_foreign_key "club_memberships", "clubs"
   add_foreign_key "club_memberships", "users"
   add_foreign_key "clubs", "users", column: "created_by_id"
+  add_foreign_key "coin_transactions", "users"
+  add_foreign_key "daily_challenge_assignments", "daily_challenge_templates"
+  add_foreign_key "daily_challenge_assignments", "seasons"
+  add_foreign_key "daily_challenge_assignments", "users"
+  add_foreign_key "daily_challenge_templates", "seasons"
   add_foreign_key "event_participations", "events"
   add_foreign_key "event_participations", "users"
   add_foreign_key "event_participations", "workouts"
@@ -425,6 +631,9 @@ ActiveRecord::Schema[8.1].define(version: 2026_06_21_120000) do
   add_foreign_key "season_challenge_completions", "season_participations"
   add_foreign_key "season_challenges", "challenges"
   add_foreign_key "season_challenges", "seasons"
+  add_foreign_key "season_community_goals", "seasons"
+  add_foreign_key "season_community_milestones", "season_community_goals"
+  add_foreign_key "season_community_milestones", "season_rewards"
   add_foreign_key "season_objective_completions", "season_objectives"
   add_foreign_key "season_objective_completions", "season_participations"
   add_foreign_key "season_objectives", "seasons"
@@ -445,6 +654,9 @@ ActiveRecord::Schema[8.1].define(version: 2026_06_21_120000) do
   add_foreign_key "user_badges", "badges"
   add_foreign_key "user_badges", "challenges"
   add_foreign_key "user_badges", "users"
+  add_foreign_key "user_cosmetics", "cosmetics"
+  add_foreign_key "user_cosmetics", "users"
+  add_foreign_key "user_xp_boosts", "users"
   add_foreign_key "workouts", "challenge_participations"
   add_foreign_key "workouts", "users"
 end

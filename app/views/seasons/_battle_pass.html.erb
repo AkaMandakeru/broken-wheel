@@ -1,0 +1,49 @@
+<% current_level = participation&.level.to_i %>
+<div class="bg-white rounded-2xl shadow-sm border border-gray-200 p-5 sm:p-6 mb-6">
+  <div class="flex items-center justify-between gap-3 mb-4">
+    <h2 class="text-lg font-semibold text-gray-900"><%= t("seasons.show.battle_pass") %></h2>
+    <div class="flex items-center gap-3 text-xs text-gray-500 whitespace-nowrap">
+      <span class="flex items-center gap-1"><span class="h-2.5 w-2.5 rounded-full bg-gray-300"></span><%= t("seasons.tracks.free") %></span>
+      <span class="flex items-center gap-1"><span class="h-2.5 w-2.5 rounded-full bg-amber-400"></span><%= t("seasons.tracks.premium") %></span>
+    </div>
+  </div>
+
+  <%# The track scrolls horizontally: a 30-level season never fits any screen,
+      and even 10 levels overflow a phone. The negative margin lets it bleed to
+      the card edges so there's no dead gutter to swipe against on mobile. %>
+  <div class="battle-pass-track overflow-x-auto overscroll-x-contain pb-3 -mx-5 px-5 sm:-mx-6 sm:px-6">
+    <div class="flex gap-2 w-max">
+      <% (1..season.max_level).each do |level| %>
+        <% level_rewards = rewards_by_level[level] || [] %>
+        <% reached = current_level >= level %>
+        <div class="flex w-20 shrink-0 flex-col items-center gap-1.5">
+          <div class="flex h-7 w-7 shrink-0 items-center justify-center rounded-full text-[11px] font-bold <%= reached ? "bg-primary text-white" : "bg-gray-100 text-gray-400" %> <%= "ring-2 ring-primary ring-offset-2" if current_level == level %>">
+            <%= level %>
+          </div>
+
+          <% %w[free premium].each do |track| %>
+            <% reward = level_rewards.find { |r| r.track == track } %>
+            <% if reward %>
+              <% unlocked = granted_reward_ids.include?(reward.id) %>
+              <%# Fixed height on every slot, filled or empty, so the free and
+                  premium rows stay aligned across the whole track. %>
+              <div class="flex h-14 w-full flex-col items-center justify-center gap-0.5 overflow-hidden rounded-lg border px-1 py-1 text-center <%= unlocked ? "border-green-300 bg-green-50" : (track == "premium" ? "border-amber-200 bg-amber-50/50" : "border-gray-200 bg-gray-50") %>"
+                   title="<%= season_reward_label(reward) %>">
+                <i class="<%= unlocked ? "fa-solid fa-circle-check text-green-600" : "#{season_reward_icon(reward)} #{track == 'premium' ? 'text-amber-500' : 'text-gray-400'}" %> text-sm leading-none"></i>
+                <p class="line-clamp-2 text-[9px] leading-tight wrap-break-word text-gray-600"><%= season_reward_label(reward) %></p>
+              </div>
+            <% else %>
+              <div class="h-14 w-full rounded-lg border border-dashed border-gray-200"></div>
+            <% end %>
+          <% end %>
+        </div>
+      <% end %>
+    </div>
+  </div>
+
+  <% unless participation&.premium? %>
+    <p class="text-xs text-gray-500 mt-2">
+      <i class="fa-solid fa-lock mr-1"></i><%= t("seasons.show.premium_locked") %>
+    </p>
+  <% end %>
+</div>

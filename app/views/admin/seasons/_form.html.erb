@@ -19,6 +19,11 @@
     </div>
 
     <div>
+      <%= f.label :slogan, t("admin.seasons.fields.slogan"), class: "block text-sm font-medium text-gray-700 mb-1" %>
+      <%= f.text_field :slogan, class: "block w-full rounded-lg border border-gray-300 px-3 py-2 focus:border-[#FC4C02] focus:ring-[#FC4C02] focus:outline-none" %>
+    </div>
+
+    <div>
       <%= f.label :description, t("admin.seasons.fields.description"), class: "block text-sm font-medium text-gray-700 mb-1" %>
       <%= f.text_area :description, rows: 3, class: "block w-full rounded-lg border border-gray-300 px-3 py-2 focus:border-[#FC4C02] focus:ring-[#FC4C02] focus:outline-none" %>
     </div>
@@ -42,7 +47,34 @@
       </div>
       <div>
         <%= f.label :xp_multiplier, t("admin.seasons.fields.xp_multiplier"), class: "block text-sm font-medium text-gray-700 mb-1" %>
-        <%= f.number_field :xp_multiplier, step: "0.1", min: 0.1, class: "block w-full rounded-lg border border-gray-300 px-3 py-2 focus:border-[#FC4C02] focus:ring-[#FC4C02] focus:outline-none" %>
+        <%# Same trap: the column stores two decimals, so a step of 0.1 would make
+            a multiplier like 1.25 impossible to save back. %>
+        <%= f.number_field :xp_multiplier, step: "any", min: 0.1, class: "block w-full rounded-lg border border-gray-300 px-3 py-2 focus:border-[#FC4C02] focus:ring-[#FC4C02] focus:outline-none" %>
+      </div>
+      <div>
+        <%= f.label :max_level, t("admin.seasons.fields.max_level"), class: "block text-sm font-medium text-gray-700 mb-1" %>
+        <%= f.number_field :max_level, min: 1, max: Season::MAX_SUPPORTED_LEVEL, class: "block w-full rounded-lg border border-gray-300 px-3 py-2 focus:border-[#FC4C02] focus:ring-[#FC4C02] focus:outline-none" %>
+      </div>
+      <div>
+        <%# Difficulty lives here, not in the level count — the curve is respread
+            across this range whenever either value changes. %>
+        <%= f.label :top_level_xp, t("admin.seasons.fields.top_level_xp"), class: "block text-sm font-medium text-gray-700 mb-1" %>
+        <%# No `step`: with a step of 100 and a min of 1 the browser only accepts
+            1, 101, 201… so a stored value like 17110 is rejected on every save
+            without the operator touching the field. XP has no natural step. %>
+        <%= f.number_field :top_level_xp, min: 1, placeholder: Seasons::LevelCurve::DEFAULT_TOP_LEVEL_XP, class: "block w-full rounded-lg border border-gray-300 px-3 py-2 focus:border-[#FC4C02] focus:ring-[#FC4C02] focus:outline-none" %>
+        <p class="text-xs text-gray-400 mt-1"><%= t("admin.seasons.fields.top_level_xp_hint") %></p>
+      </div>
+      <div>
+        <%= f.label :curve_exponent, t("admin.seasons.fields.curve_exponent"), class: "block text-sm font-medium text-gray-700 mb-1" %>
+        <%# `any` rather than a fixed step, for the same reason: min/max still
+            bound it, but no stored value can become unsaveable. %>
+        <%= f.number_field :curve_exponent, step: "any", min: 0.1, max: 4, class: "block w-full rounded-lg border border-gray-300 px-3 py-2 focus:border-[#FC4C02] focus:ring-[#FC4C02] focus:outline-none" %>
+      </div>
+      <div>
+        <%# The season's day boundary — drives dailies and hour-based challenges. %>
+        <%= f.label :time_zone, t("admin.seasons.fields.time_zone"), class: "block text-sm font-medium text-gray-700 mb-1" %>
+        <%= f.time_zone_select :time_zone, ActiveSupport::TimeZone.all, { default: "America/Sao_Paulo" }, class: "block w-full rounded-lg border border-gray-300 px-3 py-2 focus:border-[#FC4C02] focus:ring-[#FC4C02] focus:outline-none" %>
       </div>
     </div>
 

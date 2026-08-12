@@ -17,3 +17,12 @@ production:
     class: ResetWeeklyChallengesJob
     queue: default
     schedule: every Sunday at 11:59pm
+  # Just after midnight in the season's timezone (America/Sao_Paulo = UTC-3).
+  assign_daily_challenges:
+    class: AssignDailyChallengesJob
+    queue: default
+    schedule: every day at 3:05am
+  aggregate_community_goals:
+    class: AggregateCommunityGoalsJob
+    queue: default
+    schedule: every 15 minutes
