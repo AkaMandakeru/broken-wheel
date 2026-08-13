@@ -1054,6 +1054,11 @@ pt:
             selected_distance_km:
               blank: "Escolha uma distância"
               inclusion: "Escolha uma das distâncias oferecidas"
+        season:
+          attributes:
+            image:
+              invalid_type: "deve ser uma imagem (%{types})"
+              too_large: "deve ser menor que %{size}"
 
   # Enum value labels (rótulos para valores enum armazenados no banco)
   enums:

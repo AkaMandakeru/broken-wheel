@@ -5,8 +5,15 @@
   <% if @active_seasons.any? %>
     <div class="space-y-4 mb-10">
       <% @active_seasons.each do |season| %>
+        <% cover = season_image_source(season, resize: [ 1200, 320 ]) %>
         <%= link_to season_path(season), class: "block rounded-2xl overflow-hidden bg-white shadow-sm border border-gray-200 hover:shadow-md transition" do %>
-          <div class="h-2 bg-linear-to-r <%= season_theme_classes(season.theme) %>"></div>
+          <%# No scrim here — the title sits in the white card below, so darkening
+              the artwork would serve nothing. %>
+          <% if cover %>
+            <%= image_tag cover, alt: season.name, class: "h-32 w-full object-cover sm:h-40" %>
+          <% else %>
+            <div class="h-2 bg-linear-to-r <%= season_theme_classes(season.theme) %>"></div>
+          <% end %>
           <div class="p-6">
             <div class="flex items-start justify-between">
               <div>
@@ -30,9 +37,15 @@
     <h2 class="text-lg font-semibold text-gray-900 mb-3"><%= t("seasons.index.past") %></h2>
     <div class="space-y-3">
       <% @past_seasons.each do |season| %>
-        <%= link_to season_path(season), class: "flex items-center justify-between bg-white rounded-lg border border-gray-200 p-4 hover:shadow-md transition" do %>
-          <span class="font-medium text-gray-900"><%= season.name %></span>
-          <span class="text-sm text-gray-500"><%= season.ends_at&.strftime("%b %Y") %></span>
+        <% thumb = season_image_source(season, resize: [ 96, 96 ]) %>
+        <%= link_to season_path(season), class: "flex items-center gap-3 bg-white rounded-lg border border-gray-200 p-4 hover:shadow-md transition" do %>
+          <% if thumb %>
+            <%= image_tag thumb, alt: season.name, class: "h-10 w-10 shrink-0 rounded-lg object-cover" %>
+          <% else %>
+            <span class="h-10 w-10 shrink-0 rounded-lg bg-linear-to-br <%= season_theme_classes(season.theme) %>"></span>
+          <% end %>
+          <span class="flex-1 min-w-0 font-medium text-gray-900 truncate"><%= season.name %></span>
+          <span class="text-sm text-gray-500 whitespace-nowrap"><%= season.ends_at&.strftime("%b %Y") %></span>
         <% end %>
       <% end %>
     </div>

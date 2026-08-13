@@ -14,6 +14,19 @@ module SeasonsHelper
     end
   end
 
+  # A resized variant of the season's picture, or nil when there isn't one.
+  #
+  # Falls back to the original file when the blob can't be transformed — an
+  # upload that isn't a processable image would otherwise raise at render time
+  # and take the whole page down.
+  def season_image_source(season, resize:)
+    return nil unless season&.image&.attached?
+
+    season.image.variable? ? season.image.variant(resize_to_fill: resize) : season.image
+  rescue ActiveStorage::Error, ActiveStorage::FileNotFoundError
+    nil
+  end
+
   def season_status_badge_class(status)
     case status
     when "active"   then "bg-green-100 text-green-700"

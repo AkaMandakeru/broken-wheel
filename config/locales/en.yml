@@ -968,6 +968,11 @@ en:
             selected_distance_km:
               blank: "Please choose a distance"
               inclusion: "Please choose one of the offered distances"
+        season:
+          attributes:
+            image:
+              invalid_type: "must be an image (%{types})"
+              too_large: "must be smaller than %{size}"
 
   # Enum value labels (for displaying DB-stored enum strings)
   enums:

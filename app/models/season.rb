@@ -20,6 +20,11 @@ class Season < ApplicationRecord
 
   MAX_SUPPORTED_LEVEL = 100
 
+  # The picture is rendered on the public season page, so what can be uploaded
+  # is constrained here rather than discovered at render time.
+  IMAGE_CONTENT_TYPES = %w[image/png image/jpeg image/webp image/gif].freeze
+  MAX_IMAGE_BYTES = 5.megabytes
+
   validates :name, presence: true
   validates :status, inclusion: { in: STATUSES }
   validates :theme, inclusion: { in: THEMES }, allow_blank: true
@@ -31,6 +36,7 @@ class Season < ApplicationRecord
   validates :curve_exponent, numericality: { greater_than: 0 }
   validates :key, uniqueness: true, allow_blank: true
   validate :time_zone_is_known
+  validate :image_is_a_supported_picture
 
   # Clearing an optional curve field in the form submits "", which casts to nil.
   # `curve_exponent` is NOT NULL with a sensible default, so a blank field should
@@ -139,6 +145,18 @@ class Season < ApplicationRecord
     return if time_zone.blank? || ActiveSupport::TimeZone[time_zone]
 
     errors.add(:time_zone, :invalid)
+  end
+
+  def image_is_a_supported_picture
+    return unless image.attached?
+
+    unless IMAGE_CONTENT_TYPES.include?(image.blob.content_type)
+      errors.add(:image, :invalid_type, types: "PNG, JPEG, WEBP, GIF")
+    end
+
+    return unless image.blob.byte_size > MAX_IMAGE_BYTES
+
+    errors.add(:image, :too_large, size: "#{MAX_IMAGE_BYTES / 1.megabyte} MB")
   end
 
   # End-of-season payouts run once, the moment a season is closed.

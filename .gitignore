@@ -9,7 +9,11 @@
 
 # Ignore all environment files.
 /.env*
-/.DS_Store
+
+# Ignore macOS Finder metadata anywhere in the tree. Unanchored on purpose:
+# a leading slash would only match the repo root, leaving db/.DS_Store and the
+# like to show up in every status.
+.DS_Store
 
 # Ignore all logfiles and tempfiles.
 /log/*

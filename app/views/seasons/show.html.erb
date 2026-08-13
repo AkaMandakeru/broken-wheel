@@ -1,16 +1,35 @@
 <div class="pt-8">
-  <%# Themed header — gradient accent bar, app-standard text colors %>
+  <%# Themed header. With a picture the title sits on the image over a scrim,
+      which keeps it readable whatever was uploaded; without one it falls back
+      to the gradient accent bar and a dark title. %>
+  <% banner = season_image_source(@season, resize: [ 1600, 500 ]) %>
   <div class="rounded-2xl overflow-hidden bg-white border border-gray-200 shadow-sm mb-6">
-    <div class="h-2.5 bg-linear-to-r <%= season_theme_classes(@season.theme) %>"></div>
+    <% if banner %>
+      <div class="relative h-44 sm:h-60">
+        <%= image_tag banner, alt: @season.name, class: "absolute inset-0 h-full w-full object-cover" %>
+        <div class="absolute inset-0 bg-linear-to-t from-black/75 via-black/25 to-transparent"></div>
+        <div class="absolute inset-x-0 bottom-0 p-6 sm:p-8">
+          <h1 class="text-3xl font-extrabold text-white drop-shadow-md"><%= @season.name %></h1>
+          <% if @season.slogan.present? %>
+            <p class="text-sm italic text-white/85 mt-1 drop-shadow"><%= @season.slogan %></p>
+          <% end %>
+        </div>
+      </div>
+    <% else %>
+      <div class="h-2.5 bg-linear-to-r <%= season_theme_classes(@season.theme) %>"></div>
+    <% end %>
+
     <div class="p-6 sm:p-8">
       <div class="flex items-start justify-between gap-3">
         <div>
-          <h1 class="text-3xl font-extrabold text-gray-900"><%= @season.name %></h1>
-          <% if @season.slogan.present? %>
-            <p class="text-sm italic text-gray-500 mt-1"><%= @season.slogan %></p>
+          <% unless banner %>
+            <h1 class="text-3xl font-extrabold text-gray-900"><%= @season.name %></h1>
+            <% if @season.slogan.present? %>
+              <p class="text-sm italic text-gray-500 mt-1"><%= @season.slogan %></p>
+            <% end %>
           <% end %>
           <% if @season.starts_at && @season.ends_at %>
-            <p class="text-sm text-gray-500 mt-1"><%= @season.starts_at.strftime("%b %-d") %> – <%= @season.ends_at.strftime("%b %-d, %Y") %></p>
+            <p class="text-sm text-gray-500 <%= "mt-1" unless banner %>"><%= @season.starts_at.strftime("%b %-d") %> – <%= @season.ends_at.strftime("%b %-d, %Y") %></p>
           <% end %>
         </div>
         <div class="flex flex-col items-end gap-2 sm:flex-row sm:items-center">
