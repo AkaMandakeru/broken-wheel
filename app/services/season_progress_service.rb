@@ -68,7 +68,9 @@ class SeasonProgressService
 
   def xp_components
     @xp_components ||= {
-      challenges: @participation.season_challenge_completions.sum(:xp_awarded),
+      # Only claimed challenge XP counts toward the bar — completing a challenge
+      # sets it aside, collecting it is what moves the total.
+      challenges: @participation.season_challenge_completions.claimed.sum(:xp_awarded),
       objectives: @participation.season_objective_completions.sum(:xp_awarded),
       dailies: daily_xp,
       workouts: workouts_xp,
@@ -141,6 +143,7 @@ class SeasonProgressService
     challenge_fragments = SeasonChallenge
                           .joins(:season_challenge_completions)
                           .where(season_challenge_completions: { season_participation_id: @participation.id })
+                          .where.not(season_challenge_completions: { claimed_at: nil })
                           .sum(:fragment_reward)
 
     objective_fragments = SeasonObjective

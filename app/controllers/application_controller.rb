@@ -4,6 +4,8 @@ class ApplicationController < ActionController::Base
 
   # Only allow modern browsers supporting webp images, web push, badges, import maps, CSS nesting, and CSS :has.
   allow_browser versions: :modern
+  include FeatureGuarded
+
   before_action :set_locale
 
   # Changes to the importmap will invalidate the etag for HTML responses
@@ -63,9 +65,19 @@ class ApplicationController < ActionController::Base
   end
 
   # Signed-in users land on the active season (or the seasons index if none).
+  #
+  # Walks past anything switched off: this is also where a blocked feature
+  # redirects to, so returning a disabled path would bounce the user between two
+  # closed doors.
   def logged_in_home_path
-    active_season = Season.active.by_recent.first
-    active_season ? season_path(active_season) : seasons_path
+    if Features.enabled?(:seasons)
+      active_season = Season.active.by_recent.first
+      return active_season ? season_path(active_season) : seasons_path
+    end
+
+    return challenges_path if Features.enabled?(:challenges)
+
+    root_path
   end
   helper_method :logged_in_home_path
 

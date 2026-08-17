@@ -61,8 +61,18 @@ class WorkoutsController < ApplicationController
 
     Analytics.track(user: current_user, event: "workout_import_completed", properties: { provider: "strava", imported_count: imported, requested_count: activity_ids.size })
 
+    # One message per import, not per workout — a 40-activity import should not
+    # produce 40 Slack notifications.
+    if imported.positive?
+      SlackNotifier.notify(:workout_imported, user: current_user,
+                                              extra: { "Workouts" => imported, "Source" => "Strava" })
+    end
+
     notice = t("flashes.workouts.strava_imported", count: imported)
-    redirect_to workouts_path, notice: notice
+    # Back to the season, where the import actually shows up: new XP to claim,
+    # challenge bars moved, dailies ticked off. `logged_in_home_path` walks past
+    # seasons if the feature is switched off.
+    redirect_to logged_in_home_path, notice: notice
   end
 
   def create

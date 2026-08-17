@@ -17,6 +17,7 @@ class Users::RegistrationsController < Devise::RegistrationsController
   def after_sign_up_path_for(resource)
     Analytics.track(user: resource, event: "user_signed_up")
     Analytics.identify(user: resource)
-    challenges_path
+    SlackNotifier.notify(:user_registered, user: resource)
+    logged_in_home_path
   end
 end

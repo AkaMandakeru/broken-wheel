@@ -623,6 +623,18 @@ en:
         updated: "Ticket updated."
         replied: "Reply sent."
         reply_failed: "Could not send the reply. Please try again."
+    features:
+      title: "Features"
+      subtitle: "Switch parts of the app on or off. Everything is on by default."
+      "on": "On"
+      "off": "Off"
+      enable: "Enable"
+      disable: "Disable"
+      confirm_disable: "Disable %{feature}? Its menu entries disappear and its pages stop responding for everyone."
+      enabled: "%{feature} is on."
+      disabled: "%{feature} is off."
+      unknown: "Unknown feature."
+      hint: "Disabling hides the menu entries and closes the feature's pages. Profile and Admin can't be switched off."
     nav:
       title: "Admin"
       dashboard: "Dashboard"
@@ -630,6 +642,7 @@ en:
       events: "Events"
       seasons: "Seasons"
       support: "Messages"
+      features: "Features"
     dashboard:
       title: "Dashboard"
       challenges: "Challenges"
@@ -974,6 +987,34 @@ en:
               invalid_type: "must be an image (%{types})"
               too_large: "must be smaller than %{size}"
 
+  # Switchable features (admins toggle these; catalogue lives in Features)
+  features:
+    unavailable: "%{feature} is currently unavailable."
+    challenges:
+      name: "Challenges"
+      description: "Challenge list, joining, progress and timelines."
+    events:
+      name: "Events"
+      description: "Event listing and sign-ups."
+    seasons:
+      name: "Seasons"
+      description: "Season pages, battle pass, leaderboards and daily challenges."
+    workouts:
+      name: "Workouts"
+      description: "Workout list, manual logging and Strava import."
+    achievements:
+      name: "Achievements"
+      description: "Badge catalogue and progress."
+    clubs:
+      name: "Clubs"
+      description: "Club listing, creation and membership."
+    integrations:
+      name: "App connections"
+      description: "Connecting Strava and other providers."
+    support:
+      name: "Support"
+      description: "Support tickets and replies."
+
   # Enum value labels (for displaying DB-stored enum strings)
   enums:
     sports:
@@ -1190,6 +1231,17 @@ en:
       you: "You"
       done: "Done"
       not_yet: "Not yet"
+    claim:
+      title: "XP to collect"
+      subtitle:
+        one: "1 finished challenge · %{xp} XP waiting"
+        other: "%{count} finished challenges · %{xp} XP waiting"
+      claim_all: "Collect all"
+      claim_xp: "+%{xp} XP"
+      claimed_label: "Collected"
+      completed_on: "Completed %{date}"
+      claimed: "Collected %{xp} XP."
+      nothing_to_claim: "Nothing to collect right now."
     activity:
       challenge_completed: "completed a challenge (%{challenge}) · +%{xp} XP"
       objective_completed: "completed an objective (%{objective}) · +%{xp} XP"

@@ -4,6 +4,12 @@ class HomeController < ApplicationController
   skip_before_action :authenticate_user!, raise: false
 
   def index
-    redirect_to challenges_path if user_signed_in?
+    return unless user_signed_in?
+
+    # Feature-aware, and never a redirect back to this action: with everything
+    # switched off `logged_in_home_path` returns here, and signed-in users see
+    # the landing page rather than bouncing between two redirects.
+    destination = logged_in_home_path
+    redirect_to destination unless destination == root_path
   end
 end

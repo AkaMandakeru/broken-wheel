@@ -55,9 +55,16 @@
     </div>
   </div>
 
-  <%# Your progress %>
+  <%# Your progress, and any XP waiting to be collected. Both sit inside one
+      controller element so the claim animation can travel from a card to the bar. %>
   <% if @participation %>
-    <%= render "seasons/progress", season: @season, participation: @participation %>
+    <div data-controller="xp-claim">
+      <%= render "seasons/progress", season: @season, participation: @participation %>
+      <% if @unclaimed_completions.any? %>
+        <%= render "seasons/claims", season: @season, participation: @participation,
+                   completions: @unclaimed_completions %>
+      <% end %>
+    </div>
   <% elsif !user_signed_in? %>
     <div class="bg-white rounded-2xl shadow-sm border border-gray-200 p-6 mb-6 text-center">
       <p class="text-gray-600 mb-3"><%= t("seasons.show.sign_in_prompt") %></p>

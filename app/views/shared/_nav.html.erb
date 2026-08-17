@@ -20,6 +20,7 @@
         <nav class="hidden md:flex items-center gap-8">
           <% if user_signed_in? %>
             <%# Challenges + dropdown (Events, Seasons) %>
+            <% if feature_enabled?(:challenges) %>
             <div class="relative group">
               <%= link_to challenges_path, class: "text-sm font-medium text-muted-foreground hover:text-primary transition-colors flex items-center gap-2 py-2" do %>
                 <i class="fa-solid fa-trophy"></i> <%= t('shared.nav.challenges') %>
@@ -27,18 +28,25 @@
               <% end %>
               <div class="absolute left-0 top-full pt-2 hidden group-hover:block group-focus-within:block z-50">
                 <div class="w-48 bg-background border border-border rounded-lg shadow-lg py-1">
-                  <%= link_to events_path, class: "flex items-center gap-3 px-4 py-2.5 text-sm text-foreground hover:bg-muted hover:text-primary transition" do %>
-                    <i class="fa-solid fa-flag-checkered w-4 text-muted-foreground"></i> <%= t('shared.nav.events') %>
+                  <% if feature_enabled?(:events) %>
+                    <%= link_to events_path, class: "flex items-center gap-3 px-4 py-2.5 text-sm text-foreground hover:bg-muted hover:text-primary transition" do %>
+                      <i class="fa-solid fa-flag-checkered w-4 text-muted-foreground"></i> <%= t('shared.nav.events') %>
+                    <% end %>
                   <% end %>
-                  <%= link_to seasons_path, class: "flex items-center gap-3 px-4 py-2.5 text-sm text-foreground hover:bg-muted hover:text-primary transition" do %>
-                    <i class="fa-solid fa-ranking-star w-4 text-muted-foreground"></i> <%= t('shared.nav.seasons') %>
+                  <% if feature_enabled?(:seasons) %>
+                    <%= link_to seasons_path, class: "flex items-center gap-3 px-4 py-2.5 text-sm text-foreground hover:bg-muted hover:text-primary transition" do %>
+                      <i class="fa-solid fa-ranking-star w-4 text-muted-foreground"></i> <%= t('shared.nav.seasons') %>
+                    <% end %>
                   <% end %>
                 </div>
               </div>
             </div>
+            <% end %>
 
-            <%= link_to workouts_path, class: "text-sm font-medium text-muted-foreground hover:text-primary transition-colors flex items-center gap-2" do %>
-              <i class="fa-solid fa-dumbbell"></i> <%= t('shared.nav.workouts') %>
+            <% if feature_enabled?(:workouts) %>
+              <%= link_to workouts_path, class: "text-sm font-medium text-muted-foreground hover:text-primary transition-colors flex items-center gap-2" do %>
+                <i class="fa-solid fa-dumbbell"></i> <%= t('shared.nav.workouts') %>
+              <% end %>
             <% end %>
 
             <%# Profile + dropdown (Achievements, Clubs) %>
@@ -49,11 +57,15 @@
               <% end %>
               <div class="absolute left-0 top-full pt-2 hidden group-hover:block group-focus-within:block z-50">
                 <div class="w-48 bg-background border border-border rounded-lg shadow-lg py-1">
-                  <%= link_to achievements_path, class: "flex items-center gap-3 px-4 py-2.5 text-sm text-foreground hover:bg-muted hover:text-primary transition" do %>
-                    <i class="fa-solid fa-medal w-4 text-muted-foreground"></i> <%= t('shared.nav.achievements') %>
+                  <% if feature_enabled?(:achievements) %>
+                    <%= link_to achievements_path, class: "flex items-center gap-3 px-4 py-2.5 text-sm text-foreground hover:bg-muted hover:text-primary transition" do %>
+                      <i class="fa-solid fa-medal w-4 text-muted-foreground"></i> <%= t('shared.nav.achievements') %>
+                    <% end %>
                   <% end %>
-                  <%= link_to clubs_path, class: "flex items-center gap-3 px-4 py-2.5 text-sm text-foreground hover:bg-muted hover:text-primary transition" do %>
-                    <i class="fa-solid fa-users w-4 text-muted-foreground"></i> <%= t('shared.nav.clubs') %>
+                  <% if feature_enabled?(:clubs) %>
+                    <%= link_to clubs_path, class: "flex items-center gap-3 px-4 py-2.5 text-sm text-foreground hover:bg-muted hover:text-primary transition" do %>
+                      <i class="fa-solid fa-users w-4 text-muted-foreground"></i> <%= t('shared.nav.clubs') %>
+                    <% end %>
                   <% end %>
                 </div>
               </div>
@@ -63,18 +75,20 @@
                 <i class="fa-solid fa-shield-halved"></i> <%= t('shared.nav.admin') %>
               <% end %>
             <% end %>
-            <% if current_user.connected_to_strava? %>
+            <% if feature_enabled?(:integrations) && current_user.connected_to_strava? %>
               <%= link_to integrations_path, class: "text-[#FC4C02] hover:text-[#e04402] transition-colors flex items-center", title: "Strava", "aria-label": "Strava" do %>
                 <i class="fa-brands fa-strava text-xl"></i>
               <% end %>
-            <% else %>
+            <% elsif feature_enabled?(:integrations) %>
               <%= link_to integrations_path, class: "text-sm font-medium bg-[#FC4C02] text-white px-3 py-1.5 rounded-lg hover:bg-[#e04402] transition flex items-center gap-2" do %>
                 <i class="fa-solid fa-plug"></i> <%= t('shared.nav.connect_app') %>
               <% end %>
             <% end %>
           <% else %>
             <%= link_to t('shared.nav.home'),       root_path,                       class: "text-sm font-medium text-muted-foreground hover:text-primary transition-colors" %>
-            <%= link_to t('shared.nav.challenges'), challenges_path,                 class: "text-sm font-medium text-muted-foreground hover:text-primary transition-colors" %>
+            <% if feature_enabled?(:challenges) %>
+              <%= link_to t('shared.nav.challenges'), challenges_path,               class: "text-sm font-medium text-muted-foreground hover:text-primary transition-colors" %>
+            <% end %>
             <%= link_to t('shared.nav.community'),  root_path(anchor: 'clubs'),      class: "text-sm font-medium text-muted-foreground hover:text-primary transition-colors" %>
             <%= link_to t('shared.nav.ranking'),    root_path(anchor: 'seasons'),    class: "text-sm font-medium text-muted-foreground hover:text-primary transition-colors" %>
           <% end %>
@@ -149,23 +163,35 @@
       <%# Sidebar content %>
       <div class="flex-1 overflow-y-auto px-3 py-4 space-y-1">
         <% if user_signed_in? %>
-          <%= link_to challenges_path, class: "flex items-center gap-3 px-4 py-3 rounded-lg text-foreground hover:bg-muted hover:text-primary transition", data: { action: "click->sidebar#close" } do %>
-            <i class="fa-solid fa-trophy w-5 text-muted-foreground"></i> <%= t('shared.nav.challenges') %>
+          <% if feature_enabled?(:challenges) %>
+            <%= link_to challenges_path, class: "flex items-center gap-3 px-4 py-3 rounded-lg text-foreground hover:bg-muted hover:text-primary transition", data: { action: "click->sidebar#close" } do %>
+              <i class="fa-solid fa-trophy w-5 text-muted-foreground"></i> <%= t('shared.nav.challenges') %>
+            <% end %>
           <% end %>
-          <%= link_to events_path, class: "flex items-center gap-3 px-4 py-3 rounded-lg text-foreground hover:bg-muted hover:text-primary transition", data: { action: "click->sidebar#close" } do %>
-            <i class="fa-solid fa-flag-checkered w-5 text-muted-foreground"></i> <%= t('shared.nav.events') %>
+          <% if feature_enabled?(:events) %>
+            <%= link_to events_path, class: "flex items-center gap-3 px-4 py-3 rounded-lg text-foreground hover:bg-muted hover:text-primary transition", data: { action: "click->sidebar#close" } do %>
+              <i class="fa-solid fa-flag-checkered w-5 text-muted-foreground"></i> <%= t('shared.nav.events') %>
+            <% end %>
           <% end %>
-          <%= link_to seasons_path, class: "flex items-center gap-3 px-4 py-3 rounded-lg text-foreground hover:bg-muted hover:text-primary transition", data: { action: "click->sidebar#close" } do %>
-            <i class="fa-solid fa-trophy w-5 text-muted-foreground"></i> <%= t('shared.nav.seasons') %>
+          <% if feature_enabled?(:seasons) %>
+            <%= link_to seasons_path, class: "flex items-center gap-3 px-4 py-3 rounded-lg text-foreground hover:bg-muted hover:text-primary transition", data: { action: "click->sidebar#close" } do %>
+              <i class="fa-solid fa-trophy w-5 text-muted-foreground"></i> <%= t('shared.nav.seasons') %>
+            <% end %>
           <% end %>
-          <%= link_to workouts_path, class: "flex items-center gap-3 px-4 py-3 rounded-lg text-foreground hover:bg-muted hover:text-primary transition", data: { action: "click->sidebar#close" } do %>
-            <i class="fa-solid fa-dumbbell w-5 text-muted-foreground"></i> <%= t('shared.nav.workouts') %>
+          <% if feature_enabled?(:workouts) %>
+            <%= link_to workouts_path, class: "flex items-center gap-3 px-4 py-3 rounded-lg text-foreground hover:bg-muted hover:text-primary transition", data: { action: "click->sidebar#close" } do %>
+              <i class="fa-solid fa-dumbbell w-5 text-muted-foreground"></i> <%= t('shared.nav.workouts') %>
+            <% end %>
           <% end %>
-          <%= link_to achievements_path, class: "flex items-center gap-3 px-4 py-3 rounded-lg text-foreground hover:bg-muted hover:text-primary transition", data: { action: "click->sidebar#close" } do %>
-            <i class="fa-solid fa-medal w-5 text-muted-foreground"></i> <%= t('shared.nav.achievements') %>
+          <% if feature_enabled?(:achievements) %>
+            <%= link_to achievements_path, class: "flex items-center gap-3 px-4 py-3 rounded-lg text-foreground hover:bg-muted hover:text-primary transition", data: { action: "click->sidebar#close" } do %>
+              <i class="fa-solid fa-medal w-5 text-muted-foreground"></i> <%= t('shared.nav.achievements') %>
+            <% end %>
           <% end %>
-          <%= link_to clubs_path, class: "flex items-center gap-3 px-4 py-3 rounded-lg text-foreground hover:bg-muted hover:text-primary transition", data: { action: "click->sidebar#close" } do %>
-            <i class="fa-solid fa-users w-5 text-muted-foreground"></i> <%= t('shared.nav.clubs') %>
+          <% if feature_enabled?(:clubs) %>
+            <%= link_to clubs_path, class: "flex items-center gap-3 px-4 py-3 rounded-lg text-foreground hover:bg-muted hover:text-primary transition", data: { action: "click->sidebar#close" } do %>
+              <i class="fa-solid fa-users w-5 text-muted-foreground"></i> <%= t('shared.nav.clubs') %>
+            <% end %>
           <% end %>
           <%= link_to profile_path, class: "flex items-center gap-3 px-4 py-3 rounded-lg text-foreground hover:bg-muted hover:text-primary transition", data: { action: "click->sidebar#close" } do %>
             <i class="fa-solid fa-user w-5 text-muted-foreground"></i> <%= t('shared.nav.profile') %>
@@ -175,11 +201,11 @@
               <i class="fa-solid fa-shield-halved w-5 text-muted-foreground"></i> <%= t('shared.nav.admin') %>
             <% end %>
           <% end %>
-          <% if current_user.connected_to_strava? %>
+          <% if feature_enabled?(:integrations) && current_user.connected_to_strava? %>
             <%= link_to integrations_path, class: "flex items-center gap-3 px-4 py-3 rounded-lg text-foreground hover:bg-muted hover:text-primary transition", data: { action: "click->sidebar#close" } do %>
               <i class="fa-brands fa-strava w-5 text-[#FC4C02]"></i> <%= t('shared.nav.apps') %>
             <% end %>
-          <% else %>
+          <% elsif feature_enabled?(:integrations) %>
             <%= link_to integrations_path, class: "flex items-center gap-3 px-4 py-3 rounded-lg bg-[#FC4C02] text-white hover:bg-[#e04402] transition font-medium", data: { action: "click->sidebar#close" } do %>
               <i class="fa-solid fa-plug w-5"></i> <%= t('shared.nav.connect_app') %>
             <% end %>
@@ -188,8 +214,10 @@
           <%= link_to root_path, class: "flex items-center gap-3 px-4 py-3 rounded-lg text-foreground hover:bg-muted hover:text-primary transition", data: { action: "click->sidebar#close" } do %>
             <i class="fa-solid fa-house w-5 text-muted-foreground"></i> <%= t('shared.nav.home') %>
           <% end %>
-          <%= link_to challenges_path, class: "flex items-center gap-3 px-4 py-3 rounded-lg text-foreground hover:bg-muted hover:text-primary transition", data: { action: "click->sidebar#close" } do %>
-            <i class="fa-solid fa-trophy w-5 text-muted-foreground"></i> <%= t('shared.nav.challenges') %>
+          <% if feature_enabled?(:challenges) %>
+            <%= link_to challenges_path, class: "flex items-center gap-3 px-4 py-3 rounded-lg text-foreground hover:bg-muted hover:text-primary transition", data: { action: "click->sidebar#close" } do %>
+              <i class="fa-solid fa-trophy w-5 text-muted-foreground"></i> <%= t('shared.nav.challenges') %>
+            <% end %>
           <% end %>
           <%= link_to root_path(anchor: 'clubs'), class: "flex items-center gap-3 px-4 py-3 rounded-lg text-foreground hover:bg-muted hover:text-primary transition", data: { action: "click->sidebar#close" } do %>
             <i class="fa-solid fa-users w-5 text-muted-foreground"></i> <%= t('shared.nav.community') %>

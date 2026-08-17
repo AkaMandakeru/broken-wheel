@@ -3,11 +3,11 @@
 <div class="bg-white rounded-2xl shadow-sm border border-gray-200 p-6 mb-6">
   <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-4 text-center">
     <div>
-      <p class="text-3xl font-extrabold text-primary">⚡ <%= participation.level %></p>
+      <p class="text-3xl font-extrabold text-primary">⚡ <span data-xp-claim-target="level"><%= participation.level %></span></p>
       <p class="text-xs text-gray-500"><%= t("seasons.show.level") %> / <%= season.max_level %></p>
     </div>
     <div>
-      <p class="text-3xl font-extrabold text-gray-900"><%= number_with_delimiter(participation.xp) %></p>
+      <p class="text-3xl font-extrabold text-gray-900" data-xp-claim-target="xp"><%= number_with_delimiter(participation.xp) %></p>
       <p class="text-xs text-gray-500"><%= t("seasons.show.xp") %></p>
     </div>
     <div>
@@ -21,9 +21,9 @@
   </div>
 
   <div class="h-3 bg-gray-200 rounded-full overflow-hidden">
-    <div class="h-full bg-primary rounded-full transition-all" style="width: <%= pct %>%"></div>
+    <div class="h-full bg-primary rounded-full transition-all duration-700 ease-out" data-xp-claim-target="bar" style="width: <%= pct %>%"></div>
   </div>
-  <p class="text-xs text-gray-500 mt-1 text-right">
+  <p class="text-xs text-gray-500 mt-1 text-right" data-xp-claim-target="toNext">
     <% if to_next.positive? %>
       <%= t("seasons.show.to_next_level", xp: number_with_delimiter(to_next)) %>
     <% else %>

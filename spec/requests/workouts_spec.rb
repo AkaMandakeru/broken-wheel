@@ -207,7 +207,8 @@ RSpec.describe "Workouts", type: :request do
         post import_strava_workouts_path, params: { activity_ids: ["42"] }
       }.to change { user.workouts.count }.by(1)
 
-      expect(response).to redirect_to(workouts_path)
+      # Back to the season, where the import shows up as XP to collect.
+      expect(response).to redirect_to(seasons_path)
       expect(flash[:notice]).to include("1")
 
       workout = user.workouts.find_by(external_id: "42")

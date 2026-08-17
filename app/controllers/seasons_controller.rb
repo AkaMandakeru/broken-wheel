@@ -18,6 +18,8 @@ class SeasonsController < ApplicationController
       current_user.season_participations.find_by(season_id: @season.id)
     end
 
+    @unclaimed_completions = @participation&.unclaimed_completions.to_a
+
     load_challenges
     load_objectives
     load_dailies

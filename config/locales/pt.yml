@@ -595,6 +595,18 @@ pt:
         updated: "Ticket atualizado."
         replied: "Resposta enviada."
         reply_failed: "Não foi possível enviar a resposta. Tente novamente."
+    features:
+      title: "Funcionalidades"
+      subtitle: "Ligue ou desligue partes do app. Tudo vem ligado por padrão."
+      "on": "Ligado"
+      "off": "Desligado"
+      enable: "Ligar"
+      disable: "Desligar"
+      confirm_disable: "Desligar %{feature}? Os itens de menu somem e as páginas param de responder para todo mundo."
+      enabled: "%{feature} está ligado."
+      disabled: "%{feature} está desligado."
+      unknown: "Funcionalidade desconhecida."
+      hint: "Desligar esconde os itens do menu e fecha as páginas da funcionalidade. Perfil e Admin não podem ser desligados."
     nav:
       title: "Admin"
       dashboard: "Painel"
@@ -602,6 +614,7 @@ pt:
       events: "Eventos"
       seasons: "Temporadas"
       support: "Mensagens"
+      features: "Funcionalidades"
     dashboard:
       title: "Painel"
       challenges: "Desafios"
@@ -1060,6 +1073,34 @@ pt:
               invalid_type: "deve ser uma imagem (%{types})"
               too_large: "deve ser menor que %{size}"
 
+  # Funcionalidades que podem ser desligadas (catálogo em Features)
+  features:
+    unavailable: "%{feature} está indisponível no momento."
+    challenges:
+      name: "Desafios"
+      description: "Lista de desafios, participação, progresso e timeline."
+    events:
+      name: "Eventos"
+      description: "Listagem de eventos e inscrições."
+    seasons:
+      name: "Temporadas"
+      description: "Páginas de temporada, passe de batalha, rankings e desafios diários."
+    workouts:
+      name: "Treinos"
+      description: "Lista de treinos, registro manual e importação do Strava."
+    achievements:
+      name: "Conquistas"
+      description: "Catálogo de medalhas e progresso."
+    clubs:
+      name: "Clubes"
+      description: "Listagem, criação e participação em clubes."
+    integrations:
+      name: "Conexões de apps"
+      description: "Conexão com Strava e outros provedores."
+    support:
+      name: "Suporte"
+      description: "Tickets de suporte e respostas."
+
   # Enum value labels (rótulos para valores enum armazenados no banco)
   enums:
     sports:
@@ -1277,6 +1318,17 @@ pt:
       you: "Você"
       done: "Feito"
       not_yet: "Ainda não"
+    claim:
+      title: "XP para receber"
+      subtitle:
+        one: "1 desafio concluído · %{xp} XP esperando"
+        other: "%{count} desafios concluídos · %{xp} XP esperando"
+      claim_all: "Receber tudo"
+      claim_xp: "+%{xp} XP"
+      claimed_label: "Recebido"
+      completed_on: "Concluído em %{date}"
+      claimed: "Você recebeu %{xp} XP."
+      nothing_to_claim: "Nada para receber agora."
     activity:
       challenge_completed: "completou um desafio (%{challenge}) · +%{xp} XP"
       objective_completed: "completou um objetivo (%{objective}) · +%{xp} XP"

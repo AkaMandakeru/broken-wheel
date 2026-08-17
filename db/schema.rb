@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_08_11_120100) do
+ActiveRecord::Schema[8.1].define(version: 2026_08_14_100000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -234,6 +234,16 @@ ActiveRecord::Schema[8.1].define(version: 2026_08_11_120100) do
     t.index ["status"], name: "index_events_on_status"
   end
 
+  create_table "feature_flags", force: :cascade do |t|
+    t.datetime "created_at", null: false
+    t.datetime "disabled_at"
+    t.string "disabled_by"
+    t.boolean "enabled", default: true, null: false
+    t.string "key", null: false
+    t.datetime "updated_at", null: false
+    t.index ["key"], name: "index_feature_flags_on_key", unique: true
+  end
+
   create_table "push_subscriptions", force: :cascade do |t|
     t.string "auth_key", null: false
     t.datetime "created_at", null: false
@@ -259,6 +269,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_08_11_120100) do
   end
 
   create_table "season_challenge_completions", force: :cascade do |t|
+    t.datetime "claimed_at"
     t.datetime "completed_at", null: false
     t.datetime "created_at", null: false
     t.bigint "season_challenge_id", null: false
@@ -266,6 +277,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_08_11_120100) do
     t.datetime "updated_at", null: false
     t.integer "xp_awarded", default: 0, null: false
     t.index ["season_challenge_id"], name: "index_season_challenge_completions_on_season_challenge_id"
+    t.index ["season_participation_id", "claimed_at"], name: "idx_season_completions_claim_state"
     t.index ["season_participation_id", "season_challenge_id"], name: "idx_season_completions_unique", unique: true
     t.index ["season_participation_id"], name: "index_season_challenge_completions_on_season_participation_id"
   end

@@ -1,0 +1,49 @@
+<%# XP waiting to be collected. Rendered only when something is pending, and
+    removed by the controller once the last one is claimed. %>
+<div class="mb-6" data-xp-claim-target="panel">
+
+  <div class="rounded-2xl border-2 border-amber-300 bg-linear-to-br from-amber-50 to-white shadow-sm p-5 sm:p-6">
+    <div class="flex flex-wrap items-center justify-between gap-3 mb-4">
+      <div>
+        <h2 class="text-lg font-semibold text-gray-900">
+          <i class="fa-solid fa-gift text-amber-500 mr-1"></i><%= t("seasons.claim.title") %>
+        </h2>
+        <p class="text-xs text-gray-500 mt-0.5">
+          <%= t("seasons.claim.subtitle", count: participation.unclaimed_count, xp: number_with_delimiter(participation.unclaimed_xp)) %>
+        </p>
+      </div>
+
+      <%= button_to season_claims_path(season),
+                    method: :post,
+                    form: { data: { action: "submit->xp-claim#claimAll" } },
+                    class: "shrink-0 inline-flex items-center gap-2 rounded-lg bg-amber-500 px-4 py-2 text-sm font-semibold text-white transition hover:bg-amber-600 cursor-pointer" do %>
+        <i class="fa-solid fa-hand-sparkles"></i> <%= t("seasons.claim.claim_all") %>
+      <% end %>
+    </div>
+
+    <div class="space-y-2" data-xp-claim-target="list">
+      <% completions.each do |completion| %>
+        <% challenge = completion.season_challenge.challenge %>
+        <div class="flex items-center gap-3 rounded-lg border border-amber-200 bg-white p-3"
+             data-xp-claim-target="item"
+             data-completion-id="<%= completion.id %>">
+          <div class="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-amber-100 text-amber-600">
+            <i class="<%= season_category_icon(completion.season_challenge.category) %>"></i>
+          </div>
+
+          <div class="flex-1 min-w-0">
+            <p class="font-medium text-gray-900 text-sm truncate"><%= challenge.display_title %></p>
+            <p class="text-xs text-gray-500"><%= t("seasons.claim.completed_on", date: l(completion.completed_at.to_date, format: :long)) %></p>
+          </div>
+
+          <%= button_to season_claim_path(season, completion),
+                        method: :post,
+                        form: { data: { action: "submit->xp-claim#claim" } },
+                        class: "shrink-0 inline-flex items-center gap-1.5 rounded-lg bg-amber-500 px-3 py-1.5 text-xs font-semibold text-white transition hover:bg-amber-600 cursor-pointer" do %>
+            <i class="fa-solid fa-plus"></i> <%= t("seasons.claim.claim_xp", xp: completion.xp_awarded) %>
+          <% end %>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>

@@ -53,7 +53,11 @@ Rails.application.routes.draw do
 
   resource :push_subscription, only: [:create, :destroy]
 
-  resources :seasons, only: [:index, :show]
+  resources :seasons, only: [:index, :show] do
+    # `id` optional: posting without one claims everything pending.
+    resources :claims, only: [:create], controller: "season_claims"
+    post "claims/:id", to: "season_claims#create", as: :claim
+  end
 
   namespace :admin do
     root "dashboard#index"
@@ -68,6 +72,7 @@ Rails.application.routes.draw do
     resources :season_imports, only: [:new, :create] do
       collection { get :template }
     end
+    resources :features, only: [:index, :update], param: :id
     resources :support_tickets, only: [:index, :show, :update] do
       resources :messages, only: [:create], controller: "support_messages"
     end

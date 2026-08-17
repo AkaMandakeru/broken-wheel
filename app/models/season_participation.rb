@@ -25,6 +25,20 @@ class SeasonParticipation < ApplicationRecord
     season_reward_grants.pluck(:season_reward_id)
   end
 
+  # Challenges finished but not yet collected — the XP is set aside until the
+  # player claims it.
+  def unclaimed_completions
+    season_challenge_completions.unclaimed.includes(season_challenge: :challenge).by_completion
+  end
+
+  def unclaimed_xp
+    season_challenge_completions.unclaimed.sum(:xp_awarded)
+  end
+
+  def unclaimed_count
+    season_challenge_completions.unclaimed.count
+  end
+
   def level_curve
     season.level_curve_object
   end
@@ -51,6 +65,7 @@ class SeasonParticipation < ApplicationRecord
 
     update!(premium: true, premium_granted_at: Time.current)
     SeasonRewardGranter.new(self).grant_for_level(level)
+    SlackNotifier.notify(:premium_granted, user: user, extra: { "Season" => season.name })
   end
 
   private

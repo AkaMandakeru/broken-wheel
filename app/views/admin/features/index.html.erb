@@ -1,0 +1,40 @@
+<div class="pt-8 max-w-3xl">
+  <h1 class="text-2xl font-bold text-gray-900"><%= t("admin.features.title") %></h1>
+  <p class="text-sm text-gray-500 mt-1 mb-6"><%= t("admin.features.subtitle") %></p>
+
+  <div class="bg-white rounded-lg shadow-sm border border-gray-200 divide-y divide-gray-100">
+    <% @features.each do |feature| %>
+      <% enabled = Features.enabled?(feature.key) %>
+      <div class="flex items-center gap-4 p-4">
+        <div class="flex h-10 w-10 shrink-0 items-center justify-center rounded-full <%= enabled ? "bg-green-100 text-green-600" : "bg-gray-100 text-gray-400" %>">
+          <i class="<%= feature.icon %>"></i>
+        </div>
+
+        <div class="flex-1 min-w-0">
+          <p class="font-medium text-gray-900"><%= feature.name %></p>
+          <p class="text-xs text-gray-500"><%= feature.description %></p>
+          <% if enabled %>
+            <span class="inline-block mt-1 text-[10px] px-2 py-0.5 rounded-full bg-green-100 text-green-700"><%= t("admin.features.on") %></span>
+          <% else %>
+            <span class="inline-block mt-1 text-[10px] px-2 py-0.5 rounded-full bg-gray-200 text-gray-600"><%= t("admin.features.off") %></span>
+          <% end %>
+        </div>
+
+        <%= button_to admin_feature_path(feature.key),
+                      method: :patch,
+                      params: { enabled: !enabled },
+                      form: { class: "shrink-0" },
+                      data: { turbo_confirm: enabled ? t("admin.features.confirm_disable", feature: feature.name) : nil },
+                      class: enabled ?
+                        "border border-gray-300 px-4 py-2 rounded-lg hover:bg-gray-50 transition font-medium text-sm cursor-pointer" :
+                        "bg-[#FC4C02] text-white px-4 py-2 rounded-lg hover:bg-[#e04402] transition font-medium text-sm cursor-pointer" do %>
+          <%= enabled ? t("admin.features.disable") : t("admin.features.enable") %>
+        <% end %>
+      </div>
+    <% end %>
+  </div>
+
+  <p class="text-xs text-gray-400 mt-4">
+    <i class="fa-solid fa-circle-info mr-1"></i><%= t("admin.features.hint") %>
+  </p>
+</div>
