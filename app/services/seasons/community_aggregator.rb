@@ -17,8 +17,23 @@ module Seasons
       "active_days"      => "COUNT(DISTINCT workout_date)"
     }.freeze
 
+    # Recomputing costs one aggregate query, so a bulk import doesn't need to
+    # run it per workout — a fresh-enough figure is good enough.
+    FRESH_FOR = 30.seconds
+
     def self.call(goal)
       new(goal).call
+    end
+
+    # Refreshes every goal in a season unless it was just done. Called from the
+    # season recalculation so the community bar moves the moment a workout lands,
+    # rather than waiting for the next cron tick.
+    def self.refresh_season(season, force: false)
+      season.season_community_goals.find_each do |goal|
+        next if !force && goal.computed_at.present? && goal.computed_at > FRESH_FOR.ago
+
+        call(goal)
+      end
     end
 
     def initialize(goal)

@@ -87,15 +87,36 @@ RSpec.describe Seasons::BlueprintImporter do
     expect(season.season_rewards.find_by(unlock_kind: "legacy").unlock_value).to eq(5)
   end
 
-  it "scales the community goal to the number of participants" do
+  it "sizes the community goal per participant" do
     season = described_class.call(key)
     goal = season.season_community_goals.first
 
     expect(goal.target_mode).to eq("per_participant")
     expect(goal.effective_target).to eq(60.0)
+  end
+
+  # The target is frozen when a tier opens. Recomputing it live would drag every
+  # player's bar backwards the moment someone new joined.
+  it "holds the tier's target steady as the community grows" do
+    season = described_class.call(key)
+    goal = season.season_community_goals.first
+    goal.effective_target # freeze at today's size
 
     3.times { SeasonProgressService.ensure_participation(build_user, season) }
-    expect(goal.reload.effective_target).to eq(180.0)
+
+    expect(goal.reload.effective_target).to eq(60.0)
+  end
+
+  it "sizes the next tier to the community as it stands then" do
+    season = described_class.call(key)
+    goal = season.season_community_goals.first
+    3.times { SeasonProgressService.ensure_participation(build_user, season) }
+
+    goal.update!(tier: 2)
+    goal.freeze_tier_target!
+
+    # 3 participants x 60 = 180 base, doubled for tier 2.
+    expect(goal.reload.effective_target).to eq(360.0)
   end
 
   it "raises a clear error for an unknown blueprint" do

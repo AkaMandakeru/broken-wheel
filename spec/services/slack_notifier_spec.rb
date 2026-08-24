@@ -16,23 +16,24 @@ RSpec.describe SlackNotifier do
   end
 
   def enable(**vars)
-    stub_const("ENV", ENV.to_h.merge(
+    slack_env(
       "SLACK_WEBHOOK_URL" => default_webhook,
-      "SLACK_NOTIFICATIONS_ENABLED" => "true"
-    ).merge(vars))
+      "SLACK_NOTIFICATIONS_ENABLED" => "true",
+      **vars
+    )
   end
 
   describe "when it stays quiet" do
     # A developer machine or staging box must never post to the team channel.
     it "does nothing outside production by default" do
-      stub_const("ENV", ENV.to_h.merge("SLACK_WEBHOOK_URL" => default_webhook))
+      slack_env("SLACK_WEBHOOK_URL" => default_webhook)
 
       expect(described_class.notify(:user_registered, user: user)).to be(false)
       expect(delivered).to be_empty
     end
 
     it "does nothing when no webhook is configured" do
-      stub_const("ENV", ENV.to_h.merge("SLACK_NOTIFICATIONS_ENABLED" => "true"))
+      slack_env("SLACK_NOTIFICATIONS_ENABLED" => "true")
 
       expect(described_class.notify(:user_registered, user: user)).to be(false)
     end
@@ -52,7 +53,7 @@ RSpec.describe SlackNotifier do
 
   describe "in production" do
     it "delivers even without the override" do
-      stub_const("ENV", ENV.to_h.merge("SLACK_WEBHOOK_URL" => default_webhook))
+      slack_env("SLACK_WEBHOOK_URL" => default_webhook)
       allow(Rails).to receive(:env).and_return(ActiveSupport::StringInquirer.new("production"))
 
       expect(described_class.notify(:user_registered, user: user)).to be(true)
@@ -187,19 +188,13 @@ RSpec.describe SlackNotifier do
 
     # Setting the deployment name is itself the opt-in.
     it "enables notifications outside production on its own" do
-      stub_const("ENV", ENV.to_h.merge(
-        "SLACK_WEBHOOK_URL" => default_webhook,
-        "SLACK_ENVIRONMENT" => "staging"
-      ).except("SLACK_NOTIFICATIONS_ENABLED"))
+      slack_env("SLACK_WEBHOOK_URL" => default_webhook, "SLACK_ENVIRONMENT" => "staging")
 
       expect(described_class.notify(:user_registered, user: user)).to be(true)
     end
 
     it "still tags when enabled by the boolean instead" do
-      stub_const("ENV", ENV.to_h.merge(
-        "SLACK_WEBHOOK_URL" => default_webhook,
-        "SLACK_NOTIFICATIONS_ENABLED" => "true"
-      ).except("SLACK_ENVIRONMENT"))
+      slack_env("SLACK_WEBHOOK_URL" => default_webhook, "SLACK_NOTIFICATIONS_ENABLED" => "true")
 
       described_class.notify(:user_registered, user: user)
 
@@ -220,7 +215,7 @@ end
 
 RSpec.describe SlackDeliveryJob do
   before do
-    stub_const("ENV", ENV.to_h.merge("SLACK_WEBHOOK_URL" => "https://hooks.slack.com/services/T/B/x"))
+    slack_env("SLACK_WEBHOOK_URL" => "https://hooks.slack.com/services/T/B/x")
   end
 
   # A notification must never take down the action that triggered it.
@@ -241,7 +236,7 @@ RSpec.describe SlackDeliveryJob do
   end
 
   it "does nothing when no webhook is configured for the event" do
-    stub_const("ENV", ENV.to_h.except("SLACK_WEBHOOK_URL"))
+    slack_env
     expect(Net::HTTP).not_to receive(:start)
 
     described_class.new.perform(:user_registered, { text: "hi" })

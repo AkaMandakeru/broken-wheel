@@ -43,8 +43,29 @@ class SeasonCommunityGoal < ApplicationRecord
     [ (participants * per_participant.to_f).round(2), per_participant.to_f ].max
   end
 
-  # What this tier alone asks for — doubling with each tier cleared.
+  # What this tier asks for, frozen at the moment the tier opened.
+  #
+  # Recomputing this live would let a new participant push the target up under
+  # players already working on it, dragging every bar backwards — which reads as
+  # losing progress you had actually earned. A bigger community raises the next
+  # tier, not the one in flight.
   def effective_target
+    stored = tier_target_value
+    return stored.to_f if stored.present?
+
+    freeze_tier_target!
+  end
+
+  # Called when a tier opens, and lazily for any goal that predates freezing.
+  def freeze_tier_target!
+    target = computed_tier_target
+    update_columns(tier_target_value: target) if persisted?
+    self.tier_target_value = target
+    target
+  end
+
+  # What this tier would ask for given today's community size.
+  def computed_tier_target
     (base_target * (TIER_MULTIPLIER**(tier - 1))).round(2)
   end
 

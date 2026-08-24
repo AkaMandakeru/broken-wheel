@@ -36,6 +36,7 @@ class Season < ApplicationRecord
   validates :curve_exponent, numericality: { greater_than: 0 }
   validates :key, uniqueness: true, allow_blank: true
   validate :time_zone_is_known
+  before_validation :normalize_time_zone
   validate :image_is_a_supported_picture
 
   # Clearing an optional curve field in the form submits "", which casts to nil.
@@ -145,6 +146,17 @@ class Season < ApplicationRecord
     return if time_zone.blank? || ActiveSupport::TimeZone[time_zone]
 
     errors.add(:time_zone, :invalid)
+  end
+
+  # Store the IANA identifier ("America/Sao_Paulo"), never a Rails display name
+  # ("Brasilia"). Rails' time_zone_select submits display names, and a stored
+  # display name that no longer matches an option makes the browser fall back to
+  # the first entry in the list — which silently moved every season to UTC-12.
+  def normalize_time_zone
+    return if time_zone.blank?
+
+    zone = ActiveSupport::TimeZone[time_zone]
+    self.time_zone = zone.tzinfo.name if zone
   end
 
   def image_is_a_supported_picture

@@ -1224,6 +1224,7 @@ pt:
       medal_fragments: "%{value} fragmentos de medalha"
       community: "Meta da comunidade: %{value}%"
     medals:
+      earned: "%{medal} conquistada"
       bronze: "Bronze"
       silver: "Prata"
       gold: "Ouro"

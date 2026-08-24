@@ -46,6 +46,7 @@ class SeasonProgressService
     )
 
     sync_lifetime_xp
+    refresh_community_goals
     grant_parallel_rewards
     handle_level_up(old_level, new_level) if new_level > old_level
     @participation
@@ -189,6 +190,16 @@ class SeasonProgressService
                   .joins(:season_objective)
                   .where(season_objectives: { track: "legacy" })
                   .count
+  end
+
+  # The community bar is a cached aggregate. Refreshing it here means it moves
+  # as soon as a workout is imported, instead of sitting stale until the next
+  # scheduled run — which in development never comes at all.
+  def refresh_community_goals
+    Seasons::CommunityAggregator.refresh_season(@season)
+  rescue StandardError => e
+    # A stale community bar must never fail someone's season recalculation.
+    Rails.logger.warn("Community goal refresh failed for season #{@season.id}: #{e.class}: #{e.message}")
   end
 
   def sync_lifetime_xp

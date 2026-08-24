@@ -27,6 +27,50 @@ module SeasonsHelper
     nil
   end
 
+  # "01/08 – 07/08" for a weekly challenge's own window.
+  def season_challenge_date_range(season_challenge)
+    window = season_challenge.date_window
+    return nil if window.blank?
+
+    "#{window.begin.strftime('%d/%m')} – #{window.end.strftime('%d/%m')}"
+  end
+
+  # A weekly challenge's requirements run easiest to hardest, so the first
+  # earns bronze, the second silver, the third gold. Anything beyond the third
+  # has no medal — the ladder only makes sense while the tiers are distinct.
+  MEDAL_TIERS = %w[bronze silver gold].freeze
+
+  def requirement_medal(position)
+    MEDAL_TIERS[position]
+  end
+
+  def medal_classes(medal)
+    case medal
+    when "bronze" then "text-amber-700"
+    when "silver" then "text-slate-400"
+    when "gold"   then "text-yellow-500"
+    else "text-gray-300"
+    end
+  end
+
+  def medal_label(medal)
+    t("seasons.medals.#{medal}", default: medal.to_s.capitalize)
+  end
+
+  # The best medal earned on a challenge: the highest tier whose requirement is
+  # met. Nil when none are.
+  def highest_medal_earned(participation_for_challenge)
+    return nil if participation_for_challenge.nil?
+
+    statuses = participation_for_challenge.requirement_status
+    return nil if statuses.empty?
+
+    earned = statuses.first(MEDAL_TIERS.size).each_with_index.select { |status, _i| status[:met] }
+    return nil if earned.empty?
+
+    MEDAL_TIERS[earned.map(&:last).max]
+  end
+
   def season_status_badge_class(status)
     case status
     when "active"   then "bg-green-100 text-green-700"

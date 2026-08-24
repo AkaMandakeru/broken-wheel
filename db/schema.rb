@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_08_14_100000) do
+ActiveRecord::Schema[8.1].define(version: 2026_08_20_100000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -319,6 +319,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_08_14_100000) do
     t.integer "tier", default: 1, null: false
     t.integer "tier_coin_reward", default: 0, null: false
     t.decimal "tier_started_value", precision: 14, scale: 2, default: "0.0", null: false
+    t.decimal "tier_target_value", precision: 14, scale: 2
     t.datetime "updated_at", null: false
     t.index ["season_id", "key"], name: "index_season_community_goals_on_season_id_and_key", unique: true
     t.index ["season_id"], name: "index_season_community_goals_on_season_id"

@@ -1137,6 +1137,7 @@ en:
       medal_fragments: "%{value} medal fragments"
       community: "Community goal: %{value}%"
     medals:
+      earned: "%{medal} earned"
       bronze: "Bronze"
       silver: "Silver"
       gold: "Gold"

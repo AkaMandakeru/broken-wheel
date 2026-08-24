@@ -1,9 +1,19 @@
 <% challenge = season_challenge.challenge %>
 <% locked = season_challenge.locked_for?(participation) %>
 <% completed = mine&.completed_at.present? %>
+<% weekly = season_challenge.category == "weekly" %>
+<% week_over = weekly && season_challenge.window_ended? %>
+<% earned_medal = weekly ? highest_medal_earned(mine) : nil %>
 <div class="bg-white rounded-lg border p-4 <%= completed ? 'border-green-200' : 'border-gray-200' %> <%= 'opacity-70' if locked %>">
   <div class="flex items-start justify-between gap-3">
     <div class="min-w-0">
+      <%# Weekly challenges show the dates they cover, above the title. %>
+      <% if weekly && (range = season_challenge_date_range(season_challenge)) %>
+        <p class="text-[11px] font-medium uppercase tracking-wide text-gray-400 mb-0.5">
+          <i class="fa-regular fa-calendar mr-1"></i><%= range %>
+        </p>
+      <% end %>
+
       <%= link_to challenge.display_title, challenge_path(challenge), class: "font-medium text-gray-900 hover:text-[#FC4C02]" %>
       <% if season_challenge.hidden? %>
         <span class="ml-1 text-[10px] px-1.5 py-0.5 rounded-full bg-purple-100 text-purple-700"><%= t("seasons.show.secret") %></span>
@@ -11,6 +21,15 @@
       <% if season_challenge.week_index %>
         <span class="ml-1 text-[10px] px-1.5 py-0.5 rounded-full bg-gray-100 text-gray-600">
           <%= t("seasons.show.week_n", n: season_challenge.week_index) %>
+        </span>
+      <% end %>
+
+      <%# Once the week is over the medal is the standing result, so it sits
+          right after the label rather than only on the requirement rows. %>
+      <% if weekly && week_over && earned_medal %>
+        <span class="ml-1 inline-flex items-center gap-1 text-[10px] px-1.5 py-0.5 rounded-full <%= medal_tier_classes(earned_medal) %>"
+              title="<%= t("seasons.medals.earned", medal: medal_label(earned_medal)) %>">
+          <i class="fa-solid fa-medal"></i><%= medal_label(earned_medal) %>
         </span>
       <% end %>
     </div>
@@ -31,12 +50,20 @@
   <%# One row per requirement — a compound challenge shows all of its conditions. %>
   <% if mine %>
     <div class="mt-3 space-y-2">
-      <% mine.requirement_status.each do |status| %>
+      <% mine.requirement_status.each_with_index do |status, index| %>
         <% requirement = status[:requirement] %>
         <div>
           <div class="flex items-center justify-between text-xs">
             <span class="<%= status[:met] ? 'text-green-600' : 'text-gray-600' %>">
-              <i class="fa-solid <%= status[:met] ? 'fa-circle-check' : 'fa-circle' %> text-[9px] mr-1"></i>
+              <%# Weekly requirements run easiest to hardest, so each carries its
+                  own medal — finishing only the first is still worth something. %>
+              <% medal = weekly ? requirement_medal(index) : nil %>
+              <% if medal %>
+                <i class="fa-solid fa-medal text-[10px] mr-1 <%= status[:met] ? medal_classes(medal) : 'text-gray-300' %>"
+                   title="<%= medal_label(medal) %>"></i>
+              <% else %>
+                <i class="fa-solid <%= status[:met] ? 'fa-circle-check' : 'fa-circle' %> text-[9px] mr-1"></i>
+              <% end %>
               <%= requirement.label %>
             </span>
             <span class="text-gray-400 tabular-nums">
@@ -54,8 +81,16 @@
     </p>
   <% else %>
     <div class="mt-2 space-y-1">
-      <% challenge.challenge_requirements.each do |requirement| %>
-        <p class="text-xs text-gray-500"><i class="fa-solid fa-circle text-[9px] mr-1"></i><%= requirement.label %></p>
+      <% challenge.challenge_requirements.each_with_index do |requirement, index| %>
+        <% medal = weekly ? requirement_medal(index) : nil %>
+        <p class="text-xs text-gray-500">
+          <% if medal %>
+            <i class="fa-solid fa-medal text-[10px] mr-1 text-gray-300" title="<%= medal_label(medal) %>"></i>
+          <% else %>
+            <i class="fa-solid fa-circle text-[9px] mr-1"></i>
+          <% end %>
+          <%= requirement.label %>
+        </p>
       <% end %>
     </div>
   <% end %>

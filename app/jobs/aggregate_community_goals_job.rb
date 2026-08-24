@@ -73,6 +73,9 @@ class AggregateCommunityGoalsJob < ApplicationJob
     return false unless claimed.positive?
 
     goal.reload
+    # The new tier's target is sized by the community as it stands now, then
+    # frozen for the duration of that tier.
+    goal.freeze_tier_target!
     build_next_tier_milestones(goal, completed_tier)
 
     SeasonActivity.create!(

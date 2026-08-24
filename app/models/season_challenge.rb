@@ -36,6 +36,15 @@ class SeasonChallenge < ApplicationRecord
     category == "elite"
   end
 
+  # True once this challenge's window has closed, so the result is final.
+  # Measured in the season's own timezone — a week ends when it ends there.
+  def window_ended?
+    window = date_window
+    return false if window.blank?
+
+    season.current_date > window.end
+  end
+
   private
 
   def enroll_existing_participants

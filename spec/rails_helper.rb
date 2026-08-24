@@ -75,4 +75,8 @@ RSpec.configure do |config|
   # config.filter_gems_from_backtrace("gem name")
 
   config.include Devise::Test::IntegrationHelpers, type: :request
+
+  # travel_to / freeze_time, so specs about windows and deadlines don't depend
+  # on the day they happen to run.
+  config.include ActiveSupport::Testing::TimeHelpers
 end
