@@ -165,9 +165,11 @@ RSpec.describe Strava::ActivityImporter do
     end
 
     it "recomputes challenge progress after import" do
-      # Dated inside the challenge's current-week window. A fixed calendar date
-      # here silently stops counting once that week passes.
-      in_window = Date.current.beginning_of_week(:monday) + 1
+      # Dated inside the window the code actually measures. A weekly challenge
+      # is scored over Challenge.current_week_window, which runs Sunday–Saturday
+      # regardless of the dates on the record — picking a Monday-based date made
+      # this pass six days a week and fail every Sunday.
+      in_window = Challenge.current_week_window.begin + 1
       run_import(strava_activity(
         id: 203, sport_type: "Run", distance: 5000.0,
         start_date_local: in_window.to_time(:utc) + 8.hours,
