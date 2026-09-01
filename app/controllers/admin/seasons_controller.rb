@@ -2,7 +2,7 @@
 
 module Admin
   class SeasonsController < BaseController
-    before_action :set_season, only: [ :show, :edit, :update, :destroy, :export ]
+    before_action :set_season, only: [ :show, :edit, :update, :destroy, :export, :announce ]
 
     def index
       @seasons = Season.by_recent
@@ -39,6 +39,14 @@ module Admin
       else
         render :edit, status: :unprocessable_entity
       end
+    end
+
+    # Sends the "new season" announcement by hand — for a season that was
+    # already active before announcements existed, or to send it again after
+    # fixing the name or picture.
+    def announce
+      AnnounceSeasonJob.perform_later(@season.id, force: params[:force].present?)
+      redirect_to admin_season_path(@season), notice: t("admin.seasons.announce.queued")
     end
 
     # Downloads the season as a blueprint. Next month starts by exporting the

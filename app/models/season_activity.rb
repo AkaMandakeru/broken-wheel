@@ -6,7 +6,7 @@ class SeasonActivity < ApplicationRecord
   KINDS = %w[
     challenge_completed objective_completed level_up reward_unlocked
     daily_completed secret_discovered legacy_mission_completed
-    community_milestone community_tier_cleared season_finalized
+    community_milestone community_tier_cleared season_finalized season_started
   ].freeze
 
   validates :kind, inclusion: { in: KINDS }

@@ -1,0 +1,210 @@
+# =============================================================================
+# TEMPORADA 9 — CORRIDA PELA INDEPENDÊNCIA
+# =============================================================================
+
+# --- Identity ----------------------------------------------------------------
+key: season_9_corrida_pela_independencia_2026_09
+name: "Corrida pela Independência"
+slogan: "Sua corrida. Seu caminho. Sua independência."
+description: >-
+  Setembro é o mês de correr no seu próprio ritmo e conquistar novos marcos.
+  Complete desafios semanais, descubra a missão secreta de 7 de Setembro e
+  avance rumo aos 100 km durante a temporada.
+
+theme: legacy
+status: upcoming
+starts_at: 2026-09-01
+ends_at: 2026-09-30
+time_zone: America/Sao_Paulo
+xp_multiplier: 1.0
+
+# --- Battle pass shape -------------------------------------------------------
+# top_level_xp is sized against what this season can actually pay out: a
+# completionist earns ~11450 XP. The 17110 default (inherited from the 30-level
+# Season 8) put level 10 permanently out of reach, taking the `independente`
+# title and the `legado` legacy mission with it.
+#
+# Note the daily pool holds a single template, and the draw can only offer as
+# many distinct dailies as it holds — so dailies are worth 1500 here, not the
+# 4500 three-a-day would suggest.
+max_level: 10
+top_level_xp: 10000
+curve_exponent: 1.5
+
+# --- Cosmetics ---------------------------------------------------------------
+cosmetics:
+  - { key: independencia_banner, kind: banner, name: "Caminho da Independência", rarity: common, css_class: "bg-gradient-to-r from-green-800 via-yellow-500 to-blue-800" }
+  - { key: independencia_frame, kind: frame, name: "Moldura da Independência", rarity: rare, css_class: "ring-4 ring-yellow-400" }
+  - { key: independencia_name, kind: name_color, name: "Nome Verde Brasil", rarity: epic, css_class: "text-green-600" }
+  - { key: independencia_trail, kind: trail, name: "Rastro da Independência", rarity: legendary, renderable: false }
+  # Premium-only. The premium track previously handed back two items the free
+  # track already granted, so a subscriber unlocked nothing a free player didn't.
+  - { key: independencia_premium_frame, kind: frame, name: "Moldura Dourada da Independência", rarity: epic, css_class: "ring-4 ring-amber-300 ring-offset-2 ring-offset-green-900" }
+  - { key: independencia_premium_banner, kind: banner, name: "Banner · Grito do Ipiranga", rarity: legendary, css_class: "bg-gradient-to-br from-green-900 via-yellow-400 to-blue-900" }
+
+# --- Challenges --------------------------------------------------------------
+challenges:
+
+  # Semana 1 — 1 a 7 de setembro
+  - key: s9_week1_primeiros_quilometros
+    title: "Semana 1 · Primeiros Quilômetros"
+    category: weekly
+    week_index: 1
+    starts_at: 2026-09-01
+    ends_at: 2026-09-07
+    sport: run
+    xp_reward: 1000
+    coin_reward: 200
+    fragment_reward: 10
+    requirements:
+      - { metric: distance_km, target: 15 }
+      - { metric: activity_count, target: 3 }
+      - { metric: active_days, target: 3 }
+
+  # Missão secreta disponível apenas no Dia da Independência
+  - key: s9_hidden_grito_da_independencia
+    title: "🇧🇷 Grito da Independência"
+    category: hidden
+    hidden: true
+    starts_at: 2026-09-07
+    ends_at: 2026-09-07
+    sport: run
+    xp_reward: 500
+    coin_reward: 300
+    fragment_reward: 10
+    requirements:
+      - { metric: distance_km, target: 5 }
+
+  # Semana 2 — 8 a 14 de setembro
+  - key: s9_week2_ritmo_brasileiro
+    title: "Semana 2 · Ritmo Brasileiro"
+    category: weekly
+    week_index: 2
+    starts_at: 2026-09-08
+    ends_at: 2026-09-14
+    sport: run
+    xp_reward: 1000
+    coin_reward: 200
+    fragment_reward: 10
+    requirements:
+      - { metric: distance_km, target: 15 }
+      - { metric: activity_count, target: 4 }
+      - { metric: active_days, target: 4 }
+
+  # Semana 3 — 15 a 21 de setembro
+  - key: s9_week3_brasil_em_movimento
+    title: "Semana 3 · Brasil em Movimento"
+    category: weekly
+    week_index: 3
+    starts_at: 2026-09-15
+    ends_at: 2026-09-21
+    sport: run
+    xp_reward: 1000
+    coin_reward: 200
+    fragment_reward: 10
+    requirements:
+      - { metric: distance_km, target: 15 }
+      - { metric: activity_count, target: 4 }
+      - { metric: consecutive_days, target: 3 }
+
+  # Semana 4 — 22 a 30 de setembro
+  - key: s9_week4_ate_o_fim
+    title: "Semana 4 · Até o Fim"
+    category: weekly
+    week_index: 4
+    starts_at: 2026-09-22
+    ends_at: 2026-09-30
+    sport: run
+    xp_reward: 1200
+    coin_reward: 250
+    fragment_reward: 15
+    requirements:
+      - { metric: distance_km, target: 15 }
+      - { metric: activity_count, target: 3 }
+      - { metric: longest_activity_km, target: 5 }
+
+  # --- Desafios mensais com thresholds --------------------------------------
+  - key: s9_month_primeiro_marco_50km
+    title: "Rumo aos 100 KM · Primeiro Marco"
+    category: monthly
+    sport: run
+    xp_reward: 500
+    coin_reward: 300
+    fragment_reward: 10
+    requirements:
+      - { metric: distance_km, target: 50 }
+
+  - key: s9_month_em_movimento_80km
+    title: "Rumo aos 100 KM · Em Movimento"
+    category: monthly
+    sport: run
+    xp_reward: 750
+    coin_reward: 500
+    fragment_reward: 15
+    requirements:
+      - { metric: distance_km, target: 80 }
+
+  - key: s9_month_rumo_a_independencia_100km
+    title: "Rumo aos 100 KM · Corredor da Independência"
+    category: monthly
+    sport: run
+    xp_reward: 1000
+    coin_reward: 800
+    fragment_reward: 20
+    requirements:
+      - { metric: distance_km, target: 100 }
+
+# --- Rewards -----------------------------------------------------------------
+rewards:
+  - { level: 1, track: free, reward_type: badge, reward_key: s9_season_badge, name: "Badge · Setembro Independente" }
+  - { level: 2, track: free, reward_type: coins, reward_key: s9_coins_250, name: "250 Moedas", coins: 250 }
+  - { level: 3, track: free, reward_type: cosmetic, reward_key: independencia_banner, name: "Banner · Caminho da Independência" }
+  - { level: 4, track: free, reward_type: coins, reward_key: s9_coins_400, name: "400 Moedas", coins: 400 }
+  - { level: 5, track: free, reward_type: cosmetic, reward_key: independencia_frame, name: "Moldura da Independência" }
+  - { level: 6, track: free, reward_type: xp_boost, reward_key: s9_xp_boost, name: "XP Boost (1 dia)", payload: { hours: 24, multiplier: 2.0 } }
+  - { level: 7, track: free, reward_type: cosmetic, reward_key: independencia_trail, name: "Rastro da Independência" }
+  - { level: 8, track: free, reward_type: coins, reward_key: s9_coins_600, name: "600 Moedas", coins: 600 }
+  - { level: 9, track: free, reward_type: cosmetic, reward_key: independencia_name, name: "Nome Verde Brasil" }
+  - { level: 10, track: free, reward_type: title, reward_key: independente, name: "Independente" }
+
+  - { level: 2, track: premium, reward_type: cosmetic, reward_key: independencia_premium_frame, name: "Moldura Dourada da Independência" }
+  - { level: 10, track: premium, reward_type: cosmetic, reward_key: independencia_premium_banner, name: "Banner · Grito do Ipiranga" }
+
+  # The 100% community milestone below points at this key. Without a matching
+  # `unlock_kind: community` reward the importer resolves it to nil and
+  # GrantCommunityMilestoneJob quietly grants nothing.
+  - { unlock_kind: community, unlock_value: 100, track: free, reward_type: badge, reward_key: s9_community_badge, name: "Brasil em Movimento" }
+
+  - { unlock_kind: completion_tier, unlock_value: 25, track: free, reward_type: badge, reward_key: s9_bronze, name: "Medalha de Bronze" }
+  - { unlock_kind: completion_tier, unlock_value: 50, track: free, reward_type: badge, reward_key: s9_silver, name: "Medalha de Prata" }
+  - { unlock_kind: completion_tier, unlock_value: 75, track: free, reward_type: badge, reward_key: s9_gold, name: "Medalha de Ouro" }
+  - { unlock_kind: completion_tier, unlock_value: 100, track: free, reward_type: badge, reward_key: s9_diamond, name: "Troféu da Independência" }
+
+# --- Legacy missions ---------------------------------------------------------
+legacy_missions:
+  - { key: disciplina, metric: activity_count, target: 10, xp_reward: 400, coin_reward: 150, fragment_reward: 10, icon: "fa-solid fa-list-check" }
+  - { key: coragem, metric: longest_activity_km, target: 7, xp_reward: 400, coin_reward: 150, fragment_reward: 10, icon: "fa-solid fa-bolt" }
+  - { key: resiliencia, metric: consecutive_days, target: 7, xp_reward: 400, coin_reward: 150, fragment_reward: 10, icon: "fa-solid fa-shield-heart" }
+  - { key: independencia, metric: distance_km, target: 100, xp_reward: 500, coin_reward: 250, fragment_reward: 15, icon: "fa-solid fa-flag" }
+  - { key: legado, metric: battle_pass_level, target: 10, xp_reward: 400, coin_reward: 150, fragment_reward: 10, icon: "fa-solid fa-crown" }
+
+# --- Community goal ----------------------------------------------------------
+community_goal:
+  key: s9_brasil_em_movimento
+  metric: distance_km
+  target_mode: per_participant
+  # Sized for the closed beta cohort (~8 testers → ~320 km over 30 days). At 60
+  # the bar barely moves if two people go quiet, which reads as a broken feature.
+  per_participant: 40
+  target_value: 40
+  tier_coin_reward: 200
+  milestones:
+    - { percent: 25 }
+    - { percent: 50 }
+    - { percent: 75 }
+    - { percent: 100, reward_key: s9_community_badge }
+
+# --- Daily challenges --------------------------------------------------------
+# Temporada de setembro: apenas um desafio diário no pool.
+daily_templates:
+  - { key: movimento_do_dia, metric: activity_count, target: 1, sport: run, weight: 1, xp_reward: 50, coin_reward: 25 }

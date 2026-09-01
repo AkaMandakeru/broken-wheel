@@ -101,4 +101,64 @@ RSpec.describe "Seasons", type: :request do
       expect(response.body).to include(season.name)
     end
   end
+
+  # A finished season nobody can still affect is a dead leaderboard, so players
+  # get exactly one step back and no further.
+  describe "how far back a player can look" do
+    let!(:last_season) do
+      build_season(name: "Last Season", status: "ended",
+                   starts_at: Date.new(2026, 7, 1), ends_at: Date.new(2026, 7, 31))
+    end
+
+    let!(:older_season) do
+      build_season(name: "Older Season", status: "ended",
+                   starts_at: Date.new(2026, 6, 1), ends_at: Date.new(2026, 6, 30))
+    end
+
+    before { season.update!(status: "active") }
+
+    it "opens the most recent finished season" do
+      get season_path(last_season)
+
+      expect(response).to have_http_status(:ok)
+    end
+
+    it "closes anything older than that" do
+      get season_path(older_season)
+
+      expect(response).to redirect_to(seasons_path)
+      expect(flash[:alert]).to eq(I18n.t("flashes.seasons.archived"))
+    end
+
+    it "closes it for a signed-in player too" do
+      sign_in user
+
+      get season_path(older_season)
+
+      expect(response).to redirect_to(seasons_path)
+    end
+
+    it "lists only one past season" do
+      get seasons_path
+
+      expect(response.body).to include("Last Season")
+      expect(response.body).not_to include("Older Season")
+    end
+
+    # The admin panel links straight to the public page, so that link has to keep
+    # resolving for a season players can no longer open.
+    it "still opens for an admin" do
+      sign_in build_user(admin: true)
+
+      get season_path(older_season)
+
+      expect(response).to have_http_status(:ok)
+    end
+
+    it "leaves the active season alone" do
+      get season_path(season)
+
+      expect(response).to have_http_status(:ok)
+    end
+  end
 end

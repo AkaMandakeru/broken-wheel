@@ -57,6 +57,7 @@ Rails.application.routes.draw do
     # `id` optional: posting without one claims everything pending.
     resources :claims, only: [:create], controller: "season_claims"
     post "claims/:id", to: "season_claims#create", as: :claim
+    post "dismiss_announcement", to: "season_announcements#dismiss", as: :dismiss_announcement
   end
 
   namespace :admin do
@@ -64,7 +65,10 @@ Rails.application.routes.draw do
     resources :challenges
     resources :events
     resources :seasons do
-      member { get :export }
+      member do
+        get :export
+        post :announce
+      end
       resources :season_challenges, only: [:create, :destroy]
       resources :season_objectives, only: [:create, :destroy]
       resources :season_rewards, only: [:create, :destroy]

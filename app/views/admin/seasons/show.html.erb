@@ -18,6 +18,31 @@
     </div>
   </div>
 
+  <%# Telling players a season has opened. Sent automatically when a season goes
+      active; this is the manual path for one that was already running. %>
+  <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-5 mb-6">
+    <h2 class="text-sm font-semibold text-gray-900 mb-1"><%= t("admin.seasons.announce.title") %></h2>
+    <p class="text-xs text-gray-500 mb-3">
+      <% if @season.announced_at %>
+        <%= t("admin.seasons.announce.sent_on", date: l(@season.announced_at, format: :long)) %>
+      <% else %>
+        <%= t("admin.seasons.announce.not_sent") %>
+      <% end %>
+      · <%= t("admin.seasons.announce.reach", subscribed: PushSubscription.distinct.count(:user_id), total: User.count) %>
+    </p>
+    <div class="flex flex-wrap items-center gap-2">
+      <%= button_to t(@season.announced_at ? "admin.seasons.announce.resend" : "admin.seasons.announce.send"),
+                    announce_admin_season_path(@season, force: @season.announced_at ? true : nil),
+                    method: :post,
+                    disabled: !@season.active?,
+                    form: { data: { turbo_confirm: t("admin.seasons.announce.confirm") } },
+                    class: "bg-gray-900 text-white px-4 py-2 rounded-lg hover:bg-gray-700 transition font-medium text-sm cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed" %>
+      <% unless @season.active? %>
+        <span class="text-xs text-gray-400"><%= t("admin.seasons.announce.only_active") %></span>
+      <% end %>
+    </div>
+  </div>
+
   <%# Reuse this season as the basis for the next one. %>
   <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-5 mb-6">
     <h2 class="text-sm font-semibold text-gray-900 mb-1"><%= t("admin.seasons.export.title") %></h2>

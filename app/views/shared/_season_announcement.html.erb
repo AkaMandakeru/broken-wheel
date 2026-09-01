@@ -1,0 +1,46 @@
+<%# "A new season has started" — the channel that actually reaches everyone,
+    since only a fraction of players have push enabled. Shows on every page
+    until dismissed, or for a week. %>
+<% season = Seasons::Announcement.for(current_user) if user_signed_in? %>
+<% if season %>
+  <div class="container mx-auto px-4 max-w-6xl pt-4" data-controller="dismissable">
+    <div class="relative overflow-hidden rounded-2xl border border-amber-300 shadow-sm"
+         data-dismissable-target="panel">
+      <div class="h-1.5 bg-linear-to-r <%= season_theme_classes(season.theme) %>"></div>
+
+      <div class="flex flex-wrap items-center gap-4 bg-linear-to-br from-amber-50 to-white p-4 sm:p-5">
+        <span class="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-amber-100 text-amber-600">
+          <i class="fa-solid fa-flag-checkered text-lg"></i>
+        </span>
+
+        <div class="flex-1 min-w-[12rem]">
+          <p class="text-[11px] font-semibold uppercase tracking-wider text-amber-600">
+            <%= t("seasons.announcement.eyebrow") %>
+          </p>
+          <p class="font-bold text-gray-900"><%= season.name %></p>
+          <p class="text-xs text-gray-600">
+            <%= season.slogan.presence || t("seasons.announcement.fallback_subtitle") %>
+            <% if season.ends_at %>
+              · <%= t("seasons.announcement.runs_until", date: l(season.ends_at.to_date, format: :long)) %>
+            <% end %>
+          </p>
+        </div>
+
+        <div class="flex items-center gap-2">
+          <%= link_to season_path(season, from: "announcement"),
+                      class: "inline-flex items-center gap-1.5 rounded-lg bg-amber-500 px-4 py-2 text-sm font-semibold text-white transition hover:bg-amber-600" do %>
+            <i class="fa-solid fa-arrow-right"></i> <%= t("seasons.announcement.cta") %>
+          <% end %>
+
+          <%= button_to season_dismiss_announcement_path(season),
+                        method: :post,
+                        form: { data: { action: "submit->dismissable#dismiss" } },
+                        class: "rounded-lg p-2 text-gray-400 transition hover:bg-gray-100 hover:text-gray-600 cursor-pointer",
+                        aria: { label: t("seasons.announcement.dismiss") } do %>
+            <i class="fa-solid fa-xmark"></i>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+<% end %>

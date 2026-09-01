@@ -696,6 +696,16 @@ pt:
       warnings:
         unreachable_rewards: "%{count} recompensa(s) estão acima do nível %{max}. Reduza o nível delas ou aumente a quantidade de níveis — elas nunca serão concedidas."
         unreachable_challenges: "%{count} desafio(s) desbloqueiam acima do nível %{max} e nunca vão abrir."
+      announce:
+        title: "Avisar os jogadores sobre esta temporada"
+        not_sent: "Ainda não anunciada."
+        sent_on: "Anunciada em %{date}."
+        reach: "%{subscribed} de %{total} jogadores têm push ativado — os demais veem o banner no app."
+        send: "Anunciar temporada"
+        resend: "Anunciar novamente"
+        confirm: "Enviar a notificação de nova temporada para todos os jogadores?"
+        only_active: "Só uma temporada ativa pode ser anunciada."
+        queued: "Anúncio enfileirado."
       export:
         title: "Reaproveitar esta temporada"
         hint: "Baixe como blueprint, mude a chave e as datas, e importe como a temporada do próximo mês."
@@ -1319,6 +1329,12 @@ pt:
       you: "Você"
       done: "Feito"
       not_yet: "Ainda não"
+    announcement:
+      eyebrow: "Nova temporada"
+      cta: "Conferir"
+      dismiss: "Dispensar"
+      runs_until: "vai até %{date}"
+      fallback_subtitle: "Uma nova temporada começou. Seus desafios estão esperando."
     claim:
       title: "XP para receber"
       subtitle:
@@ -1361,6 +1377,9 @@ pt:
     event:
       title: "Novo evento 🏁"
       body: "%{title} acabou de ser adicionado — confira!"
+    season_started:
+      title: "Uma nova temporada começou 🚩"
+      body: "%{season} está no ar — novos desafios, novas recompensas."
     season_level:
       title: "Subiu de nível! ⚡"
       body: "Você alcançou o nível %{level} em %{season}."
@@ -1393,6 +1412,8 @@ pt:
       not_member: "Você não é membro."
     profiles:
       updated: "Perfil atualizado com sucesso."
+    seasons:
+      archived: "Essa temporada está encerrada. Você pode ver apenas uma temporada anterior."
     strava:
       connected: "Strava conectado com sucesso!"
       disconnected: "Strava desconectado."

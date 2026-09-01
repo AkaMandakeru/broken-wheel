@@ -76,6 +76,11 @@ module DailyChallenges
         kind: "daily_completed",
         metadata: { daily: template.display_title, xp: template.xp_reward }
       )
+
+      SeasonAnalytics.track(
+        user: @user, event: "season_daily_completed", season: @season,
+        template_key: template.key, xp: template.xp_reward
+      )
     end
   end
 end

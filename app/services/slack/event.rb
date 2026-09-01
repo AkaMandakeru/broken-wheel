@@ -11,7 +11,8 @@ module Slack
     ALL = [
       Definition.new(key: :user_registered,  emoji: "🎉", label: "New user registered"),
       Definition.new(key: :premium_granted,  emoji: "⭐", label: "Premium pass granted"),
-      Definition.new(key: :workout_imported, emoji: "🏃", label: "Workout imported")
+      Definition.new(key: :workout_imported, emoji: "🏃", label: "Workout imported"),
+      Definition.new(key: :season_started,   emoji: "🚩", label: "Season started")
     ].freeze
 
     module_function

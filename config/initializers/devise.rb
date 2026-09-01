@@ -167,13 +167,17 @@ Devise.setup do |config|
 
   # ==> Configuration for :rememberable
   # The time the user will be remembered without asking for credentials again.
-  # config.remember_for = 2.weeks
+  # A fitness app is opened for a run, not for a session — two weeks meant a
+  # regular user still got bounced to the sign-in form every fortnight.
+  config.remember_for = 3.months
 
   # Invalidates all the remember me tokens when the user signs out.
   config.expire_all_remember_me_on_sign_out = true
 
   # If true, extends the user's remember period when remembered via cookie.
-  # config.extend_remember_period = false
+  # Rolls the window forward while someone keeps using the app, instead of
+  # cutting them off a fixed period after the one time they signed in.
+  config.extend_remember_period = true
 
   # Options to be passed to the created cookie. For instance, you can set
   # secure: true in order to force SSL only cookies.

@@ -48,6 +48,31 @@ RSpec.describe "Claiming season XP", type: :request do
     end
   end
 
+  describe "an archived season" do
+    before do
+      complete_the_challenge
+      sign_in user
+      # This season finishes, then a later one finishes behind it — pushing it
+      # past the one-season archive depth.
+      season.update_columns(status: "ended")
+      build_season(status: "ended", starts_at: Date.new(2026, 9, 1), ends_at: Date.new(2026, 9, 30))
+      build_season(status: "active", starts_at: Date.new(2026, 10, 1), ends_at: Date.new(2026, 10, 31))
+    end
+
+    it "refuses the claim" do
+      expect { post season_claims_path(season) }
+        .not_to change { participation.reload.xp }
+
+      expect(response).to redirect_to(seasons_path)
+    end
+
+    it "answers 404 to the in-page claim" do
+      post season_claims_path(season), as: :json
+
+      expect(response).to have_http_status(:not_found)
+    end
+  end
+
   describe "collecting it" do
     before do
       complete_the_challenge

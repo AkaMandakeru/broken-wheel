@@ -9,13 +9,16 @@
 # Silently does nothing outside production unless SLACK_NOTIFICATIONS_ENABLED is
 # set — see Slack::Config.
 class SlackNotifier
-  def self.notify(event, user:, extra: {})
-    new(event, user: user, extra: extra).call
+  # `user` is optional: some events are about the app rather than a person —
+  # a season opening has no signup behind it. Those pass a `subject` instead.
+  def self.notify(event, user: nil, subject: nil, extra: {})
+    new(event, user: user, subject: subject, extra: extra).call
   end
 
-  def initialize(event, user:, extra: {})
+  def initialize(event, user: nil, subject: nil, extra: {})
     @event = Slack::Event.find(event)
     @user = user
+    @subject = subject
     @extra = extra.compact
   end
 
@@ -30,7 +33,9 @@ class SlackNotifier
   private
 
   def deliverable?
-    return false if @event.nil? || @user.nil?
+    return false if @event.nil?
+    # Something has to identify what the message is about.
+    return false if @user.nil? && @subject.blank?
     return false unless Slack::Config.enabled?
 
     webhook_url.present?
@@ -57,7 +62,14 @@ class SlackNotifier
   # What shows in the notification popup and on any client that can't render
   # blocks. Slack requires it whenever blocks are present.
   def fallback_text
-    "#{tag}#{@event.emoji} #{@event.label} — #{display_name} (#{@user.email})"
+    "#{tag}#{@event.emoji} #{@event.label} — #{headline}"
+  end
+
+  # A person when there is one, otherwise whatever the event is about.
+  def headline
+    return @subject.to_s if @user.nil?
+
+    "#{display_name} (#{@user.email})"
   end
 
   def blocks
@@ -75,12 +87,11 @@ class SlackNotifier
   end
 
   def fields
-    base = {
-      "Event" => @event.label,
-      "User" => display_name,
-      "Email" => @user.email,
-      "Date" => timestamp
-    }
+    base = { "Event" => @event.label }
+    base["User"] = display_name if @user
+    base["Email"] = @user.email if @user
+    base["Date"] = timestamp
+
     # Slack renders at most 10 fields in a section.
     base.merge(@extra.transform_keys(&:to_s)).first(10).to_h
   end

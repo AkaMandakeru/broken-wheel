@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_08_20_100000) do
+ActiveRecord::Schema[8.1].define(version: 2026_08_21_100000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -432,6 +432,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_08_20_100000) do
   end
 
   create_table "seasons", force: :cascade do |t|
+    t.datetime "announced_at"
     t.datetime "created_at", null: false
     t.decimal "curve_exponent", precision: 4, scale: 2, default: "1.5", null: false
     t.text "description"
