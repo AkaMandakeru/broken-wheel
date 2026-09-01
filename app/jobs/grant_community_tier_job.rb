@@ -32,5 +32,12 @@ class GrantCommunityTierJob < ApplicationJob
       reason_key: "community_tier:#{goal.id}:#{tier}",
       metadata: { season_id: goal.season_id, goal: goal.key, tier: tier }
     )
+
+    # Clearing a tier is a season-wide event, but Analytics is keyed to a user —
+    # so it is recorded against each participant the tier actually paid.
+    SeasonAnalytics.track(
+      user: participation.user, event: "season_community_tier_cleared", season: goal.season,
+      goal: goal.key, tier: tier, payout: payout
+    )
   end
 end

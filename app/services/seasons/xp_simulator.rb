@@ -71,13 +71,17 @@ module Seasons
       @season.season_challenges.of_category(category).sum(:xp_reward)
     end
 
-    # Three dailies a day for every day of the season.
+    # Three dailies a day for every day of the season — but the draw can never
+    # hand out more distinct templates than the pool holds, so a season with one
+    # template offers one a day. Budgeting the full three there overstated the
+    # XP ceiling threefold and made an unreachable top level look reachable.
     def daily_max
       templates = DailyChallengeTemplate.active.for_season(@season)
       return 0 if templates.empty?
 
+      per_day = [ DailyChallenges::Assigner::PER_DAY, templates.count ].min
       average = templates.average(:xp_reward).to_f
-      (average * DailyChallenges::Assigner::PER_DAY * season_days).round
+      (average * per_day * season_days).round
     end
 
     def season_days

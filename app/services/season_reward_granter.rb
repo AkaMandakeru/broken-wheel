@@ -37,6 +37,12 @@ class SeasonRewardGranter
         kind: "reward_unlocked",
         metadata: { reward_type: reward.reward_type, reward_key: reward.reward_key, name: reward.name, track: reward.track }
       )
+
+      SeasonAnalytics.track(
+        user: @user, event: "season_reward_granted", season: @season,
+        reward_key: reward.reward_key, reward_type: reward.reward_type,
+        track: reward.track, unlock_kind: reward.unlock_kind
+      )
     end
   end
 

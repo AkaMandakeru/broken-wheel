@@ -20,8 +20,16 @@ class SeasonClaimsController < ApplicationController
 
   private
 
+  # Same reach as the season page itself. Gating only the page would leave this
+  # endpoint open, and collecting XP is as much "access" as reading the board.
   def set_season
-    @season = Season.find(params[:season_id])
+    @season = Season.browsable.find_by(id: params[:season_id])
+    return if @season
+
+    respond_to do |format|
+      format.json { head :not_found }
+      format.html { redirect_to seasons_path, alert: t("flashes.seasons.archived") }
+    end
   end
 
   def set_participation

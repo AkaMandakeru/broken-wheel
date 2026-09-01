@@ -59,7 +59,10 @@ class WorkoutsController < ApplicationController
       imported += 1 if importer.import_one(activity)
     end
 
-    Analytics.track(user: current_user, event: "workout_import_completed", properties: { provider: "strava", imported_count: imported, requested_count: activity_ids.size })
+    Analytics.track(user: current_user, event: "workout_import_completed",
+                    properties: { provider: "strava", imported_count: imported,
+                                  requested_count: activity_ids.size,
+                                  season_key: Season.active.by_recent.first&.key })
 
     # One message per import, not per workout — a 40-activity import should not
     # produce 40 Slack notifications.

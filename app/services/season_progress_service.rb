@@ -15,10 +15,22 @@ class SeasonProgressService
   CLUB_BONUS              = 25
 
   def self.ensure_participation(user, season)
-    season.season_participations.find_or_create_by!(user: user)
+    participation = season.season_participations.find_or_create_by!(user: user)
+    track_join(participation) if participation.previously_new_record?
+    participation
   rescue ActiveRecord::RecordNotUnique
     season.season_participations.find_by!(user: user)
   end
+
+  # Joining is the top of every season funnel. Recorded on the create only —
+  # this method also runs on every season page view, and tracking the re-fetch
+  # would turn one join into a daily event.
+  def self.track_join(participation)
+    SeasonAnalytics.track(
+      user: participation.user, event: "season_joined", season: participation.season
+    )
+  end
+  private_class_method :track_join
 
   def initialize(participation)
     @participation = participation
@@ -208,6 +220,7 @@ class SeasonProgressService
 
   def handle_level_up(_old_level, new_level)
     SeasonActivity.create!(season: @season, user: @user, kind: "level_up", metadata: { level: new_level })
+    SeasonAnalytics.track(user: @user, event: "season_level_up", season: @season, level: new_level)
     notify_level_up(new_level)
   end
 

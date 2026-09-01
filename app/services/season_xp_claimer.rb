@@ -26,16 +26,32 @@ class SeasonXpClaimer
 
     SeasonProgressService.new(@participation).recalculate if claimed.any?
 
-    Result.new(
+    result = Result.new(
       claimed: claimed.size,
       xp: xp,
       level_before: level_before,
       level_after: @participation.reload.level,
       participation: @participation
     )
+
+    track(result) if result.any?
+    result
   end
 
   private
+
+  # The gap between completing a challenge and claiming its XP is the number
+  # that says whether the claim mechanic is being noticed at all, so only real
+  # claims are recorded — a no-op claim would flatten that signal.
+  def track(result)
+    season = @participation.season
+
+    SeasonAnalytics.track(
+      user: @participation.user, event: "season_xp_claimed", season: season,
+      claimed_count: result.claimed, xp: result.xp,
+      levelled_up: result.levelled_up?, level: result.level_after
+    )
+  end
 
   # Guards against claiming someone else's completion by id.
   def belongs_to_participation?(completion)

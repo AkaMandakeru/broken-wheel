@@ -6,7 +6,7 @@ class SeasonsController < ApplicationController
 
   def index
     @active_seasons = Season.active.by_recent
-    @past_seasons = Season.where(status: "ended").by_recent
+    @past_seasons = Season.recent_archive
   end
 
   def show
@@ -28,12 +28,34 @@ class SeasonsController < ApplicationController
     load_community
 
     @activities = @season.season_activities.recent.includes(:user).limit(15)
+
+    track_announcement_click
   end
 
   private
 
+  # The banner's CTA carries ?from=announcement, so the click is measurable
+  # without a redirect hop or a second endpoint. Deliberately no "shown" event:
+  # the banner renders on every page, and that would drown the funnel.
+  def track_announcement_click
+    return unless user_signed_in? && params[:from] == "announcement"
+
+    SeasonAnalytics.track(user: current_user, event: "season_announcement_clicked", season: @season)
+  end
+
+  # A season that has aged out is closed, not missing — so this sends the player
+  # back to the list with a reason rather than a bare 404.
   def set_season
-    @season = Season.find(params[:id])
+    @season = season_scope.find_by(id: params[:id])
+    return if @season
+
+    redirect_to seasons_path, alert: t("flashes.seasons.archived")
+  end
+
+  # Admins keep the whole history, so the admin panel's "view public" link still
+  # resolves for a season players can no longer open.
+  def season_scope
+    current_user&.admin? ? Season.all : Season.browsable
   end
 
   def load_challenges

@@ -20,6 +20,9 @@ class Season < ApplicationRecord
 
   MAX_SUPPORTED_LEVEL = 100
 
+  # How many finished seasons stay reachable behind the current one.
+  ARCHIVE_DEPTH = 1
+
   # The picture is rendered on the public season page, so what can be uploaded
   # is constrained here rather than discovered at render time.
   IMAGE_CONTENT_TYPES = %w[image/png image/jpeg image/webp image/gif].freeze
@@ -51,9 +54,27 @@ class Season < ApplicationRecord
   before_save :rebuild_level_curve, if: :level_curve_stale?
 
   scope :active, -> { where(status: "active") }
+  scope :ended, -> { where(status: "ended") }
   scope :by_recent, -> { order(starts_at: :desc) }
 
+  # Players may look back exactly one season. Older ones close for good: a
+  # season nobody can still affect is a dead leaderboard, and leaving it open
+  # invites people to measure themselves against a board they can never enter.
+  scope :recent_archive, -> { ended.by_recent.limit(ARCHIVE_DEPTH) }
+
+  # Everything a player may open — the current season, anything not yet started,
+  # and that one season of history. Admins bypass this via the admin panel.
+  scope :browsable, -> {
+    where(status: %w[upcoming active]).or(where(id: recent_archive.select(:id)))
+  }
+
   after_update_commit :finalize_if_ended
+
+  # One registration covering both cases on purpose: Rails dedupes callbacks by
+  # filter name, so a separate after_create_commit :announce_if_started would
+  # silently *replace* the update one — and activating an existing season, the
+  # normal path, would never announce.
+  after_commit :announce_if_started, on: [ :create, :update ]
 
   def active?
     status == "active"
@@ -169,6 +190,17 @@ class Season < ApplicationRecord
     return unless image.blob.byte_size > MAX_IMAGE_BYTES
 
     errors.add(:image, :too_large, size: "#{MAX_IMAGE_BYTES / 1.megabyte} MB")
+  end
+
+  # A season opening is worth telling people about, but only the first time it
+  # opens — announcing is stamped on the record, so flipping status back and
+  # forth doesn't notify everyone again.
+  def announce_if_started
+    return unless active?
+    return if announced_at.present?
+    return unless previously_new_record? || saved_change_to_status?
+
+    AnnounceSeasonJob.perform_later(id)
   end
 
   # End-of-season payouts run once, the moment a season is closed.

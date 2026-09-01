@@ -724,6 +724,16 @@ en:
       warnings:
         unreachable_rewards: "%{count} reward(s) sit above level %{max}. Lower their level or raise the level count — they can never be granted."
         unreachable_challenges: "%{count} challenge(s) unlock above level %{max} and can never open."
+      announce:
+        title: "Tell players about this season"
+        not_sent: "Not announced yet."
+        sent_on: "Announced %{date}."
+        reach: "%{subscribed} of %{total} players have push enabled — everyone else sees the in-app banner."
+        send: "Announce season"
+        resend: "Announce again"
+        confirm: "Send the new-season notification to every player?"
+        only_active: "Only an active season can be announced."
+        queued: "Announcement queued."
       export:
         title: "Reuse this season"
         hint: "Download it as a blueprint, change the key and dates, then import it as next month's season."
@@ -1232,6 +1242,12 @@ en:
       you: "You"
       done: "Done"
       not_yet: "Not yet"
+    announcement:
+      eyebrow: "New season"
+      cta: "Take a look"
+      dismiss: "Dismiss"
+      runs_until: "runs until %{date}"
+      fallback_subtitle: "A new season has started. Your challenges are waiting."
     claim:
       title: "XP to collect"
       subtitle:
@@ -1274,6 +1290,9 @@ en:
     event:
       title: "New event 🏁"
       body: "%{title} was just added — check it out!"
+    season_started:
+      title: "A new season has started 🚩"
+      body: "%{season} is live — new challenges, new rewards."
     season_level:
       title: "Level up! ⚡"
       body: "You reached level %{level} in %{season}."
@@ -1307,6 +1326,8 @@ en:
       not_member: "Not a member."
     profiles:
       updated: "Profile updated successfully."
+    seasons:
+      archived: "That season is closed. You can only look back one season."
     strava:
       connected: "Strava connected successfully!"
       disconnected: "Strava disconnected."

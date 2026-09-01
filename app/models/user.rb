@@ -25,7 +25,7 @@ class User < ApplicationRecord
 
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :validatable,
-         :lockable, :timeoutable
+         :lockable
 
   validates :first_name, :last_name, presence: true
   # The displayed title (singular) must be one the user has actually earned.
@@ -91,6 +91,26 @@ class User < ApplicationRecord
     true
   end
 
+  # --- Season announcements --------------------------------------------------
+
+  # Which "new season" banners this user has already dismissed. Kept in the
+  # preferences jsonb rather than its own table — it is a UI preference, and
+  # there is exactly one row per user either way.
+  DISMISSED_ANNOUNCEMENTS_KEY = "dismissed_season_announcements"
+
+  def dismissed_season_announcements
+    Array(preferences_hash[DISMISSED_ANNOUNCEMENTS_KEY]).map(&:to_i)
+  end
+
+  def dismiss_season_announcement(season_id)
+    ids = (dismissed_season_announcements + [ season_id.to_i ]).uniq.last(20)
+    update_column(:preferences, preferences_hash.merge(DISMISSED_ANNOUNCEMENTS_KEY => ids))
+  end
+
+  def dismissed_season_announcement?(season_id)
+    dismissed_season_announcements.include?(season_id.to_i)
+  end
+
   # --- Cosmetics -------------------------------------------------------------
 
   # { "frame" => "legendary_frame", "name_color" => "gold", ... }
@@ -129,6 +149,10 @@ class User < ApplicationRecord
   end
 
   private
+
+  def preferences_hash
+    (self[:preferences] || {}).with_indifferent_access
+  end
 
   def grant_default_titles
     defaults = Titles.defaults.map(&:to_s)

@@ -89,6 +89,11 @@ module DailyChallenges
         daily_challenge_template: template,
         challenge_date: @date
       )
+
+      SeasonAnalytics.track(
+        user: @user, event: "season_daily_assigned", season: @season,
+        template_key: template.key, challenge_date: @date.to_s
+      )
     rescue ActiveRecord::RecordNotUnique
       nil # already assigned by a concurrent request
     end
