@@ -93,11 +93,6 @@ RSpec.describe Strava::ActivityImporter do
       expect(workout.duration_minutes).to eq(25)
     end
 
-    it "returns achievements in the result" do
-      result = run_import(strava_activity)
-      expect(result.achievements).to be_an(Array)
-    end
-
     it "handles zero moving_time gracefully" do
       run_import(strava_activity(id: 800, moving_time: 0))
       expect(user.workouts.find_by(external_id: "800").duration_minutes).to eq(0)
@@ -120,8 +115,10 @@ RSpec.describe Strava::ActivityImporter do
       expect(user.workouts.count).to eq(0)
     end
 
-    it "runs the achievement checker" do
-      expect(AchievementChecker).to receive(:new).with(user).and_call_original
+    it "recomputes season progress for the imported activity" do
+      build_season(status: "active")
+
+      expect(SeasonRecalcJob).to receive(:enqueue_debounced).at_least(:once)
       run_import_one(strava_activity(id: 50))
     end
   end

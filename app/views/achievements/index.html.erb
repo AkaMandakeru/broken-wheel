@@ -1,115 +1,75 @@
 <% content_for :title, t('achievements.index.title') %>
 
-<div class="pt-8" data-controller="modal">
+<div class="pt-8">
 
   <h1 class="text-2xl font-bold text-gray-900 mb-2"><%= t('achievements.index.heading') %></h1>
   <p class="text-gray-500 text-sm mb-6"><%= t('achievements.index.subtitle') %></p>
 
-  <%# Stats bar %>
-  <div class="grid grid-cols-3 gap-4 mb-10">
-    <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-4 text-center">
-      <p class="text-2xl font-bold text-[#FC4C02]"><%= @total_points %></p>
-      <p class="text-xs text-gray-500 mt-1"><%= t('achievements.index.total_points') %></p>
-    </div>
-    <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-4 text-center">
-      <p class="text-2xl font-bold text-gray-900"><%= @earned_count %></p>
-      <p class="text-xs text-gray-500 mt-1"><%= t('achievements.index.badges_earned') %></p>
-    </div>
-    <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-4 text-center">
-      <p class="text-2xl font-bold text-gray-400"><%= @total_count - @earned_count %></p>
-      <p class="text-xs text-gray-500 mt-1"><%= t('achievements.index.still_locked') %></p>
-    </div>
-  </div>
-
-  <%# Workout Count %>
-  <%= render "achievements/section",
-    title: t('achievements.sections.workout_count.title'),
-    subtitle: t('achievements.sections.workout_count.subtitle'),
-    icon: "fa-solid fa-dumbbell",
-    badges: @workout_count_badges,
-    earned_map: @earned_map, progress_map: @progress_map %>
-
-  <%# Personal Records %>
-  <%= render "achievements/section",
-    title: t('achievements.sections.personal_records.title'),
-    subtitle: t('achievements.sections.personal_records.subtitle'),
-    icon: "fa-solid fa-flag-checkered",
-    badges: @distance_pr_badges,
-    earned_map: @earned_map, progress_map: @progress_map %>
-
-  <%# Distance Milestones %>
-  <%= render "achievements/section",
-    title: t('achievements.sections.distance_milestones.title'),
-    subtitle: t('achievements.sections.distance_milestones.subtitle'),
-    icon: "fa-solid fa-road",
-    badges: @distance_count_badges,
-    earned_map: @earned_map,
-    progress_map: @progress_map,
-    group_by_distance: true %>
-
-  <%# Streak %>
-  <%= render "achievements/section",
-    title: t('achievements.sections.consistency_streaks.title'),
-    subtitle: t('achievements.sections.consistency_streaks.subtitle'),
-    icon: "fa-solid fa-fire",
-    badges: @streak_badges,
-    earned_map: @earned_map, progress_map: @progress_map %>
-
-  <%# Pace %>
-  <%= render "achievements/section",
-    title: t('achievements.sections.pace_achievements.title'),
-    subtitle: t('achievements.sections.pace_achievements.subtitle'),
-    icon: "fa-solid fa-bolt",
-    badges: @pace_badges,
-    earned_map: @earned_map,
-    progress_map: @progress_map,
-    group_by_distance: true %>
-
-  <%# Modal %>
-  <div data-modal-target="overlay"
-       class="hidden fixed inset-0 z-[80] bg-black/50 flex items-center justify-center p-4"
-       data-action="click->modal#closeOnBackdrop">
-    <div class="bg-white rounded-2xl shadow-xl w-full max-w-sm p-6 text-center">
-
-      <div class="text-6xl mb-3" data-modal-target="icon"></div>
-
-      <p class="text-xl font-bold text-gray-900 mb-1" data-modal-target="name"></p>
-      <p class="text-sm font-semibold text-[#FC4C02] mb-4" data-modal-target="title"></p>
-
-      <p class="text-sm text-gray-600 mb-5 leading-relaxed" data-modal-target="description"></p>
-
-      <div class="bg-gray-50 rounded-lg px-4 py-2 inline-block mb-5">
-        <p class="text-base font-bold text-gray-900" data-modal-target="points"></p>
+  <% if @participations.any? %>
+    <%# Summary %>
+    <div class="grid grid-cols-3 gap-4 mb-10">
+      <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-4 text-center">
+        <p class="text-2xl font-bold text-gray-900"><%= @participations.size %></p>
+        <p class="text-xs text-gray-500 mt-1"><%= t('achievements.index.seasons_played') %></p>
       </div>
-
-      <%# Earned state %>
-      <div data-modal-target="earnedSection" class="hidden mb-5">
-        <div class="flex items-center justify-center gap-2 text-green-600">
-          <i class="fa-solid fa-circle-check"></i>
-          <span class="text-sm font-medium"><%= t('achievements.index.earned_on') %> <span data-modal-target="earnedAt"></span></span>
-        </div>
+      <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-4 text-center">
+        <p class="text-2xl font-bold text-primary"><%= @medals.size %></p>
+        <p class="text-xs text-gray-500 mt-1"><%= t('achievements.index.medals_earned') %></p>
       </div>
+      <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-4 text-center">
+        <p class="text-2xl font-bold text-gray-400"><%= @participations.sum(&:medal_fragments) %></p>
+        <p class="text-xs text-gray-500 mt-1"><%= t('seasons.stats.fragments') %></p>
+      </div>
+    </div>
 
-      <%# Locked state + progress %>
-      <div data-modal-target="lockedSection" class="hidden mb-5">
-        <div class="flex items-center justify-center gap-2 text-gray-400 mb-3">
-          <i class="fa-solid fa-lock"></i>
-          <span class="text-sm"><%= t('achievements.index.not_yet_unlocked') %></span>
-        </div>
-        <%# Progress bar (hidden for pace kind) %>
-        <div data-modal-target="progressBarSection" class="mb-2">
-          <div class="w-full bg-gray-200 rounded-full h-2">
-            <div data-modal-target="progressBar" class="bg-[#FC4C02] h-2 rounded-full transition-all" style="width: 0%"></div>
+    <%# Medals by tier — the shelf, in ladder order rather than by season %>
+    <% if @medal_counts.any? %>
+      <div class="flex flex-wrap gap-3 mb-10">
+        <% SeasonParticipation::MEDAL_TIERS.keys.reverse.each do |tier| %>
+          <% next unless @medal_counts[tier].to_i.positive? %>
+          <div class="flex items-center gap-2 bg-white rounded-lg border border-gray-200 px-4 py-2">
+            <span class="text-2xl"><%= medal_tier_emoji(tier) %></span>
+            <div>
+              <p class="text-sm font-bold text-gray-900"><%= @medal_counts[tier] %>&times;</p>
+              <p class="text-[11px] text-gray-500"><%= medal_label(tier) %></p>
+            </div>
           </div>
-        </div>
-        <p class="text-xs text-gray-500" data-modal-target="progressLabel"></p>
+        <% end %>
       </div>
+    <% end %>
 
-      <button data-action="click->modal#close"
-              class="w-full bg-[#FC4C02] text-white py-2 rounded-lg hover:bg-[#e04402] transition font-medium cursor-pointer">
-        Close
-      </button>
+    <%# One card per season taken part in %>
+    <h2 class="text-lg font-semibold text-gray-900 mb-4"><%= t('achievements.index.your_seasons') %></h2>
+    <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 mb-10">
+      <% @participations.each do |participation| %>
+        <%= render "achievements/medal_card",
+              participation: participation,
+              linked: @browsable_season_ids.include?(participation.season_id) %>
+      <% end %>
     </div>
-  </div>
+
+    <%# Extras the seasons handed out alongside their medals %>
+    <% if @reward_badges.any? %>
+      <h2 class="text-lg font-semibold text-gray-900 mb-4"><%= t('achievements.index.season_rewards') %></h2>
+      <div class="flex flex-wrap gap-4">
+        <% @reward_badges.each do |user_badge| %>
+          <div class="bg-white rounded-lg border border-gray-200 p-4 text-center min-w-[110px]">
+            <span class="text-3xl"><%= user_badge.badge.icon %></span>
+            <p class="text-sm font-medium text-gray-900 mt-2"><%= user_badge.badge.display_name %></p>
+            <p class="text-xs text-gray-500"><%= user_badge.earned_at&.strftime("%b %Y") %></p>
+          </div>
+        <% end %>
+      </div>
+    <% end %>
+
+  <% else %>
+    <div class="bg-white rounded-2xl shadow-sm border border-gray-200 p-10 text-center">
+      <p class="text-5xl mb-3">🎖</p>
+      <p class="text-gray-900 font-semibold mb-1"><%= t('achievements.index.empty_title') %></p>
+      <p class="text-gray-500 text-sm mb-5"><%= t('achievements.index.empty_body') %></p>
+      <%= link_to t('achievements.index.browse_seasons'), seasons_path,
+            class: "inline-flex items-center gap-2 bg-primary text-white px-4 py-2 rounded-lg font-medium text-sm hover:opacity-90 transition" %>
+    </div>
+  <% end %>
 
 </div>

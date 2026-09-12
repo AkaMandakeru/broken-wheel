@@ -28,7 +28,7 @@ RSpec.describe SyncStravaActivitiesJob do
       refresh_token: "r",
       expires_at: 1.hour.from_now.to_i
     )
-    result = Strava::ActivityImporter::Result.new(imported: 0, skipped: 0, achievements: [])
+    result = Strava::ActivityImporter::Result.new(imported: 0, skipped: 0)
     importer = instance_double(Strava::ActivityImporter, call: result)
     expect(Strava::ActivityImporter).to receive(:new).with(user, after: nil).and_return(importer)
 
@@ -41,7 +41,7 @@ RSpec.describe SyncStravaActivitiesJob do
       refresh_token: "r",
       expires_at: 1.hour.from_now.to_i
     )
-    result = Strava::ActivityImporter::Result.new(imported: 0, skipped: 0, achievements: [])
+    result = Strava::ActivityImporter::Result.new(imported: 0, skipped: 0)
     importer = instance_double(Strava::ActivityImporter, call: result)
     expect(Strava::ActivityImporter).to receive(:new).with(user, after: 1000).and_return(importer)
 

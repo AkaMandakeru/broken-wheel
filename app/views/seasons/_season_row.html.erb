@@ -1,0 +1,38 @@
+<%# One season as a horizontal row — the seasons list's "past seasons" pattern,
+    pulled out so the profile and the achievements shelf render the same thing.
+
+    locals:
+      season   — required
+      subtitle — optional second line under the name
+      trailing — optional right-hand content (a medal chip, a date)
+      linked   — false for a season that has aged out of Season.browsable, so a
+                 row that would only bounce the player back to the list with an
+                 "archived" alert is rendered flat instead of as a dead link. %>
+<% thumb    = season_image_source(season, resize: [ 96, 96 ]) %>
+<% subtitle = local_assigns[:subtitle] %>
+<% trailing = local_assigns[:trailing] %>
+<% linked   = local_assigns.fetch(:linked, true) %>
+<% row_class = "flex items-center gap-3 bg-white rounded-lg border border-gray-200 p-4" %>
+
+<% body = capture do %>
+  <% if thumb %>
+    <%= image_tag thumb, alt: season.name, class: "h-10 w-10 shrink-0 rounded-lg object-cover" %>
+  <% else %>
+    <span class="h-10 w-10 shrink-0 rounded-lg bg-linear-to-br <%= season_theme_classes(season.theme) %>"></span>
+  <% end %>
+  <span class="flex-1 min-w-0">
+    <span class="block font-medium text-gray-900 truncate"><%= season.name %></span>
+    <% if subtitle.present? %>
+      <span class="block text-xs text-gray-500 truncate"><%= subtitle %></span>
+    <% end %>
+  </span>
+  <% if trailing.present? %>
+    <span class="shrink-0 whitespace-nowrap"><%= trailing %></span>
+  <% end %>
+<% end %>
+
+<% if linked %>
+  <%= link_to season_path(season), class: "#{row_class} hover:shadow-md transition" do %><%= body %><% end %>
+<% else %>
+  <div class="<%= row_class %>"><%= body %></div>
+<% end %>

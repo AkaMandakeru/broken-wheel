@@ -150,6 +150,28 @@ module SeasonsHelper
     end
   end
 
+  # --- Season medals on the profile ------------------------------------------
+
+  def medal_tier_emoji(tier)
+    case tier
+    when "bronze"  then "🥉"
+    when "silver"  then "🥈"
+    when "gold"    then "🥇"
+    when "diamond" then "💎"
+    else "🎖"
+    end
+  end
+
+  # "🥇 Gold" as a tier-coloured chip. Nil-safe: a season the player
+  # finished below bronze renders nothing rather than an empty pill.
+  def medal_chip(tier)
+    return nil if tier.blank?
+
+    tag.span("#{medal_tier_emoji(tier)} #{medal_label(tier)}",
+             class: "inline-flex items-center gap-1 px-2 py-0.5 rounded-full " \
+                    "text-[11px] font-semibold #{medal_tier_classes(tier)}")
+  end
+
   def cosmetic_rarity_classes(rarity)
     case rarity
     when "rare"      then "bg-sky-100 text-sky-700"

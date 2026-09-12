@@ -60,6 +60,35 @@ class SeasonParticipation < ApplicationRecord
     MEDAL_TIERS.select { |_tier, threshold| medal_fragments >= threshold }.keys.last
   end
 
+  def medal?
+    medal_tier.present?
+  end
+
+  # The tier being chased, or nil once the top one is in hand.
+  def next_medal_tier
+    MEDAL_TIERS.find { |_tier, threshold| medal_fragments < threshold }&.first
+  end
+
+  def fragments_to_next_medal
+    threshold = MEDAL_TIERS[next_medal_tier]
+    threshold ? threshold - medal_fragments : 0
+  end
+
+  # How far along the *current* tier the participant is, not how far along the
+  # whole ladder — a bar measured against the 200 fragments of diamond barely
+  # moves for someone working from bronze to silver, which reads as no progress
+  # at all for the players who most need to see some.
+  def medal_progress_percent
+    ceiling = MEDAL_TIERS[next_medal_tier]
+    return 100 if ceiling.nil?
+
+    floor = MEDAL_TIERS[medal_tier] || 0
+    span = ceiling - floor
+    return 0 unless span.positive?
+
+    (((medal_fragments - floor).to_f / span) * 100).round.clamp(0, 100)
+  end
+
   def grant_premium!
     return if premium?
 

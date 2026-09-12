@@ -3,35 +3,19 @@ pt:
   # Achievements (Conquistas)
   achievements:
     index:
-      title: "Conquistas — Broken Wheels"
-      heading: "Conquistas"
-      subtitle: "Acompanhe suas maratonas. Continue pedalando."
-      total_points: "Pontos Totais"
-      badges_earned: "Medalhas Conquistadas"
-      still_locked: "Ainda Bloqueadas"
-      close: "Fechar"
-      earned_on: "Conquistada em"
-      not_yet_unlocked: "Ainda não desbloqueada"
-    sections:
-      workout_count:
-        title: "Contagem de Treinos"
-        subtitle: "Cada corrida conta. Acumule-as."
-      personal_records:
-        title: "Recordes Pessoais"
-        subtitle: "Primeira vez superando uma nova distância."
-      distance_milestones:
-        title: "Marcos de Distância"
-        subtitle: "Quantas vezes você dominou cada distância?"
-      consistency_streaks:
-        title: "Sequências de Consistência"
-        subtitle: "Semanas consecutivas sem perder uma corrida."
-      pace_achievements:
-        title: "Conquistas de Ritmo"
-        subtitle: "Velocidade é conquistada. Um km de cada vez."
-    badge_card:
-      points: "pontos"
-    section:
-      earned: "conquistadas"
+      title: "Medalhas — Broken Wheels"
+      heading: "Medalhas de Temporada"
+      subtitle: "Cada temporada que você correu, e o que levou dela."
+      seasons_played: "Temporadas"
+      medals_earned: "Medalhas"
+      your_seasons: "Suas Temporadas"
+      season_rewards: "Recompensas de Temporada"
+      no_medal_yet: "Sem medalha ainda"
+      fragments_to_next: "%{count} fragmentos para %{medal}"
+      top_medal: "Medalha máxima conquistada"
+      empty_title: "Nenhuma temporada ainda"
+      empty_body: "As medalhas são conquistadas dentro das temporadas. Entre em uma e comece a juntar fragmentos."
+      browse_seasons: "Ver temporadas"
 
   # Challenges (Desafios)
   challenges:
@@ -319,8 +303,10 @@ pt:
       connect_strava: "Conectar ao Strava"
       disconnect_strava: "Desconectar do Strava"
       manage_apps: "Gerenciar Apps Conectados"
-      badges_achievements: "Medalhas e Conquistas"
-      no_badges_yet: "Complete desafios para conquistar medalhas. Nenhuma ainda!"
+      season_medals: "Medalhas de Temporada"
+      all_achievements: "Ver todas"
+      season_summary: "Nível %{level} · %{percent}% concluído"
+      no_seasons_yet: "Você ainda não entrou em uma temporada. É lá que as medalhas são conquistadas."
       edit_profile: "Editar Perfil"
       title_label: "Título"
       title_none: "Sem título"
@@ -342,8 +328,8 @@ pt:
         distance: "Distância"
         week_streak: "Sequência"
         workouts: "Treinos"
-        achievements: "Conquistas"
-        points: "Pontos"
+        seasons: "Temporadas"
+        medals: "Medalhas"
     edit:
       title: "Editar perfil"
       back: "Voltar ao perfil"
@@ -942,130 +928,6 @@ pt:
       closed_notice: "Esta conversa está fechada. Inicie uma nova mensagem se ainda precisar de ajuda."
 
   # Texto das conquistas (badges). Chaveado por tipo + limite.
-  badges:
-    descriptions:
-      workout_count: "Complete %{count} treinos de corrida."
-      distance_pr: "Corra %{distance}km pela primeira vez."
-      distance_count: "Complete %{count} corridas de %{distance}km ou mais."
-      streak: "Mantenha uma sequência de corrida por %{weeks} semana(s) consecutiva(s)."
-      pace: "Corra %{distance}km em um ritmo de %{pace} ou mais rápido."
-    workout_count:
-      names:
-        "1": "Primeira Volta"
-        "5": "Engrenando"
-        "10": "No Embalo"
-        "25": "Estrada Conhecida"
-        "50": "Rodas de Ferro"
-        "100": "Esmaga-Século"
-        "200": "Dose Dupla"
-        "300": "Tríplice Coroa"
-        "400": "Implacável"
-        "500": "Quebra-Rodas"
-      titles:
-        "1": "Novato"
-        "5": "Broto"
-        "10": "Regular"
-        "25": "Comprometido"
-        "50": "Dedicado"
-        "100": "Centurião"
-        "200": "Veterano"
-        "300": "Elite"
-        "400": "Lenda"
-        "500": "Campeão"
-    distance_pr:
-      names:
-        "3": "Primeiro Trecho"
-        "5": "Estreia no Parque"
-        "8": "Oito na Conta"
-        "10": "Casa dos Dez"
-        "15": "Herói do Meio"
-        "20": "Marca dos Vinte"
-        "21": "Metade do Caminho"
-        "25": "Quarto de Século"
-        "30": "Trinta Sujos"
-        "40": "Os Quarenta"
-        "42": "Revelação Total"
-        "50": "Pioneiro Ultra"
-      titles:
-        "3": "Explorador"
-        "5": "Andarilho"
-        "8": "Passista"
-        "10": "Corredor"
-        "15": "Aventureiro"
-        "20": "Buscador de Resistência"
-        "21": "Meio-Maratonista"
-        "25": "Guerreiro da Distância"
-        "30": "Corredor de Ferro"
-        "40": "Maratonista em Treino"
-        "42": "Maratonista"
-        "50": "Ultramaratonista"
-    streak:
-      names:
-        "1": "Primeira Semana"
-        "5": "Toca Aqui, 5 Semanas"
-        "10": "Sequência de Dois Dígitos"
-        "25": "Trimestre na Pegada"
-        "50": "Sequência de Meio Século"
-        "100": "Sequência do Século"
-        "200": "Duzentos Firmes"
-        "300": "Ritmo Implacável"
-        "400": "Quatrocentas Razões"
-        "500": "Chama Eterna"
-      titles:
-        "1": "Novato Consistente"
-        "5": "Guerreiro Semanal"
-        "10": "Construtor de Hábito"
-        "25": "Guardião do Ritmo"
-        "50": "Máquina de Sequência"
-        "100": "Inquebrável"
-        "200": "Imparável"
-        "300": "Lenda da Sequência"
-        "400": "Elite da Sequência"
-        "500": "Campeão da Sequência"
-    series:
-      "3": "Sprint"
-      "5": "Corrida no Parque"
-      "8": "Oito"
-      "10": "Clube dos Dez"
-      "15": "Quinze"
-      "20": "Vinte"
-      "21": "Meia-Maratona"
-      "25": "Vinte e Cinco"
-      "30": "Trinta"
-      "40": "Quarenta"
-      "42": "Maratona"
-      "50": "Ultra"
-    count_tiers:
-      "1": "Novato"
-      "5": "Iniciante"
-      "10": "Regular"
-      "25": "Comprometido"
-      "50": "Dedicado"
-      "100": "Centurião"
-      "200": "Veterano"
-      "300": "Elite"
-      "400": "Lenda"
-      "500": "Campeão"
-    pace:
-      labels:
-        "5": "5K"
-        "10": "10K"
-        "21": "Meia-Maratona"
-      names:
-        "60": "Cruzeiro"
-        "55": "Marcador"
-        "50": "Ligeiro"
-        "45": "Rápido"
-        "40": "Flamejante"
-        "35": "Relâmpago"
-      titles:
-        "60": "Novato de Ritmo"
-        "55": "Marcador de Trilha"
-        "50": "Buscador de Velocidade"
-        "45": "Veloz na Pista"
-        "40": "Chama Veloz"
-        "35": "Campeão de Velocidade"
-
   activerecord:
     attributes:
       event_participation:
@@ -1425,9 +1287,6 @@ pt:
       must_join: "Participe do desafio para ver e publicar na linha do tempo."
     workouts:
       added: "Treino adicionado!"
-      added_with_achievements:
-        one: "Treino adicionado! Você desbloqueou 1 nova conquista 🏅"
-        other: "Treino adicionado! Você desbloqueou %{count} novas conquistas 🏅"
       strava_not_connected: "Conecte ao Strava primeiro no seu perfil."
       strava_auth_failed: "Autorização do Strava falhou. Reconecte pelo seu perfil."
       strava_rate_limited: "Limite de requisições do Strava atingido. Tente novamente em alguns minutos."

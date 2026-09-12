@@ -52,14 +52,14 @@
         <p class="text-xs text-gray-500"><%= t('profiles.show.stats.workouts') %></p>
       </div>
       <div class="bg-gray-50 rounded-xl border border-gray-100 p-4">
-        <p class="text-2xl">🎖</p>
-        <p class="text-xl font-extrabold text-gray-900 mt-1"><%= @stats[:earned_count] %> <span class="text-sm font-semibold text-gray-500">/ <%= @stats[:total_badges] %></span></p>
-        <p class="text-xs text-gray-500"><%= t('profiles.show.stats.achievements') %></p>
+        <p class="text-2xl">🏆</p>
+        <p class="text-xl font-extrabold text-gray-900 mt-1"><%= @stats[:seasons] %></p>
+        <p class="text-xs text-gray-500"><%= t('profiles.show.stats.seasons') %></p>
       </div>
       <div class="bg-gray-50 rounded-xl border border-gray-100 p-4">
-        <p class="text-2xl">⚡</p>
-        <p class="text-xl font-extrabold text-primary mt-1"><%= @stats[:points] %></p>
-        <p class="text-xs text-gray-500"><%= t('profiles.show.stats.points') %></p>
+        <p class="text-2xl">🎖</p>
+        <p class="text-xl font-extrabold text-primary mt-1"><%= @stats[:medals] %></p>
+        <p class="text-xs text-gray-500"><%= t('profiles.show.stats.medals') %></p>
       </div>
     </div>
   </div>
@@ -84,21 +84,34 @@
     <% end %>
   </div>
 
-  <%# Badges / achievements %>
+  <%# Season medals — one row per season entered, newest first. Seasons the
+      player finished below bronze still appear: taking part is the record, the
+      medal is the result. %>
   <div class="mt-10">
-    <h2 class="text-lg font-semibold text-gray-900 mb-4"><%= t('profiles.show.badges_achievements') %></h2>
-    <% if @user.user_badges.any? %>
-      <div class="flex flex-wrap gap-4">
-        <% @user.user_badges.includes(:badge, :challenge).each do |ub| %>
-          <div class="bg-white rounded-lg border border-gray-200 p-4 text-center min-w-[100px]">
-            <span class="text-3xl"><%= ub.badge.icon %></span>
-            <p class="text-sm font-medium text-gray-900 mt-2"><%= ub.badge.display_name %></p>
-            <p class="text-xs text-gray-500"><%= ub.earned_at&.strftime("%b %Y") %></p>
-          </div>
+    <div class="flex items-center justify-between mb-4">
+      <h2 class="text-lg font-semibold text-gray-900"><%= t('profiles.show.season_medals') %></h2>
+      <% if @participations.any? && feature_enabled?(:achievements) %>
+        <%= link_to t('profiles.show.all_achievements'), achievements_path,
+              class: "text-sm font-medium text-primary hover:underline" %>
+      <% end %>
+    </div>
+
+    <% if @participations.any? %>
+      <div class="space-y-3">
+        <% @participations.each do |participation| %>
+          <%= render "seasons/season_row",
+                season: participation.season,
+                linked: @browsable_season_ids.include?(participation.season_id),
+                subtitle: t('profiles.show.season_summary',
+                            level: participation.level,
+                            percent: participation.completion_percent),
+                trailing: medal_chip(participation.medal_tier) ||
+                          tag.span(participation.season.ends_at&.strftime("%b %Y"),
+                                   class: "text-sm text-gray-500") %>
         <% end %>
       </div>
     <% else %>
-      <p class="text-gray-600 text-sm"><%= t('profiles.show.no_badges_yet') %></p>
+      <p class="text-gray-600 text-sm"><%= t('profiles.show.no_seasons_yet') %></p>
     <% end %>
   </div>
 </div>

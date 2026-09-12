@@ -83,13 +83,7 @@ class WorkoutsController < ApplicationController
     if workout.save
       Analytics.track(user: current_user, event: "workout_created_manually", properties: { sport: workout.sport, distance_km: workout.distance_km, duration_minutes: workout.duration_minutes })
       update_participation_progress(workout)
-      newly_earned = AchievementChecker.new(current_user).check_all!
-      notice = if newly_earned.any?
-                 t("flashes.workouts.added_with_achievements", count: newly_earned.size)
-               else
-                 t("flashes.workouts.added")
-               end
-      redirect_to workouts_path, notice: notice
+      redirect_to workouts_path, notice: t("flashes.workouts.added")
     else
       redirect_to workouts_path, alert: workout.errors.full_messages.join(", ")
     end

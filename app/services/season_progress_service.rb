@@ -128,7 +128,7 @@ class SeasonProgressService
   end
 
   def streak_weeks
-    AchievementChecker.user_stats(@user)[:streak].to_i
+    WorkoutStreak.weeks_for(@user)
   end
 
   def consistency_weeks

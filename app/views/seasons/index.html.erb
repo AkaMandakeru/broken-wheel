@@ -37,16 +37,9 @@
     <h2 class="text-lg font-semibold text-gray-900 mb-3"><%= t("seasons.index.past") %></h2>
     <div class="space-y-3">
       <% @past_seasons.each do |season| %>
-        <% thumb = season_image_source(season, resize: [ 96, 96 ]) %>
-        <%= link_to season_path(season), class: "flex items-center gap-3 bg-white rounded-lg border border-gray-200 p-4 hover:shadow-md transition" do %>
-          <% if thumb %>
-            <%= image_tag thumb, alt: season.name, class: "h-10 w-10 shrink-0 rounded-lg object-cover" %>
-          <% else %>
-            <span class="h-10 w-10 shrink-0 rounded-lg bg-linear-to-br <%= season_theme_classes(season.theme) %>"></span>
-          <% end %>
-          <span class="flex-1 min-w-0 font-medium text-gray-900 truncate"><%= season.name %></span>
-          <span class="text-sm text-gray-500 whitespace-nowrap"><%= season.ends_at&.strftime("%b %Y") %></span>
-        <% end %>
+        <%= render "seasons/season_row",
+              season: season,
+              trailing: tag.span(season.ends_at&.strftime("%b %Y"), class: "text-sm text-gray-500") %>
       <% end %>
     </div>
   <% end %>

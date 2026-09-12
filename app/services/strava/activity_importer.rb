@@ -15,7 +15,7 @@ module Strava
       "Soccer"           => "soccer"
     }.freeze
 
-    Result = Struct.new(:imported, :skipped, :achievements, keyword_init: true)
+    Result = Struct.new(:imported, :skipped, keyword_init: true)
 
     def initialize(user, client: nil, after: nil)
       @user = user
@@ -35,9 +35,9 @@ module Strava
         end
       end
 
-      achievements = finalize!
+      finalize!
 
-      Result.new(imported: imported, skipped: skipped, achievements: achievements)
+      Result.new(imported: imported, skipped: skipped)
     end
 
     def import_one(activity)
@@ -51,8 +51,8 @@ module Strava
     # than once per activity. A 40-activity import used to fan out 40 recalcs.
     def import_many(activities)
       imported = activities.count { |activity| upsert(activity) }
-      achievements = finalize!
-      Result.new(imported: imported, skipped: activities.size - imported, achievements: achievements)
+      finalize!
+      Result.new(imported: imported, skipped: activities.size - imported)
     end
 
     private
@@ -102,7 +102,6 @@ module Strava
     def finalize!
       recompute_active_challenges!
       Season.active.find_each { |season| SeasonRecalcJob.enqueue_debounced(@user.id, season.id) }
-      AchievementChecker.new(@user).check_all!
     end
 
     def recompute_active_challenges!

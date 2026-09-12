@@ -5,6 +5,7 @@ class ProfilesController < ApplicationController
 
   def show
     @user = current_user
+    load_seasons
     load_stats
   end
 
@@ -25,17 +26,21 @@ class ProfilesController < ApplicationController
 
   private
 
-  def load_stats
-    stats = AchievementChecker.user_stats(@user)
-    earned = @user.user_badges.includes(:badge)
+  # The profile is a season record now: what the user has run, and the medal
+  # each season they entered ended with.
+  def load_seasons
+    @participations = @user.season_history.to_a
+    @medals = @participations.select(&:medal_tier)
+    @browsable_season_ids = Season.browsable.pluck(:id).to_set
+  end
 
+  def load_stats
     @stats = {
-      distance_km:  @user.workouts.sum(:distance_km).to_f.round(1),
-      week_streak:  stats[:streak].to_i,
-      workouts:     stats[:workout_count].to_i,
-      earned_count: earned.size,
-      total_badges: Badge.where(badge_type: Badge::CATEGORIES.keys).count,
-      points:       earned.sum { |ub| ub.badge.points.to_i }
+      distance_km: @user.workouts.sum(:distance_km).to_f.round(1),
+      week_streak: WorkoutStreak.weeks_for(@user),
+      workouts:    @user.workouts.count,
+      seasons:     @participations.size,
+      medals:      @medals.size
     }
   end
 

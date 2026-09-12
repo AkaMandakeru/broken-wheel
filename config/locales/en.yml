@@ -31,35 +31,19 @@ en:
   # Achievements
   achievements:
     index:
-      title: "Achievements — Broken Wheels"
-      heading: "Achievements"
-      subtitle: "Track your running milestones. Keep rolling."
-      total_points: "Total Points"
-      badges_earned: "Badges Earned"
-      still_locked: "Still Locked"
-      close: "Close"
-      earned_on: "Earned on"
-      not_yet_unlocked: "Not yet unlocked"
-    sections:
-      workout_count:
-        title: "Workout Count"
-        subtitle: "Every run counts. Stack them up."
-      personal_records:
-        title: "Personal Records"
-        subtitle: "First time crossing a new distance."
-      distance_milestones:
-        title: "Distance Milestones"
-        subtitle: "How many times have you crushed each distance?"
-      consistency_streaks:
-        title: "Consistency Streaks"
-        subtitle: "Consecutive weeks without missing a run."
-      pace_achievements:
-        title: "Pace Achievements"
-        subtitle: "Speed is earned. One km at a time."
-    badge_card:
-      points: "pts"
-    section:
-      earned: "earned"
+      title: "Medals — Broken Wheels"
+      heading: "Season Medals"
+      subtitle: "Every season you ran, and what you walked away with."
+      seasons_played: "Seasons Played"
+      medals_earned: "Medals Earned"
+      your_seasons: "Your Seasons"
+      season_rewards: "Season Rewards"
+      no_medal_yet: "No medal yet"
+      fragments_to_next: "%{count} fragments to %{medal}"
+      top_medal: "Top medal earned"
+      empty_title: "No seasons yet"
+      empty_body: "Medals are earned inside seasons. Join one and start collecting fragments."
+      browse_seasons: "Browse seasons"
 
   # Challenges
   challenges:
@@ -347,8 +331,10 @@ en:
       connect_strava: "Connect to Strava"
       disconnect_strava: "Disconnect from Strava"
       manage_apps: "Manage Connected Apps"
-      badges_achievements: "Badges & Achievements"
-      no_badges_yet: "Complete challenges to earn badges. None yet!"
+      season_medals: "Season Medals"
+      all_achievements: "See all"
+      season_summary: "Level %{level} · %{percent}% complete"
+      no_seasons_yet: "You haven't joined a season yet. Medals are earned there."
       edit_profile: "Edit Profile"
       title_label: "Title"
       title_none: "No title"
@@ -370,8 +356,8 @@ en:
         distance: "Distance"
         week_streak: "Week streak"
         workouts: "Workouts"
-        achievements: "Achievements"
-        points: "Points"
+        seasons: "Seasons"
+        medals: "Medals"
     edit:
       title: "Edit profile"
       back: "Back to profile"
@@ -972,14 +958,6 @@ en:
   # Achievement badge text. Keyed by badge type + threshold; English names and
   # titles fall back to the values stored in the database, so only the templated
   # descriptions are listed here.
-  badges:
-    descriptions:
-      workout_count: "Complete %{count} running workouts."
-      distance_pr: "Run %{distance}km for the first time."
-      distance_count: "Complete %{count} runs of %{distance}km or more."
-      streak: "Maintain a running streak for %{weeks} consecutive week(s)."
-      pace: "Run %{distance}km at %{pace} pace or faster."
-
   activerecord:
     attributes:
       event_participation:
@@ -1339,9 +1317,6 @@ en:
       must_join: "Join the challenge to view and post on the timeline."
     workouts:
       added: "Workout added!"
-      added_with_achievements:
-        one: "Workout added! You unlocked 1 new achievement 🏅"
-        other: "Workout added! You unlocked %{count} new achievements 🏅"
       strava_not_connected: "Connect to Strava first from your profile."
       strava_auth_failed: "Strava authorization failed. Please reconnect from your profile."
       strava_rate_limited: "Strava rate limit reached. Please try again in a few minutes."

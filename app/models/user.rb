@@ -77,6 +77,23 @@ class User < ApplicationRecord
     title.present? ? Titles.label(title) : nil
   end
 
+  # --- Season history --------------------------------------------------------
+
+  # Every season the user took part in, newest first, with the artwork the medal
+  # shelf renders. Loaded whole rather than paginated: a player accumulates one
+  # row per season, so this stays a handful of records for years.
+  def season_history
+    season_participations.joins(:season)
+                         .includes(season: { image_attachment: :blob })
+                         .merge(Season.by_recent)
+  end
+
+  # Seasons finished with a medal. Participations below bronze still belong in
+  # the history — they just have nothing to hang on the shelf.
+  def season_medals
+    season_history.select(&:medal_tier)
+  end
+
   # --- Unlockable cosmetic themes (granted by season rewards) ----------------
 
   def unlocked_themes
