@@ -49,26 +49,36 @@
               <% end %>
             <% end %>
 
-            <%# Profile + dropdown (Achievements, Clubs) %>
+            <%# Profile + dropdown (Achievements, Clubs).
+
+                Both entries are feature-gated, so with each switched off the
+                panel rendered as an empty box on hover and the chevron promised
+                a menu that was not there. The menu only exists when something
+                is in it; Profile stays a plain link otherwise. %>
+            <% profile_menu = feature_enabled?(:achievements) || feature_enabled?(:clubs) %>
             <div class="relative group">
               <%= link_to profile_path, class: "text-sm font-medium text-muted-foreground hover:text-primary transition-colors flex items-center gap-2 py-2" do %>
                 <i class="fa-solid fa-user"></i> <%= t('shared.nav.profile') %>
-                <i class="fa-solid fa-chevron-down text-[10px] opacity-60"></i>
+                <% if profile_menu %>
+                  <i class="fa-solid fa-chevron-down text-[10px] opacity-60"></i>
+                <% end %>
               <% end %>
-              <div class="absolute left-0 top-full pt-2 hidden group-hover:block group-focus-within:block z-50">
-                <div class="w-48 bg-background border border-border rounded-lg shadow-lg py-1">
-                  <% if feature_enabled?(:achievements) %>
-                    <%= link_to achievements_path, class: "flex items-center gap-3 px-4 py-2.5 text-sm text-foreground hover:bg-muted hover:text-primary transition" do %>
-                      <i class="fa-solid fa-medal w-4 text-muted-foreground"></i> <%= t('shared.nav.achievements') %>
+              <% if profile_menu %>
+                <div class="absolute left-0 top-full pt-2 hidden group-hover:block group-focus-within:block z-50">
+                  <div class="w-48 bg-background border border-border rounded-lg shadow-lg py-1">
+                    <% if feature_enabled?(:achievements) %>
+                      <%= link_to achievements_path, class: "flex items-center gap-3 px-4 py-2.5 text-sm text-foreground hover:bg-muted hover:text-primary transition" do %>
+                        <i class="fa-solid fa-medal w-4 text-muted-foreground"></i> <%= t('shared.nav.achievements') %>
+                      <% end %>
                     <% end %>
-                  <% end %>
-                  <% if feature_enabled?(:clubs) %>
-                    <%= link_to clubs_path, class: "flex items-center gap-3 px-4 py-2.5 text-sm text-foreground hover:bg-muted hover:text-primary transition" do %>
-                      <i class="fa-solid fa-users w-4 text-muted-foreground"></i> <%= t('shared.nav.clubs') %>
+                    <% if feature_enabled?(:clubs) %>
+                      <%= link_to clubs_path, class: "flex items-center gap-3 px-4 py-2.5 text-sm text-foreground hover:bg-muted hover:text-primary transition" do %>
+                        <i class="fa-solid fa-users w-4 text-muted-foreground"></i> <%= t('shared.nav.clubs') %>
+                      <% end %>
                     <% end %>
-                  <% end %>
+                  </div>
                 </div>
-              </div>
+              <% end %>
             </div>
             <% if current_user.admin? %>
               <%= link_to admin_root_path, class: "text-sm font-medium text-muted-foreground hover:text-primary transition-colors flex items-center gap-2" do %>

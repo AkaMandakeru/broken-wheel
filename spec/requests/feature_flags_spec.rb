@@ -107,6 +107,29 @@ RSpec.describe "Feature flags", type: :request do
       expect(response.body).not_to include(clubs_path)
     end
 
+    # The Profile menu holds nothing but Achievements and Clubs. With both off it
+    # used to render as an empty box on hover, under a chevron promising a menu.
+    it "drops the profile dropdown once nothing is left in it" do
+      get profile_path
+      expect(response.body.scan("group-hover:block").size).to eq(2)
+
+      disable(:achievements)
+      disable(:clubs)
+      get profile_path
+
+      expect(response.body.scan("group-hover:block").size).to eq(1)
+      expect(response.body).to include(profile_path)
+    end
+
+    it "keeps the profile dropdown while one entry survives" do
+      disable(:clubs)
+
+      get profile_path
+
+      expect(response.body.scan("group-hover:block").size).to eq(2)
+      expect(response.body).to include(achievements_path)
+    end
+
     it "shows them again once re-enabled" do
       disable(:clubs)
       FeatureFlag.set(:clubs, true)
