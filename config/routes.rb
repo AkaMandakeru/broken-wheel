@@ -11,6 +11,8 @@ Rails.application.routes.draw do
 
   get "profile", to: "profiles#show"
   get "profile/edit", to: "profiles#edit", as: :edit_profile
+  get   "profile/appearance", to: "appearances#show",   as: :profile_appearance
+  patch "profile/appearance", to: "appearances#update"
   patch "profile", to: "profiles#update"
   put "profile", to: "profiles#update"
 
@@ -76,6 +78,7 @@ Rails.application.routes.draw do
     resources :season_imports, only: [:new, :create] do
       collection { get :template }
     end
+    resources :cosmetics, except: [:show]
     resources :features, only: [:index, :update], param: :id
     resources :support_tickets, only: [:index, :show, :update] do
       resources :messages, only: [:create], controller: "support_messages"

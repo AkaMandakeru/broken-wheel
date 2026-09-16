@@ -1,0 +1,72 @@
+<% content_for :title, t("appearances.show.title") %>
+
+<div class="pt-8">
+  <div class="flex items-center justify-between gap-3 mb-1">
+    <h1 class="text-2xl font-bold text-gray-900"><%= t("appearances.show.title") %></h1>
+    <span class="shrink-0 inline-flex items-center gap-1.5 rounded-full bg-amber-100 px-3 py-1.5">
+      <i class="fa-solid fa-coins text-amber-500"></i>
+      <span class="text-sm font-bold text-amber-700"><%= number_with_delimiter(current_user.coins) %></span>
+    </span>
+  </div>
+  <p class="text-gray-500 text-sm mb-6"><%= t("appearances.show.subtitle") %></p>
+
+  <%# Preview: the profile header as it stands, so a choice can be judged
+      against the thing it changes rather than against a swatch. %>
+  <div class="bg-white rounded-xl border border-gray-200 overflow-hidden mb-6">
+    <%= render "profiles/banner", user: current_user, owner: false %>
+    <div class="px-5 pb-5 flex items-end gap-4">
+      <div class="-mt-10">
+        <%= render "shared/avatar", user: current_user, size: 72 %>
+      </div>
+      <div class="min-w-0 pb-1">
+        <p class="font-bold text-gray-900 truncate"><%= current_user.first_name %> <%= current_user.last_name %></p>
+        <% if current_user.title_label.present? %>
+          <p class="text-xs text-gray-500 truncate"><%= current_user.title_label %></p>
+        <% end %>
+      </div>
+    </div>
+  </div>
+
+  <div class="flex flex-wrap gap-2 mb-6">
+    <% AppearancesController::KINDS.each do |kind| %>
+      <%= link_to profile_appearance_path(kind: kind),
+            class: "shrink-0 text-sm font-semibold px-5 py-2.5 rounded-full transition #{@kind == kind ? 'bg-primary text-white' : 'bg-gray-100 text-gray-600 hover:bg-gray-200'}" do %>
+        <%= t("cosmetics.kinds.#{kind}") %>
+      <% end %>
+    <% end %>
+  </div>
+
+  <% if @owned.any? %>
+    <h2 class="text-xs font-semibold tracking-wider text-gray-500 mb-2">
+      <%= t("appearances.show.owned", count: @owned.size).upcase %>
+    </h2>
+    <div class="grid <%= @kind == 'frame' ? 'grid-cols-3 sm:grid-cols-4' : 'grid-cols-2 sm:grid-cols-3' %> gap-3 mb-8">
+      <% if @equipped_key.present? %>
+        <%= render "appearances/remove", kind: @kind %>
+      <% end %>
+      <% @owned.each do |cosmetic| %>
+        <%= render "appearances/owned", cosmetic: cosmetic, kind: @kind,
+              equipped: cosmetic.key == @equipped_key %>
+      <% end %>
+    </div>
+  <% else %>
+    <div class="bg-white rounded-2xl shadow-sm border border-gray-200 p-8 text-center mb-8">
+      <p class="text-gray-900 font-semibold mb-1"><%= t("appearances.show.empty_title") %></p>
+      <p class="text-gray-500 text-sm mb-5"><%= t("appearances.show.empty_body") %></p>
+      <%= link_to t("appearances.show.browse_seasons"), seasons_path,
+            class: "inline-flex items-center gap-2 bg-primary text-white px-4 py-2 rounded-lg font-medium text-sm hover:opacity-90 transition" %>
+    </div>
+  <% end %>
+
+  <% if @locked.any? %>
+    <h2 class="text-xs font-semibold tracking-wider text-gray-500 mb-2">
+      <%= t("appearances.show.locked", count: @locked.size).upcase %>
+    </h2>
+    <div class="grid <%= @kind == 'frame' ? 'grid-cols-3 sm:grid-cols-4' : 'grid-cols-2 sm:grid-cols-3' %> gap-3">
+      <% @locked.each do |cosmetic| %>
+        <%= render "appearances/locked", cosmetic: cosmetic, kind: @kind,
+              reward: @unlock_hints[cosmetic.key] %>
+      <% end %>
+    </div>
+  <% end %>
+</div>

@@ -3,6 +3,14 @@
 require "rails_helper"
 
 RSpec.describe "Seasons", type: :request do
+  # Season 8 runs 1-31 August 2026, and several of these examples only hold
+  # inside that window: DailyChallenges::Assigner draws nothing outside it, so
+  # the "Today" section stops rendering altogether. Unpinned, they passed in
+  # August and failed every month after — which is exactly what happened on
+  # 1 September. Declared above the let! so the clock moves before the import.
+  before { travel_to Time.utc(2026, 8, 15, 12) }
+  after { travel_back }
+
   let(:user) { build_user }
   let!(:season) { Seasons::BlueprintImporter.call("season_8_legacy_of_champions") }
 

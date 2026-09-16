@@ -1,0 +1,23 @@
+<%# The profile's background picture: the top band of the header card, not a
+    full-bleed cover. A banner with no artwork uploaded yet falls back to a
+    rarity gradient, the same way a season without a cover does.
+
+    locals: user, owner (show the change affordance) %>
+<% banner = user.equipped_banner %>
+<% art    = cosmetic_image_source(banner, resize: [ 1200, 400 ]) %>
+<% owner  = local_assigns.fetch(:owner, false) %>
+
+<div class="relative h-36 sm:h-44 <%= "bg-linear-to-br #{cosmetic_fallback_gradient(banner)}" unless art %>">
+  <% if art %>
+    <%= image_tag art, alt: banner.display_name, class: "w-full h-full object-cover" %>
+  <% end %>
+
+  <% if owner %>
+    <%= link_to profile_appearance_path(kind: "banner"),
+          class: "absolute top-3 right-3 h-11 w-11 rounded-full bg-white/90 shadow-sm flex items-center justify-center text-gray-700 hover:bg-white transition",
+          title: t("profiles.show.change_banner"),
+          aria: { label: t("profiles.show.change_banner") } do %>
+      <i class="fa-solid fa-image"></i>
+    <% end %>
+  <% end %>
+</div>

@@ -1,0 +1,66 @@
+<div class="pt-8">
+  <div class="flex items-center justify-between mb-2">
+    <h1 class="text-2xl font-bold text-gray-900"><%= t("admin.cosmetics.title") %></h1>
+    <%= link_to new_admin_cosmetic_path, class: "bg-[#FC4C02] text-white px-4 py-2 rounded-lg hover:bg-[#e04402] transition font-medium text-sm flex items-center gap-2" do %>
+      <i class="fa-solid fa-plus"></i> <%= t("admin.cosmetics.new") %>
+    <% end %>
+  </div>
+  <p class="text-gray-500 text-sm mb-6"><%= t("admin.cosmetics.subtitle") %></p>
+
+  <% if @cosmetics.any? %>
+    <% Cosmetic::PICTURE_KINDS.each do |kind| %>
+      <% items = @cosmetics[kind].to_a %>
+      <% next if items.empty? %>
+
+      <h2 class="text-lg font-semibold text-gray-900 mb-3"><%= t("cosmetics.kinds.#{kind}") %></h2>
+      <div class="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden mb-8">
+        <table class="min-w-full divide-y divide-gray-200">
+          <thead class="bg-gray-50">
+            <tr>
+              <th class="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider"><%= t("admin.cosmetics.fields.image") %></th>
+              <th class="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider"><%= t("admin.cosmetics.fields.name") %></th>
+              <th class="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider"><%= t("admin.cosmetics.fields.rarity") %></th>
+              <th class="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider"><%= t("admin.cosmetics.fields.owners") %></th>
+              <th class="px-4 py-3 text-right text-xs font-semibold text-gray-500 uppercase tracking-wider"><%= t("admin.cosmetics.fields.actions") %></th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-gray-100">
+            <% items.each do |cosmetic| %>
+              <tr class="hover:bg-gray-50">
+                <td class="px-4 py-3">
+                  <% thumb = cosmetic_image_source(cosmetic, resize: [ 96, 54 ], crop: kind != "frame") %>
+                  <% if thumb %>
+                    <%= image_tag thumb, alt: "", class: "h-9 rounded border border-gray-200 bg-gray-50" %>
+                  <% else %>
+                    <span class="inline-flex items-center gap-1.5 text-xs text-amber-700 bg-amber-50 border border-amber-200 rounded px-2 py-1">
+                      <i class="fa-solid fa-triangle-exclamation"></i> <%= t("admin.cosmetics.no_image") %>
+                    </span>
+                  <% end %>
+                </td>
+                <td class="px-4 py-3">
+                  <%= link_to cosmetic.display_name, edit_admin_cosmetic_path(cosmetic), class: "font-medium text-gray-900 hover:text-[#FC4C02]" %>
+                  <p class="text-xs text-gray-400 font-mono"><%= cosmetic.key %></p>
+                </td>
+                <td class="px-4 py-3">
+                  <%= cosmetic_rarity_chip(cosmetic) %>
+                </td>
+                <td class="px-4 py-3 text-sm text-gray-600"><%= cosmetic.user_cosmetics.size %></td>
+                <td class="px-4 py-3 text-right text-sm whitespace-nowrap">
+                  <%= link_to t("admin.cosmetics.edit"), edit_admin_cosmetic_path(cosmetic), class: "text-gray-600 hover:text-[#FC4C02] mr-3" %>
+                  <%= button_to t("admin.cosmetics.delete"), admin_cosmetic_path(cosmetic), method: :delete,
+                        form: { class: "inline", data: { turbo_confirm: t("admin.cosmetics.confirm_delete") } },
+                        class: "text-red-600 hover:text-red-800 cursor-pointer" %>
+                </td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
+    <% end %>
+  <% else %>
+    <div class="bg-white rounded-lg shadow-sm border border-gray-200 p-10 text-center">
+      <p class="text-gray-900 font-semibold mb-1"><%= t("admin.cosmetics.empty_title") %></p>
+      <p class="text-gray-500 text-sm"><%= t("admin.cosmetics.empty_body") %></p>
+    </div>
+  <% end %>
+</div>

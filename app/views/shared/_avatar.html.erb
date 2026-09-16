@@ -1,0 +1,40 @@
+<%# The user's picture with their equipped frame drawn over it.
+
+    Frames are square, transparent PNGs in the Albion / Mobile Legends idiom:
+    the ornament occupies the edge of the box and the portrait sits inside it.
+    So the picture is inset rather than the frame being scaled — a frame laid
+    flush against a full-bleed avatar would cover the face.
+
+    locals:
+      user  — required
+      size  — outer box in px (the frame's box, not the portrait's)
+      frame — optional Cosmetic; defaults to whatever the user has equipped.
+              Pass one explicitly to preview a frame the user has not equipped. %>
+<% size    = local_assigns.fetch(:size, 96) %>
+<% frame   = local_assigns.key?(:frame) ? local_assigns[:frame] : user.equipped_frame %>
+<% art     = cosmetic_image_source(frame, resize: [ size * 2, size * 2 ], crop: false) %>
+<%# 11% a side leaves the portrait at 78% of the box, which is where these
+    frames put their opening. Unframed avatars fill the box instead. %>
+<% inset   = frame ? (size * 0.11).round : 0 %>
+<% portrait = size - (inset * 2) %>
+
+<div class="relative shrink-0" style="width: <%= size %>px; height: <%= size %>px;">
+  <div class="absolute rounded-full overflow-hidden bg-primary/15 flex items-center justify-center <%= "ring-4 ring-white" if frame.nil? %>"
+       style="inset: <%= inset %>px;">
+    <% if user.avatar.attached? %>
+      <%= image_tag url_for(user.avatar), alt: "", class: "w-full h-full object-cover" %>
+    <% else %>
+      <span class="text-primary font-extrabold" style="font-size: <%= (portrait * 0.38).round %>px;">
+        <%= user.first_name&.first || "?" %>
+      </span>
+    <% end %>
+  </div>
+
+  <% if art %>
+    <%= image_tag art, alt: frame.display_name,
+          class: "absolute inset-0 w-full h-full object-contain pointer-events-none" %>
+  <% elsif frame %>
+    <%# Owned, equipped, but the artwork has not been uploaded yet. %>
+    <div class="absolute inset-0 rounded-full border-4 <%= cosmetic_rarity_border(frame.rarity) %> pointer-events-none"></div>
+  <% end %>
+</div>

@@ -28,6 +28,20 @@ class SeasonReward < ApplicationRecord
   scope :on_track, ->(premium) { where(track: premium ? TRACKS : [ "free" ]) }
   scope :by_unlock, ->(kind, value) { where(unlock_kind: kind).where(unlock_value: ..value) }
 
+  # Where each of these cosmetics is first offered, keyed by cosmetic key. A
+  # cosmetic handed out by several seasons resolves to its earliest unlock —
+  # that is the first chance a player actually has at it.
+  def self.cosmetic_unlocks_for(keys)
+    keys = Array(keys)
+    return {} if keys.empty?
+
+    where(reward_type: "cosmetic", reward_key: keys)
+      .includes(:season)
+      .order(:unlock_value)
+      .group_by(&:reward_key)
+      .transform_values(&:first)
+  end
+
   before_validation :default_unlock_value
 
   def premium?

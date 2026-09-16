@@ -130,6 +130,12 @@ class User < ApplicationRecord
 
   # --- Cosmetics -------------------------------------------------------------
 
+  # Everyone wearing this cosmetic in this slot. equipped_cosmetics is jsonb, so
+  # this scope is the one place that has to know the column's shape.
+  scope :wearing, ->(kind, key) {
+    where("equipped_cosmetics ->> :kind = :key", kind: kind.to_s, key: key.to_s)
+  }
+
   # { "frame" => "legendary_frame", "name_color" => "gold", ... }
   def equipped
     (self[:equipped_cosmetics] || {}).with_indifferent_access
@@ -139,7 +145,28 @@ class User < ApplicationRecord
     key = equipped[kind.to_s]
     return nil if key.blank?
 
-    cosmetics.find_by(key: key, kind: kind.to_s)
+    # Eager-loads the blob: every caller renders the artwork straight away.
+    cosmetics.with_artwork.find_by(key: key, kind: kind.to_s)
+  end
+
+  def equipped_banner
+    equipped_cosmetic("banner")
+  end
+
+  def equipped_frame
+    equipped_cosmetic("frame")
+  end
+
+  # One kind of the collection, in catalogue order. Unrenderable rows are left
+  # out because equip_cosmetic! would refuse them anyway.
+  def owned_cosmetics(kind)
+    cosmetics.of_kind(kind.to_s).renderable.ordered.with_artwork
+  end
+
+  # The rest of the catalogue for that kind — what the locker shows as locked.
+  def unowned_cosmetics(kind)
+    owned = user_cosmetics.select(:cosmetic_id)
+    Cosmetic.of_kind(kind.to_s).renderable.where.not(id: owned).ordered.with_artwork
   end
 
   # Equipping is restricted to cosmetics the user owns and that we can actually

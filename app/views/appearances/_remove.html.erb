@@ -1,0 +1,11 @@
+<%# Take the current one off without putting another on. locals: kind %>
+<%= button_to profile_appearance_path,
+      method: :patch,
+      params: { kind: kind, key: "" },
+      form: { class: "contents" },
+      class: "block w-full bg-white rounded-xl overflow-hidden border-2 border-dashed border-gray-300 hover:border-gray-400 transition cursor-pointer" do %>
+  <span class="flex flex-col items-center justify-center gap-2 h-full min-h-[7.5rem] p-3 text-gray-500">
+    <i class="fa-solid fa-ban"></i>
+    <span class="text-[13px] font-semibold"><%= t("appearances.show.none") %></span>
+  </span>
+<% end %>

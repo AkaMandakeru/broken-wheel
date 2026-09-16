@@ -1,0 +1,27 @@
+<%# One equipped slot, and the way in to change it. The banner and the frame
+    rows are the same row — only the thumbnail differs, so the kind picks it.
+    locals: user, kind, cosmetic %>
+<%= link_to profile_appearance_path(kind: kind),
+      class: "flex items-center gap-3 bg-white rounded-lg border border-gray-200 p-4 hover:shadow-md transition" do %>
+  <% if kind == "frame" %>
+    <%= render "shared/avatar", user: user, size: 40 %>
+  <% else %>
+    <% thumb = cosmetic_image_source(cosmetic, resize: [ 120, 80 ]) %>
+    <% if thumb %>
+      <%= image_tag thumb, alt: "", class: "h-10 w-[60px] shrink-0 rounded-md object-cover" %>
+    <% else %>
+      <span class="h-10 w-[60px] shrink-0 rounded-md bg-linear-to-br <%= cosmetic_fallback_gradient(cosmetic) %>"></span>
+    <% end %>
+  <% end %>
+
+  <span class="flex-1 min-w-0">
+    <span class="block font-medium text-gray-900 truncate">
+      <%= cosmetic&.display_name || t("profiles.show.no_#{kind}") %>
+    </span>
+    <span class="flex items-center gap-1.5 mt-0.5">
+      <%= cosmetic_rarity_chip(cosmetic) %>
+      <span class="text-[11px] text-gray-500"><%= t("cosmetics.kinds.#{kind}") %></span>
+    </span>
+  </span>
+  <span class="shrink-0 text-sm font-medium text-primary"><%= t("profiles.show.change") %></span>
+<% end %>

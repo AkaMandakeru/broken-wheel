@@ -1,0 +1,25 @@
+<%# locals: cosmetic, kind, equipped %>
+<%= button_to profile_appearance_path,
+      method: :patch,
+      params: { kind: kind, key: cosmetic.key },
+      form: { class: "contents" },
+      class: "block w-full text-left bg-white rounded-xl overflow-hidden border-2 transition cursor-pointer #{equipped ? 'border-primary' : 'border-gray-200 hover:border-gray-300'}" do %>
+  <span class="relative block">
+    <%= render "appearances/swatch", cosmetic: cosmetic, kind: kind %>
+    <% if equipped %>
+      <span class="absolute top-2 right-2 h-[22px] w-[22px] rounded-full bg-primary text-white flex items-center justify-center">
+        <i class="fa-solid fa-check text-[11px]"></i>
+      </span>
+    <% end %>
+  </span>
+
+  <span class="block p-2.5">
+    <span class="block text-[13px] font-semibold text-gray-900 truncate"><%= cosmetic.display_name %></span>
+    <span class="flex flex-wrap items-center gap-1.5 mt-1">
+      <%= cosmetic_rarity_chip(cosmetic) %>
+      <% if equipped %>
+        <span class="text-[11px] font-semibold text-primary"><%= t("appearances.show.equipped") %></span>
+      <% end %>
+    </span>
+  </span>
+<% end %>

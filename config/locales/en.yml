@@ -336,6 +336,13 @@ en:
       season_summary: "Level %{level} · %{percent}% complete"
       no_seasons_yet: "You haven't joined a season yet. Medals are earned there."
       edit_profile: "Edit Profile"
+      appearance: "Appearance"
+      manage_appearance: "See all"
+      appearance_collected: "%{owned} of %{total} banners and frames collected."
+      change: "Change"
+      change_banner: "Change banner"
+      no_banner: "Default banner"
+      no_frame: "No frame yet"
       title_label: "Title"
       title_none: "No title"
       title_hint: "Earn more titles in challenges and seasons."
@@ -373,6 +380,27 @@ en:
       unsupported: "Your browser doesn't support push notifications."
 
   # Home (landing page)
+  appearances:
+    show:
+      title: "Appearance"
+      subtitle: "Banners and frames you have earned. Level up a season to win more."
+      owned:
+        one: "Owned · 1"
+        other: "Owned · %{count}"
+      locked:
+        one: "Locked · 1"
+        other: "Locked · %{count}"
+      equipped: "Equipped"
+      none: "None"
+      empty_title: "Nothing to wear yet"
+      empty_body: "Banners and frames are handed out as season rewards."
+      browse_seasons: "Browse seasons"
+      not_yet_offered: "Not offered by a season yet"
+    flashes:
+      equipped: "Profile updated."
+      removed: "Removed."
+      unavailable: "You haven't unlocked that yet."
+
   home:
     meta:
       title: "Broken Wheels — Turn running into a game"
@@ -584,6 +612,10 @@ en:
   admin:
     flashes:
       not_authorized: "You are not authorized to access that page."
+      cosmetics:
+        created: "Cosmetic created."
+        updated: "Cosmetic updated."
+        destroyed: "Cosmetic deleted and removed from every profile wearing it."
       challenges:
         created: "Challenge created."
         updated: "Challenge updated."
@@ -621,12 +653,40 @@ en:
       disabled: "%{feature} is off."
       unknown: "Unknown feature."
       hint: "Disabling hides the menu entries and closes the feature's pages. Profile and Admin can't be switched off."
+    cosmetics:
+      title: "Cosmetics"
+      subtitle: "Profile banners and avatar frames. Hand one out by adding a season reward of type Cosmetic whose key matches."
+      new: "New cosmetic"
+      edit: "Edit"
+      edit_title: "Edit %{name}"
+      delete: "Delete"
+      confirm_delete: "Delete this cosmetic? It is removed from every profile wearing it."
+      empty_title: "No cosmetics yet"
+      empty_body: "Add a banner or a frame to start handing them out as season rewards."
+      no_image: "No image"
+      fields:
+        name: "Title"
+        key: "Key"
+        kind: "Kind"
+        rarity: "Rarity"
+        position: "Order"
+        renderable: "Can be equipped"
+        animated: "Animated"
+        image: "Image"
+        owners: "Owners"
+        actions: "Actions"
+      form:
+        key_hint: "Stable identifier. A season reward of type Cosmetic uses this as its reward key."
+        image_hint: "Banners are cropped wide — 1200×400 works well. Frames should be square PNGs with a transparent middle; the avatar sits in the center 78%."
+        save: "Save"
+        cancel: "Cancel"
     nav:
       title: "Admin"
       dashboard: "Dashboard"
       challenges: "Challenges"
       events: "Events"
       seasons: "Seasons"
+      cosmetics: "Cosmetics"
       support: "Messages"
       features: "Features"
     dashboard:
@@ -969,6 +1029,11 @@ en:
             selected_distance_km:
               blank: "Please choose a distance"
               inclusion: "Please choose one of the offered distances"
+        cosmetic:
+          attributes:
+            image:
+              invalid_type: "must be an image (%{types})"
+              too_large: "must be smaller than %{size}"
         season:
           attributes:
             image:
@@ -1076,6 +1141,9 @@ en:
 
   # Cosmetics
   cosmetics:
+    kinds:
+      banner: "Banner"
+      frame: "Frame"
     rarities:
       common: "Common"
       rare: "Rare"

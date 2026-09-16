@@ -1,0 +1,28 @@
+<%# Not a button: there is nothing to press until the player earns it. The hint
+    comes from the season reward that hands it out, so the card says where to go
+    rather than just being greyed out. locals: cosmetic, kind, reward %>
+<div class="bg-white rounded-xl overflow-hidden border border-gray-200">
+  <div class="relative">
+    <%= render "appearances/swatch", cosmetic: cosmetic, kind: kind, dimmed: true %>
+    <div class="absolute inset-0 flex items-center justify-center">
+      <span class="h-8 w-8 rounded-full bg-white/90 flex items-center justify-center">
+        <i class="fa-solid fa-lock text-gray-600 text-xs"></i>
+      </span>
+    </div>
+  </div>
+
+  <div class="p-2.5">
+    <p class="text-[13px] font-semibold text-gray-600 truncate"><%= cosmetic.display_name %></p>
+    <div class="flex flex-wrap items-center gap-1.5 mt-1">
+      <%= cosmetic_rarity_chip(cosmetic) %>
+    </div>
+    <p class="text-[11px] text-gray-500 mt-1 truncate">
+      <% if reward %>
+        <%= reward.season.name %> ·
+        <%= t("seasons.unlock_kinds.#{reward.unlock_kind}", value: reward.unlock_value, default: reward.unlock_kind) %>
+      <% else %>
+        <%= t("appearances.show.not_yet_offered") %>
+      <% end %>
+    </p>
+  </div>
+</div>

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_08_21_100000) do
+ActiveRecord::Schema[8.1].define(version: 2026_09_11_100000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -159,10 +159,12 @@ ActiveRecord::Schema[8.1].define(version: 2026_08_21_100000) do
     t.string "key", null: false
     t.string "kind", null: false
     t.string "name"
+    t.integer "position", default: 0, null: false
     t.string "rarity", default: "common", null: false
     t.boolean "renderable", default: true, null: false
     t.datetime "updated_at", null: false
     t.index ["key"], name: "index_cosmetics_on_key", unique: true
+    t.index ["kind", "position"], name: "index_cosmetics_on_kind_and_position"
     t.index ["kind"], name: "index_cosmetics_on_kind"
   end
 

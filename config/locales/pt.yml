@@ -308,6 +308,13 @@ pt:
       season_summary: "Nível %{level} · %{percent}% concluído"
       no_seasons_yet: "Você ainda não entrou em uma temporada. É lá que as medalhas são conquistadas."
       edit_profile: "Editar Perfil"
+      appearance: "Aparência"
+      manage_appearance: "Ver todas"
+      appearance_collected: "%{owned} de %{total} banners e molduras colecionados."
+      change: "Trocar"
+      change_banner: "Trocar banner"
+      no_banner: "Banner padrão"
+      no_frame: "Nenhuma moldura ainda"
       title_label: "Título"
       title_none: "Sem título"
       title_hint: "Conquiste mais títulos em desafios e temporadas."
@@ -345,6 +352,27 @@ pt:
       unsupported: "Seu navegador não suporta notificações push."
 
   # Home (página inicial)
+  appearances:
+    show:
+      title: "Aparência"
+      subtitle: "Banners e molduras que você conquistou. Suba de nível numa temporada para ganhar mais."
+      owned:
+        one: "Seus · 1"
+        other: "Seus · %{count}"
+      locked:
+        one: "Bloqueados · 1"
+        other: "Bloqueados · %{count}"
+      equipped: "Em uso"
+      none: "Nenhum"
+      empty_title: "Nada para usar ainda"
+      empty_body: "Banners e molduras são recompensas de temporada."
+      browse_seasons: "Ver temporadas"
+      not_yet_offered: "Ainda não oferecido por uma temporada"
+    flashes:
+      equipped: "Perfil atualizado."
+      removed: "Removido."
+      unavailable: "Você ainda não desbloqueou isso."
+
   home:
     meta:
       title: "Broken Wheels — Transforme corrida em jogo"
@@ -556,6 +584,10 @@ pt:
   admin:
     flashes:
       not_authorized: "Você não tem permissão para acessar essa página."
+      cosmetics:
+        created: "Cosmético criado."
+        updated: "Cosmético atualizado."
+        destroyed: "Cosmético excluído e removido de todos os perfis que o usavam."
       challenges:
         created: "Desafio criado."
         updated: "Desafio atualizado."
@@ -593,12 +625,40 @@ pt:
       disabled: "%{feature} está desligado."
       unknown: "Funcionalidade desconhecida."
       hint: "Desligar esconde os itens do menu e fecha as páginas da funcionalidade. Perfil e Admin não podem ser desligados."
+    cosmetics:
+      title: "Cosméticos"
+      subtitle: "Banners de perfil e molduras de avatar. Para distribuir um, adicione uma recompensa de temporada do tipo Cosmético com a mesma chave."
+      new: "Novo cosmético"
+      edit: "Editar"
+      edit_title: "Editar %{name}"
+      delete: "Excluir"
+      confirm_delete: "Excluir este cosmético? Ele será removido de todos os perfis que o usam."
+      empty_title: "Nenhum cosmético ainda"
+      empty_body: "Adicione um banner ou uma moldura para começar a distribuí-los como recompensas."
+      no_image: "Sem imagem"
+      fields:
+        name: "Título"
+        key: "Chave"
+        kind: "Tipo"
+        rarity: "Raridade"
+        position: "Ordem"
+        renderable: "Pode ser equipado"
+        animated: "Animado"
+        image: "Imagem"
+        owners: "Donos"
+        actions: "Ações"
+      form:
+        key_hint: "Identificador estável. A recompensa de temporada do tipo Cosmético usa isto como chave."
+        image_hint: "Banners são cortados na horizontal — 1200×400 funciona bem. Molduras devem ser PNGs quadrados com o miolo transparente; o avatar ocupa os 78% centrais."
+        save: "Salvar"
+        cancel: "Cancelar"
     nav:
       title: "Admin"
       dashboard: "Painel"
       challenges: "Desafios"
       events: "Eventos"
       seasons: "Temporadas"
+      cosmetics: "Cosméticos"
       support: "Mensagens"
       features: "Funcionalidades"
     dashboard:
@@ -939,6 +999,11 @@ pt:
             selected_distance_km:
               blank: "Escolha uma distância"
               inclusion: "Escolha uma das distâncias oferecidas"
+        cosmetic:
+          attributes:
+            image:
+              invalid_type: "deve ser uma imagem (%{types})"
+              too_large: "deve ser menor que %{size}"
         season:
           attributes:
             image:
@@ -1046,6 +1111,9 @@ pt:
 
   # Cosméticos
   cosmetics:
+    kinds:
+      banner: "Banner"
+      frame: "Moldura"
     rarities:
       common: "Comum"
       rare: "Raro"

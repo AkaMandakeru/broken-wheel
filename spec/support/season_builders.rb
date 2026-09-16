@@ -52,6 +52,31 @@ module SeasonBuilders
     )
   end
 
+  # --- Cosmetics -------------------------------------------------------------
+
+  def build_cosmetic(key:, kind: "banner", rarity: "common", **overrides)
+    Cosmetic.create!({
+      key: key,
+      kind: kind,
+      name: key.to_s.humanize,
+      rarity: rarity
+    }.merge(overrides))
+  end
+
+  # Ownership written the way SeasonRewardGranter#grant_cosmetic writes it.
+  def grant_cosmetic(user, cosmetic, source: "season_reward")
+    user.user_cosmetics.create!(cosmetic: cosmetic, source: source, unlocked_at: Time.current)
+  end
+
+  def attach_cosmetic_art(cosmetic, file: "season_cover.png", content_type: "image/png")
+    cosmetic.image.attach(
+      io: Rails.root.join("spec/fixtures/files/#{file}").open,
+      filename: file,
+      content_type: content_type
+    )
+    cosmetic
+  end
+
   def build_challenge(key:, requirements:, sport: nil, starts_at: Date.new(2026, 8, 1), ends_at: Date.new(2026, 8, 31))
     challenge = Challenge.create!(
       key: key,

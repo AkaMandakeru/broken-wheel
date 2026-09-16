@@ -1,68 +1,75 @@
 <div class="pt-8">
   <%# Header: avatar, name, edit button %>
-  <div class="bg-white rounded-xl shadow-sm border border-gray-200 p-6 sm:p-8">
-    <div class="flex flex-col sm:flex-row sm:items-center gap-5">
-      <div class="w-20 h-20 rounded-full overflow-hidden bg-primary/15 flex items-center justify-center shrink-0">
-        <% if @user.avatar.attached? %>
-          <%= image_tag url_for(@user.avatar), class: "w-full h-full object-cover" %>
-        <% else %>
-          <span class="text-primary text-3xl font-extrabold"><%= @user.first_name&.first || "?" %></span>
+  <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
+    <%= render "profiles/banner", user: @user, owner: true %>
+
+    <div class="p-6 sm:p-8">
+      <div class="flex flex-col sm:flex-row sm:items-end gap-5">
+        <%# Straddles the banner's edge: half the 96px avatar over the picture,
+            half over the white. The wrapper's own padding (24px, 32px at sm)
+            already pushes it down, so the pull is that plus half the avatar.
+            The frame is drawn by the shared partial so the profile, the locker
+            preview and its grid all wear it identically. %>
+        <div class="-mt-18 sm:-mt-20 self-center sm:self-auto">
+          <%= render "shared/avatar", user: @user, size: 96 %>
+        </div>
+
+        <div class="flex-1 min-w-0">
+          <h1 class="text-2xl font-bold text-gray-900"><%= @user.first_name %> <%= @user.last_name %></h1>
+          <% if @user.title_label.present? %>
+            <p class="text-sm font-semibold text-primary"><i class="fa-solid fa-medal mr-1"></i><%= @user.title_label %></p>
+          <% end %>
+          <% if @user.nickname.present? %>
+            <p class="text-gray-500">@<%= @user.nickname %></p>
+          <% end %>
+          <% if Array(@user.sports).any? %>
+            <div class="flex flex-wrap gap-2 mt-3">
+              <% Array(@user.sports).each do |sport| %>
+                <span class="text-xs font-medium bg-gray-100 text-gray-700 rounded-full px-3 py-1">
+                  <%= t("enums.sports.#{sport}", default: sport.capitalize) %>
+                </span>
+              <% end %>
+            </div>
+          <% end %>
+        </div>
+
+        <%= link_to edit_profile_path, class: "shrink-0 inline-flex items-center gap-2 border border-gray-300 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-50 transition font-medium text-sm" do %>
+          <i class="fa-solid fa-pen"></i> <%= t('profiles.show.edit_profile') %>
         <% end %>
       </div>
 
-      <div class="flex-1 min-w-0">
-        <h1 class="text-2xl font-bold text-gray-900"><%= @user.first_name %> <%= @user.last_name %></h1>
-        <% if @user.title_label.present? %>
-          <p class="text-sm font-semibold text-primary"><i class="fa-solid fa-medal mr-1"></i><%= @user.title_label %></p>
-        <% end %>
-        <% if @user.nickname.present? %>
-          <p class="text-gray-500">@<%= @user.nickname %></p>
-        <% end %>
-        <% if Array(@user.sports).any? %>
-          <div class="flex flex-wrap gap-2 mt-3">
-            <% Array(@user.sports).each do |sport| %>
-              <span class="text-xs font-medium bg-gray-100 text-gray-700 rounded-full px-3 py-1">
-                <%= t("enums.sports.#{sport}", default: sport.capitalize) %>
-              </span>
-            <% end %>
-          </div>
-        <% end %>
-      </div>
-
-      <%= link_to edit_profile_path, class: "shrink-0 inline-flex items-center gap-2 border border-gray-300 text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-50 transition font-medium text-sm" do %>
-        <i class="fa-solid fa-pen"></i> <%= t('profiles.show.edit_profile') %>
-      <% end %>
-    </div>
-
-    <%# Stats grid %>
-    <div class="grid grid-cols-2 lg:grid-cols-5 gap-3 mt-6">
-      <div class="bg-gray-50 rounded-xl border border-gray-100 p-4">
-        <p class="text-2xl">🏃</p>
-        <p class="text-xl font-extrabold text-gray-900 mt-1"><%= @stats[:distance_km] %> <span class="text-sm font-semibold text-gray-500">km</span></p>
-        <p class="text-xs text-gray-500"><%= t('profiles.show.stats.distance') %></p>
-      </div>
-      <div class="bg-gray-50 rounded-xl border border-gray-100 p-4">
-        <p class="text-2xl">🔥</p>
-        <p class="text-xl font-extrabold text-gray-900 mt-1"><%= @stats[:week_streak] %></p>
-        <p class="text-xs text-gray-500"><%= t('profiles.show.stats.week_streak') %></p>
-      </div>
-      <div class="bg-gray-50 rounded-xl border border-gray-100 p-4">
-        <p class="text-2xl">🏋️</p>
-        <p class="text-xl font-extrabold text-gray-900 mt-1"><%= @stats[:workouts] %></p>
-        <p class="text-xs text-gray-500"><%= t('profiles.show.stats.workouts') %></p>
-      </div>
-      <div class="bg-gray-50 rounded-xl border border-gray-100 p-4">
-        <p class="text-2xl">🏆</p>
-        <p class="text-xl font-extrabold text-gray-900 mt-1"><%= @stats[:seasons] %></p>
-        <p class="text-xs text-gray-500"><%= t('profiles.show.stats.seasons') %></p>
-      </div>
-      <div class="bg-gray-50 rounded-xl border border-gray-100 p-4">
-        <p class="text-2xl">🎖</p>
-        <p class="text-xl font-extrabold text-primary mt-1"><%= @stats[:medals] %></p>
-        <p class="text-xs text-gray-500"><%= t('profiles.show.stats.medals') %></p>
+      <%# Stats grid %>
+      <div class="grid grid-cols-2 lg:grid-cols-5 gap-3 mt-6">
+        <div class="bg-gray-50 rounded-xl border border-gray-100 p-4">
+          <p class="text-2xl">🏃</p>
+          <p class="text-xl font-extrabold text-gray-900 mt-1"><%= @stats[:distance_km] %> <span class="text-sm font-semibold text-gray-500">km</span></p>
+          <p class="text-xs text-gray-500"><%= t('profiles.show.stats.distance') %></p>
+        </div>
+        <div class="bg-gray-50 rounded-xl border border-gray-100 p-4">
+          <p class="text-2xl">🔥</p>
+          <p class="text-xl font-extrabold text-gray-900 mt-1"><%= @stats[:week_streak] %></p>
+          <p class="text-xs text-gray-500"><%= t('profiles.show.stats.week_streak') %></p>
+        </div>
+        <div class="bg-gray-50 rounded-xl border border-gray-100 p-4">
+          <p class="text-2xl">🏋️</p>
+          <p class="text-xl font-extrabold text-gray-900 mt-1"><%= @stats[:workouts] %></p>
+          <p class="text-xs text-gray-500"><%= t('profiles.show.stats.workouts') %></p>
+        </div>
+        <div class="bg-gray-50 rounded-xl border border-gray-100 p-4">
+          <p class="text-2xl">🏆</p>
+          <p class="text-xl font-extrabold text-gray-900 mt-1"><%= @stats[:seasons] %></p>
+          <p class="text-xs text-gray-500"><%= t('profiles.show.stats.seasons') %></p>
+        </div>
+        <div class="bg-gray-50 rounded-xl border border-gray-100 p-4">
+          <p class="text-2xl">🎖</p>
+          <p class="text-xl font-extrabold text-primary mt-1"><%= @stats[:medals] %></p>
+          <p class="text-xs text-gray-500"><%= t('profiles.show.stats.medals') %></p>
+        </div>
       </div>
     </div>
   </div>
+
+  <%= render "profiles/appearance", user: @user %>
 
   <%# Connected apps %>
   <div class="mt-10">

@@ -1,0 +1,17 @@
+<%# A cosmetic drawn the way its kind wants to be seen: a banner as a wide
+    crop, a frame worn by the viewer's own avatar so the fit is obvious.
+    locals: cosmetic, kind, dimmed %>
+<% dimmed = local_assigns.fetch(:dimmed, false) %>
+
+<% if kind == "frame" %>
+  <div class="flex justify-center py-3 <%= "opacity-50 grayscale" if dimmed %>">
+    <%= render "shared/avatar", user: current_user, size: 64, frame: cosmetic %>
+  </div>
+<% else %>
+  <% art = cosmetic_image_source(cosmetic, resize: [ 400, 225 ]) %>
+  <div class="aspect-video w-full <%= "opacity-50 grayscale" if dimmed %> <%= "bg-linear-to-br #{cosmetic_fallback_gradient(cosmetic)}" unless art %>">
+    <% if art %>
+      <%= image_tag art, alt: cosmetic.display_name, class: "w-full h-full object-cover" %>
+    <% end %>
+  </div>
+<% end %>

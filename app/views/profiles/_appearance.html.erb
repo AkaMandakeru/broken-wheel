@@ -1,0 +1,18 @@
+<%# What the player is wearing, and the way in to change it. locals: user %>
+<% banner = user.equipped_banner %>
+<% frame  = user.equipped_frame %>
+<% owned  = user.user_cosmetics.joins(:cosmetic).merge(Cosmetic.of_kind(Cosmetic::PICTURE_KINDS)).count %>
+<% total  = Cosmetic.of_kind(Cosmetic::PICTURE_KINDS).renderable.count %>
+
+<div class="mt-10">
+  <div class="flex items-center justify-between mb-1">
+    <h2 class="text-lg font-semibold text-gray-900"><%= t("profiles.show.appearance") %></h2>
+    <%= link_to t("profiles.show.manage_appearance"), profile_appearance_path,
+          class: "text-sm font-medium text-primary hover:underline" %>
+  </div>
+  <p class="text-gray-500 text-sm mb-3"><%= t("profiles.show.appearance_collected", owned: owned, total: total) %></p>
+  <div class="space-y-3">
+    <%= render "profiles/appearance_row", user: user, kind: "banner", cosmetic: banner %>
+    <%= render "profiles/appearance_row", user: user, kind: "frame", cosmetic: frame %>
+  </div>
+</div>

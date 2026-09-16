@@ -110,6 +110,48 @@ RSpec.describe SeasonRewardGranter do
       expect(user.reload.owns_cosmetic?("silver_frame")).to be(true)
     end
 
+    # This is the whole path behind "win new ones during the season": the reward
+    # key names a row in the cosmetics catalogue, and what arrives has to be
+    # wearable straight away or the profile locker has nothing to offer.
+    it "hands over a profile banner the player can equip immediately" do
+      banner = build_cosmetic(key: "legacy_of_champions", kind: "banner", rarity: "legendary")
+      reward(level: 4, type: "cosmetic", key: banner.key)
+
+      described_class.new(participation).grant_for_level(4)
+      user.reload
+
+      expect(user.owned_cosmetics("banner")).to contain_exactly(banner)
+      expect(user.equip_cosmetic!("banner", banner.key)).to be(true)
+      expect(user.reload.equipped_banner).to eq(banner)
+    end
+
+    it "records where the cosmetic came from" do
+      frame = build_cosmetic(key: "champions_laurel", kind: "frame")
+      reward(level: 1, type: "cosmetic", key: frame.key)
+
+      described_class.new(participation).grant_for_level(1)
+
+      expect(user.user_cosmetics.sole.source).to eq("season_reward")
+    end
+
+    it "does not hand the same cosmetic over twice on a recalculation" do
+      frame = build_cosmetic(key: "champions_laurel", kind: "frame")
+      reward(level: 1, type: "cosmetic", key: frame.key)
+
+      2.times { described_class.new(participation).grant_for_level(1) }
+
+      expect(user.user_cosmetics.count).to eq(1)
+    end
+
+    # A blueprint can name a cosmetic before anyone creates the row. Granting
+    # has to shrug rather than take the whole recalculation down with it.
+    it "ignores a reward pointing at a cosmetic that does not exist" do
+      reward(level: 1, type: "cosmetic", key: "never_created")
+
+      expect { described_class.new(participation).grant_for_level(1) }.not_to raise_error
+      expect(user.reload.user_cosmetics).to be_empty
+    end
+
     it "starts a bounded XP boost" do
       reward(level: 1, type: "xp_boost", key: "boost_1d", payload: { "hours" => 24, "multiplier" => 2.0 })
 
