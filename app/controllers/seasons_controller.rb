@@ -61,14 +61,15 @@ class SeasonsController < ApplicationController
   def load_challenges
     scope = @season.season_challenges.includes(challenge: :challenge_requirements)
 
-    # Secrets stay off the board until the player finds them.
-    @discovered_secret_ids = @participation&.season_challenge_completions&.pluck(:season_challenge_id) || []
-    visible = scope.reject { |sc| sc.hidden? && !@discovered_secret_ids.include?(sc.id) }
+    # Every challenge is on the board. Special ones used to be withheld until a
+    # player stumbled into completing one; they are listed like the rest now, so
+    # the progress bar is something to aim at rather than a reveal.
+    challenges = scope.to_a
 
-    @challenges_by_category = visible.group_by(&:category)
+    @challenges_by_category = challenges.group_by(&:category)
     @weekly_challenges = (@challenges_by_category["weekly"] || []).sort_by { |sc| sc.week_index.to_i }
-    @season_challenges = visible
-    @my_challenge_progress = my_challenge_progress(visible.map(&:challenge_id))
+    @season_challenges = challenges
+    @my_challenge_progress = my_challenge_progress(challenges.map(&:challenge_id))
   end
 
   def load_objectives

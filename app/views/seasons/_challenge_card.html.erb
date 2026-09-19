@@ -15,9 +15,7 @@
       <% end %>
 
       <%= link_to challenge.display_title, challenge_path(challenge), class: "font-medium text-gray-900 hover:text-[#FC4C02]" %>
-      <% if season_challenge.hidden? %>
-        <span class="ml-1 text-[10px] px-1.5 py-0.5 rounded-full bg-purple-100 text-purple-700"><%= t("seasons.show.secret") %></span>
-      <% end %>
+      <%= special_challenge_chip(season_challenge) %>
       <% if season_challenge.week_index %>
         <span class="ml-1 text-[10px] px-1.5 py-0.5 rounded-full bg-gray-100 text-gray-600">
           <%= t("seasons.show.week_n", n: season_challenge.week_index) %>

@@ -64,8 +64,7 @@ challenges:
   # Missão secreta disponível apenas no Dia da Independência
   - key: s9_hidden_grito_da_independencia
     title: "🇧🇷 Grito da Independência"
-    category: hidden
-    hidden: true
+    category: special
     starts_at: 2026-09-07
     ends_at: 2026-09-07
     sport: run

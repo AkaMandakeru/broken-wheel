@@ -146,13 +146,13 @@ class RecomputeChallengeProgress
     SeasonActivity.create!(
       season: season,
       user: @user,
-      kind: season_challenge.hidden? ? "secret_discovered" : "challenge_completed",
+      kind: season_challenge.special? ? "special_completed" : "challenge_completed",
       metadata: { challenge: @challenge.display_title, xp: season_challenge.xp_reward, category: season_challenge.category }
     )
     SeasonAnalytics.track(
       user: @user, event: "season_challenge_completed", season: season,
       challenge_key: @challenge.key, category: season_challenge.category,
-      hidden: season_challenge.hidden?, xp: season_challenge.xp_reward
+      special: season_challenge.special?, xp: season_challenge.xp_reward
     )
     SeasonRecalcJob.enqueue_debounced(@user.id, season.id)
   end

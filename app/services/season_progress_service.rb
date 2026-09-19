@@ -171,17 +171,16 @@ class SeasonProgressService
     @user.coin_transactions.credits.where("metadata ->> 'season_id' = ?", @season.id.to_s).sum(:amount)
   end
 
-  # Share of the season's plannable content finished. Secrets are excluded from
-  # the denominator on purpose — a player cannot aim at a challenge they have
-  # not been told exists, so counting them would make 100% unreachable by design.
+  # Share of the season's content finished. Special challenges used to be left
+  # out of the denominator because a player could not aim at something they had
+  # not been told existed. They are on the board now, so they count — which does
+  # mean a season's completion percentage drops the first time it is recomputed
+  # after this change, by however much the special challenges are worth.
   def completion_percent
-    total = @season.season_challenges.visible.count + @season.season_objectives.count
+    total = @season.season_challenges.count + @season.season_objectives.count
     return 0 if total.zero?
 
-    done = @participation.season_challenge_completions
-                         .joins(:season_challenge)
-                         .where(season_challenges: { hidden: false })
-                         .count +
+    done = @participation.season_challenge_completions.count +
            @participation.season_objective_completions.count
 
     [ ((done.to_f / total) * 100).round, 100 ].min

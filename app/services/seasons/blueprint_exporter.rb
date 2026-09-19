@@ -92,7 +92,6 @@ module Seasons
           "coin_reward" => sc.coin_reward,
           "fragment_reward" => sc.fragment_reward,
           "unlock_level" => sc.unlock_level.positive? ? sc.unlock_level : nil,
-          "hidden" => (sc.hidden? || nil),
           "required" => (sc.required? || nil),
           "starts_at" => shift(sc.starts_at)&.to_s,
           "ends_at" => shift(sc.ends_at)&.to_s,

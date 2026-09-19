@@ -42,25 +42,31 @@ RSpec.describe "Seasons", type: :request do
       expect(response).to have_http_status(:ok)
     end
 
-    # Secrets must not be discoverable by reading the page source.
-    it "hides undiscovered secret challenges" do
+    # These used to be secrets, withheld until a player stumbled into completing
+    # one. They are on the board from the start now, under their own heading.
+    it "lists special challenges before they are completed" do
       sign_in user
       get season_path(season)
 
-      expect(response.body).not_to include(ERB::Util.html_escape(I18n.t("challenges.defaults.s8_secret_early_bird.title")))
+      expect(response.body).to include(ERB::Util.html_escape(I18n.t("challenges.defaults.s8_secret_early_bird.title")))
+      expect(response.body).to include(ERB::Util.html_escape(I18n.t("seasons.categories.special")))
     end
 
-    it "reveals a secret once it has been completed" do
+    it "shows a special challenge to a signed-out visitor too" do
+      get season_path(season)
+
+      expect(response.body).to include(ERB::Util.html_escape(I18n.t("challenges.defaults.s8_secret_early_bird.title")))
+    end
+
+    it "marks a special challenge as special" do
       sign_in user
-      participation = SeasonProgressService.ensure_participation(user, season)
-      secret = season.season_challenges.secret.first
-      participation.season_challenge_completions.create!(
-        season_challenge: secret, xp_awarded: secret.xp_reward, completed_at: Time.current
-      )
+      special = season.season_challenges.special.first
 
       get season_path(season)
 
-      expect(response.body).to include(ERB::Util.html_escape(secret.challenge.display_title))
+      expect(special.category).to eq("special")
+      expect(response.body).to include(ERB::Util.html_escape(special.challenge.display_title))
+      expect(response.body).to include(ERB::Util.html_escape(I18n.t("seasons.show.special")))
     end
 
     it "switches leaderboard boards" do

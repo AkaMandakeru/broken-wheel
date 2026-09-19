@@ -22,7 +22,7 @@ module Admin
 
     def season_challenge_params
       params.require(:season_challenge).permit(:challenge_id, :position, :required, :xp_reward,
-                                                :category, :unlock_level, :hidden, :coin_reward,
+                                                :category, :unlock_level, :coin_reward,
                                                 :fragment_reward, :week_index)
     end
   end

@@ -58,11 +58,13 @@ cosmetics:
   - { key: example_trail,  kind: trail,      name: Example Trail,  rarity: legendary, renderable: false }
 
 # --- Challenges --------------------------------------------------------------
-# category: weekly | monthly | elite | hidden | standard
+# category: weekly | monthly | elite | special | standard
 #   weekly   — grouped and ordered by week_index
 #   elite    — set unlock_level; progress still accrues below it and pays out
 #              the moment the player reaches that level
-#   hidden   — a secret; stays off the challenge list until completed
+#   special  — listed like any other challenge, just worth more. (Was "hidden",
+#              which stayed off the board until completed; blueprints still
+#              saying `category: hidden` import as special.)
 #
 # starts_at / ends_at are OPTIONAL and must fall inside the season. Leave them
 # out and the challenge is scored over the whole season — which is what lets you
@@ -135,8 +137,7 @@ challenges:
 
   - key: example_secret
     title: "🥶 Early Bird"
-    category: hidden
-    hidden: true
+    category: special
     xp_reward: 300
     coin_reward: 150
     fragment_reward: 5

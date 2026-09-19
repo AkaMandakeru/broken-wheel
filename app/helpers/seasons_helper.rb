@@ -92,8 +92,8 @@ module SeasonsHelper
       t("seasons.activity.reward_unlocked", name: meta["name"].presence || meta["reward_key"])
     when "daily_completed"
       t("seasons.activity.daily_completed", daily: meta["daily"], xp: meta["xp"])
-    when "secret_discovered"
-      t("seasons.activity.secret_discovered", challenge: meta["challenge"], xp: meta["xp"])
+    when "special_completed"
+      t("seasons.activity.special_completed", challenge: meta["challenge"], xp: meta["xp"])
     when "legacy_mission_completed"
       t("seasons.activity.legacy_mission_completed", objective: meta["objective"], xp: meta["xp"])
     when "community_milestone"
@@ -134,7 +134,7 @@ module SeasonsHelper
     when "weekly"  then "fa-solid fa-calendar-week"
     when "monthly" then "fa-solid fa-calendar-days"
     when "elite"   then "fa-solid fa-crown"
-    when "hidden"  then "fa-solid fa-user-secret"
+    when "special" then "fa-solid fa-star"
     when "daily"   then "fa-solid fa-sun"
     else "fa-solid fa-flag-checkered"
     end
@@ -170,6 +170,16 @@ module SeasonsHelper
     tag.span("#{medal_tier_emoji(tier)} #{medal_label(tier)}",
              class: "inline-flex items-center gap-1 px-2 py-0.5 rounded-full " \
                     "text-[11px] font-semibold #{medal_tier_classes(tier)}")
+  end
+
+  # The badge marking a special challenge, wherever one is listed. Nil-safe on
+  # category so an ordinary challenge renders nothing, the way medal_chip does
+  # for a season that finished below bronze.
+  def special_challenge_chip(season_challenge)
+    return nil unless season_challenge&.special?
+
+    tag.span(t("seasons.show.special"),
+             class: "ml-1 text-[10px] px-1.5 py-0.5 rounded-full bg-purple-100 text-purple-700")
   end
 
   def cosmetic_rarity_classes(rarity)

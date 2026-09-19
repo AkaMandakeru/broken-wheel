@@ -4,7 +4,7 @@
 #
 #   "Given a user, a time window and some options, what is the value of metric X?"
 #
-# Daily, weekly, monthly, elite and hidden challenges, legacy missions, season
+# Daily, weekly, monthly, elite and special challenges, legacy missions, season
 # objectives and leaderboards all resolve through this registry, so a new kind of
 # goal is a new metric class rather than a new subsystem.
 module ChallengeMetrics

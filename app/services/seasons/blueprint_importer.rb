@@ -205,12 +205,11 @@ module Seasons
       season_challenge = season.season_challenges.find_or_initialize_by(challenge: challenge)
       season_challenge.assign_attributes(
         position: entry.fetch("position", index),
-        category: entry.fetch("category", "standard"),
+        category: SeasonChallenge.canonical_category(entry.fetch("category", "standard")),
         xp_reward: entry.fetch("xp_reward", 0),
         coin_reward: entry.fetch("coin_reward", 0),
         fragment_reward: entry.fetch("fragment_reward", 0),
         unlock_level: entry.fetch("unlock_level", 0),
-        hidden: entry.fetch("hidden", false),
         required: entry.fetch("required", false),
         week_index: entry["week_index"],
         # The window belongs to the season, not the challenge — so the same

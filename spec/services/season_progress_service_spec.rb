@@ -104,16 +104,30 @@ RSpec.describe SeasonProgressService do
       season.season_challenges.create!(challenge: challenge, category: "monthly", xp_reward: 100)
     end
 
-    let!(:secret) do
-      challenge = build_challenge(key: "secret_one", requirements: [ { metric: "activity_count", target: 1 } ])
-      season.season_challenges.create!(challenge: challenge, category: "hidden", hidden: true, xp_reward: 100)
+    # Deliberately out of reach of the single workout below, so the two counts
+    # can be told apart.
+    let!(:special) do
+      challenge = build_challenge(key: "special_one", requirements: [ { metric: "activity_count", target: 5 } ])
+      season.season_challenges.create!(challenge: challenge, category: "special", xp_reward: 100)
     end
 
-    # Secrets are undiscoverable by definition; counting them in the denominator
-    # would make 100% completion impossible to aim at.
-    it "excludes hidden challenges from the denominator" do
+    # Special challenges were excluded from the denominator back when they were
+    # secrets nobody could aim at. They are listed now, so they count like any
+    # other — finishing the monthly and not the special is half the season, not
+    # all of it.
+    it "counts special challenges in the denominator" do
       participation
       build_workout(user, date: Date.new(2026, 8, 3))
+      user.challenge_participations.each { |cp| RecomputeChallengeProgress.new(cp).call }
+
+      recalculate
+
+      expect(participation.completion_percent).to eq(50)
+    end
+
+    it "reaches 100% once the special one is finished too" do
+      participation
+      5.times { |i| build_workout(user, date: Date.new(2026, 8, 3 + i)) }
       user.challenge_participations.each { |cp| RecomputeChallengeProgress.new(cp).call }
 
       recalculate

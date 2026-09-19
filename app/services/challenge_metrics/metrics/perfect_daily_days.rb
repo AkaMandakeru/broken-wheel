@@ -3,7 +3,7 @@
 module ChallengeMetrics
   module Metrics
     # Days on which every assigned daily challenge was completed — the basis of
-    # the "Perfect Month" secret.
+    # the "Perfect Month" special challenge.
     #
     # Only days the user was actually assigned challenges count. Someone who
     # joins on the 11th is judged on the 11th onward, never on days that were

@@ -97,9 +97,7 @@
                 · +<%= sc.xp_reward %> XP<%= " · #{t('seasons.show.required')}" if sc.required %>
                 <%= " · #{t('seasons.show.unlocks_at_level', level: sc.unlock_level)}" if sc.unlock_level.positive? %>
               </span>
-              <% if sc.hidden? %>
-                <span class="ml-1 text-[10px] px-1.5 py-0.5 rounded-full bg-purple-100 text-purple-700"><%= t("seasons.show.secret") %></span>
-              <% end %>
+              <%= special_challenge_chip(sc) %>
             </div>
             <%= button_to t("admin.seasons.challenges.remove"), admin_season_season_challenge_path(@season, sc), method: :delete, form: { class: "inline" }, class: "text-red-600 hover:text-red-800 text-xs cursor-pointer" %>
           </div>
@@ -143,9 +141,6 @@
           <div class="flex flex-wrap gap-4">
             <label class="flex items-center gap-2 text-sm text-gray-700">
               <%= f.check_box :required, class: "rounded text-[#FC4C02]" %> <%= t("admin.seasons.challenges.required") %>
-            </label>
-            <label class="flex items-center gap-2 text-sm text-gray-700">
-              <%= f.check_box :hidden, class: "rounded text-[#FC4C02]" %> <%= t("admin.seasons.challenges.hidden") %>
             </label>
           </div>
           <%= f.submit t("admin.seasons.challenges.add"), class: "bg-gray-900 text-white px-4 py-2 rounded-lg hover:bg-gray-700 transition font-medium text-sm cursor-pointer" %>

@@ -15,7 +15,7 @@ module Seasons
       monthlies: 0.5,
       legacy: 0.8,
       elite: 0.0,
-      hidden: 0.2
+      special: 0.2
     }.freeze
 
     def initialize(season)
@@ -49,7 +49,7 @@ module Seasons
         "Weekly challenges" => pair(category_xp("weekly"), ENGAGED_RATES[:weeklies]),
         "Monthly challenges" => pair(category_xp("monthly"), ENGAGED_RATES[:monthlies]),
         "Elite challenges" => pair(category_xp("elite"), ENGAGED_RATES[:elite]),
-        "Hidden challenges" => pair(category_xp("hidden"), ENGAGED_RATES[:hidden]),
+        "Special challenges" => pair(category_xp("special"), ENGAGED_RATES[:special]),
         "Legacy missions" => pair(@season.season_objectives.legacy.sum(:xp_reward), ENGAGED_RATES[:legacy]),
         "Other objectives" => pair(@season.season_objectives.standard.sum(:xp_reward), 0.5),
         "Workouts & bonuses" => pair(baseline_xp, 0.8)

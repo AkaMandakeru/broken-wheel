@@ -58,7 +58,7 @@ RSpec.describe "Season analytics" do
       expect(events("season_challenge_completed").count).to eq(1)
       expect(properties("season_challenge_completed")).to include(
         "season_key" => season.key, "challenge_key" => "run_20km",
-        "category" => "monthly", "xp" => 500, "hidden" => false
+        "category" => "monthly", "xp" => 500, "special" => false
       )
     end
 

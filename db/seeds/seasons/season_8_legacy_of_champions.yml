@@ -216,8 +216,7 @@ challenges:
   # --- Hidden: secret achievements -----------------------------------------
   - key: s8_secret_early_bird
     title: "🥶 Early Bird"
-    category: hidden
-    hidden: true
+    category: special
     xp_reward: 300
     coin_reward: 150
     fragment_reward: 5
@@ -226,8 +225,7 @@ challenges:
 
   - key: s8_secret_night_owl
     title: "🌙 Night Owl"
-    category: hidden
-    hidden: true
+    category: special
     xp_reward: 300
     coin_reward: 150
     fragment_reward: 5
@@ -236,8 +234,7 @@ challenges:
 
   - key: s8_secret_fire_within
     title: "🔥 Fire Within"
-    category: hidden
-    hidden: true
+    category: special
     xp_reward: 400
     coin_reward: 200
     fragment_reward: 5
@@ -248,8 +245,7 @@ challenges:
   # mid-month does not make a perfect month impossible.
   - key: s8_secret_perfect_month
     title: "💯 Perfect Month"
-    category: hidden
-    hidden: true
+    category: special
     xp_reward: 800
     coin_reward: 400
     fragment_reward: 15
@@ -258,8 +254,7 @@ challenges:
 
   - key: s8_secret_trailblazer
     title: "🗺 Trailblazer"
-    category: hidden
-    hidden: true
+    category: special
     xp_reward: 300
     coin_reward: 150
     fragment_reward: 5
@@ -268,8 +263,7 @@ challenges:
 
   - key: s8_secret_unbroken
     title: "⛓ Unbroken"
-    category: hidden
-    hidden: true
+    category: special
     xp_reward: 300
     coin_reward: 150
     fragment_reward: 5

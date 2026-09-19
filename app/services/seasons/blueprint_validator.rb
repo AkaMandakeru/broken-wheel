@@ -147,7 +147,8 @@ module Seasons
 
     def validate_challenge_category(entry, path)
       category = entry["category"]
-      if category.present? && !SeasonChallenge::CATEGORIES.include?(category.to_s)
+      # known_category? accepts the legacy spellings the importer maps.
+      if category.present? && !SeasonChallenge.known_category?(category)
         error("#{path}.category", "#{category.inspect} is not a category. Options: #{SeasonChallenge::CATEGORIES.join(', ')}")
       end
 

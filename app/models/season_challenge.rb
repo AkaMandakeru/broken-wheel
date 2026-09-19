@@ -3,7 +3,21 @@ class SeasonChallenge < ApplicationRecord
   belongs_to :challenge
   has_many :season_challenge_completions, dependent: :destroy
 
-  CATEGORIES = %w[standard daily weekly monthly elite hidden].freeze
+  CATEGORIES = %w[standard daily weekly monthly elite special].freeze
+
+  # Spellings older blueprints still use. "hidden" was what special challenges
+  # were called while they stayed off the board until completed.
+  LEGACY_CATEGORIES = { "hidden" => "special" }.freeze
+
+  # The category a blueprint value means today.
+  def self.canonical_category(value)
+    value = value.to_s
+    LEGACY_CATEGORIES.fetch(value, value)
+  end
+
+  def self.known_category?(value)
+    CATEGORIES.include?(canonical_category(value))
+  end
 
   validates :challenge_id, uniqueness: { scope: :season_id }
   validates :category, inclusion: { in: CATEGORIES }
@@ -11,8 +25,7 @@ class SeasonChallenge < ApplicationRecord
   validates :unlock_level, numericality: { greater_than_or_equal_to: 0 }
 
   scope :of_category, ->(category) { where(category: category) }
-  scope :visible, -> { where(hidden: false) }
-  scope :secret, -> { where(hidden: true) }
+  scope :special, -> { of_category("special") }
 
   validate :window_within_season
 
@@ -34,6 +47,12 @@ class SeasonChallenge < ApplicationRecord
 
   def elite?
     category == "elite"
+  end
+
+  # Was "hidden": a challenge players could only stumble into. They are listed
+  # like any other now — the category only marks them as worth more.
+  def special?
+    category == "special"
   end
 
   # True once this challenge's window has closed, so the result is final.

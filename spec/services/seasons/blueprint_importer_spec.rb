@@ -7,6 +7,35 @@ require "rails_helper"
 RSpec.describe Seasons::BlueprintImporter do
   let(:key) { "season_8_legacy_of_champions" }
 
+  # Blueprints exported before special challenges were renamed still say
+  # `category: hidden`, and may still carry a `hidden: true` that no longer maps
+  # to a column. Both have to keep importing rather than failing validation.
+  it "imports a pre-rename blueprint that still says hidden" do
+    yaml = <<~YAML
+      key: legacy_blueprint_#{SecureRandom.hex(3)}
+      name: Legacy Blueprint
+      status: upcoming
+      theme: legacy
+      starts_at: 2026-08-01
+      ends_at: 2026-08-31
+      time_zone: America/Sao_Paulo
+      max_level: 5
+      challenges:
+        - key: legacy_secret_run
+          title: "Legacy Secret"
+          category: hidden
+          hidden: true
+          xp_reward: 300
+          requirements:
+            - { metric: activity_count, target: 1 }
+    YAML
+
+    season = described_class.from_yaml(yaml)
+
+    expect(season.season_challenges.special.count).to eq(1)
+    expect(season.season_challenges.first.category).to eq("special")
+  end
+
   it "imports the reference season with all of its content" do
     season = described_class.call(key)
 
@@ -20,7 +49,7 @@ RSpec.describe Seasons::BlueprintImporter do
     expect(season.season_challenges.of_category("weekly").count).to eq(4)
     expect(season.season_challenges.of_category("monthly").count).to eq(4)
     expect(season.season_challenges.of_category("elite").count).to eq(5)
-    expect(season.season_challenges.secret.count).to eq(6)
+    expect(season.season_challenges.special.count).to eq(6)
     expect(season.season_objectives.legacy.count).to eq(5)
     expect(season.season_community_goals.count).to eq(1)
     expect(DailyChallengeTemplate.where(season: season).count).to eq(12)
