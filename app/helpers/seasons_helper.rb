@@ -31,6 +31,7 @@ module SeasonsHelper
   def season_challenge_date_range(season_challenge)
     window = season_challenge.date_window
     return nil if window.blank?
+    return window.begin.strftime("%d/%m") if window.begin == window.end
 
     "#{window.begin.strftime('%d/%m')} – #{window.end.strftime('%d/%m')}"
   end

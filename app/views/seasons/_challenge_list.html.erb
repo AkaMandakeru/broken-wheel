@@ -1,0 +1,8 @@
+<%# A run of challenge cards. Used by every category section on the season page.
+    locals: items, progress, participation %>
+<div class="space-y-3">
+  <% items.each do |season_challenge| %>
+    <%= render "seasons/challenge_card", season_challenge: season_challenge,
+               mine: progress[season_challenge.challenge_id], participation: participation %>
+  <% end %>
+</div>

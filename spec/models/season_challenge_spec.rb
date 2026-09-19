@@ -62,6 +62,33 @@ RSpec.describe SeasonChallenge, type: :model do
     end
   end
 
+  describe "#narrower_than_season?" do
+    let(:season) { build_season } # 2026-08-01 .. 2026-08-31
+
+    def challenge_over(starts_at: nil, ends_at: nil, category: "special")
+      challenge = build_challenge(key: "c_#{SecureRandom.hex(3)}", requirements: [ { metric: "activity_count", target: 1 } ])
+      season.season_challenges.create!(challenge: challenge, category: category, xp_reward: 10,
+                                       starts_at: starts_at, ends_at: ends_at)
+    end
+
+    it "is true for a single day inside the season" do
+      expect(challenge_over(starts_at: "2026-08-12", ends_at: "2026-08-12")).to be_narrower_than_season
+    end
+
+    it "is true for a week inside the season" do
+      expect(challenge_over(starts_at: "2026-08-03", ends_at: "2026-08-09")).to be_narrower_than_season
+    end
+
+    # A monthly that spells out the season's own dates adds nothing to the card.
+    it "is false when the window is the whole season" do
+      expect(challenge_over(starts_at: "2026-08-01", ends_at: "2026-08-31")).not_to be_narrower_than_season
+    end
+
+    it "is false when it inherits the season's window" do
+      expect(challenge_over(category: "monthly")).not_to be_narrower_than_season
+    end
+  end
+
   # The column that used to drive the hiding is gone; the category is the marker.
   it "no longer carries a hidden flag" do
     expect(described_class.column_names).not_to include("hidden")

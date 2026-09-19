@@ -97,26 +97,20 @@
         <h3 class="text-sm font-semibold text-gray-500 uppercase tracking-wide mt-4 mb-2">
           <i class="<%= season_category_icon("weekly") %> mr-1"></i><%= t("seasons.categories.weekly") %>
         </h3>
-        <div class="space-y-3">
-          <% @weekly_challenges.each do |sc| %>
-            <%= render "seasons/challenge_card", season_challenge: sc,
-                       mine: @my_challenge_progress[sc.challenge_id], participation: @participation %>
-          <% end %>
-        </div>
+        <%= render "seasons/challenge_list", items: @weekly_challenges,
+                   progress: @my_challenge_progress, participation: @participation %>
       <% end %>
 
-      <% %w[monthly elite standard special].each do |category| %>
+      <%# Special challenges are deliberately absent here — they get the second
+          column, beside the legacy missions. %>
+      <% %w[monthly elite standard].each do |category| %>
         <% items = @challenges_by_category[category] %>
         <% next if items.blank? %>
         <h3 class="text-sm font-semibold text-gray-500 uppercase tracking-wide mt-6 mb-2">
           <i class="<%= season_category_icon(category) %> mr-1"></i><%= t("seasons.categories.#{category}", default: category.humanize) %>
         </h3>
-        <div class="space-y-3">
-          <% items.each do |sc| %>
-            <%= render "seasons/challenge_card", season_challenge: sc,
-                       mine: @my_challenge_progress[sc.challenge_id], participation: @participation %>
-          <% end %>
-        </div>
+        <%= render "seasons/challenge_list", items: items,
+                   progress: @my_challenge_progress, participation: @participation %>
       <% end %>
 
       <% if @season_challenges.empty? %>
@@ -147,6 +141,19 @@
     </div>
 
     <div>
+      <%# Special challenges. They sit beside the legacy missions rather than at
+          the bottom of the challenge list, where the weekly run buried them. %>
+      <% special_challenges = @challenges_by_category["special"] %>
+      <% if special_challenges.present? %>
+        <div class="mb-6">
+          <h2 class="text-lg font-semibold text-gray-900 mb-3">
+            <i class="<%= season_category_icon("special") %> text-purple-500 mr-1"></i><%= t("seasons.categories.special") %>
+          </h2>
+          <%= render "seasons/challenge_list", items: special_challenges,
+                     progress: @my_challenge_progress, participation: @participation %>
+        </div>
+      <% end %>
+
       <%# Legacy missions %>
       <% if @legacy_missions.any? %>
         <%= render "seasons/legacy_missions", missions: @legacy_missions,

@@ -27,6 +27,25 @@ RSpec.describe SeasonsHelper, type: :helper do
     end
   end
 
+  describe "#season_challenge_date_range" do
+    let(:season) { build_season } # 2026-08-01 .. 2026-08-31
+
+    def challenge_over(starts_at, ends_at)
+      challenge = build_challenge(key: "c_#{SecureRandom.hex(3)}", requirements: [ { metric: "activity_count", target: 1 } ])
+      season.season_challenges.create!(challenge: challenge, category: "special", xp_reward: 10,
+                                       starts_at: starts_at, ends_at: ends_at)
+    end
+
+    # "12/10 – 12/10" is a range of one. A one-day special reads as a date.
+    it "renders a single day as one date" do
+      expect(helper.season_challenge_date_range(challenge_over("2026-08-12", "2026-08-12"))).to eq("12/08")
+    end
+
+    it "renders a longer window as a range" do
+      expect(helper.season_challenge_date_range(challenge_over("2026-08-03", "2026-08-09"))).to eq("03/08 – 09/08")
+    end
+  end
+
   describe "#season_category_icon" do
     it "gives special challenges their own icon" do
       expect(helper.season_category_icon("special")).to include("fa-star")

@@ -49,6 +49,18 @@ class SeasonChallenge < ApplicationRecord
     category == "elite"
   end
 
+  # True when the challenge covers less of the calendar than the season does,
+  # so its dates tell a player something the season header does not. A monthly
+  # that spells out the season's own start and end says nothing; a one-day
+  # special says everything.
+  def narrower_than_season?
+    window = date_window
+    season_window = season&.date_window
+    return false if window.blank? || season_window.blank?
+
+    window.begin > season_window.begin || window.end < season_window.end
+  end
+
   # Was "hidden": a challenge players could only stumble into. They are listed
   # like any other now — the category only marks them as worth more.
   def special?

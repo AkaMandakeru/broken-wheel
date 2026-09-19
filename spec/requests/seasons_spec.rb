@@ -58,6 +58,30 @@ RSpec.describe "Seasons", type: :request do
       expect(response.body).to include(ERB::Util.html_escape(I18n.t("challenges.defaults.s8_secret_early_bird.title")))
     end
 
+    # The second column: special challenges lead it, the legacy missions follow.
+    # In the first column they sat under the weekly run and got lost.
+    it "puts special challenges in the second column, above the legacy missions" do
+      sign_in user
+      get season_path(season)
+
+      special_section = response.body.index("fa-star text-purple-500")
+      legacy_section = response.body.index(ERB::Util.html_escape(I18n.t("seasons.show.legacy_missions")))
+
+      expect(special_section).to be_present
+      expect(legacy_section).to be_present
+      expect(special_section).to be < legacy_section
+    end
+
+    it "no longer lists special challenges among the first column's categories" do
+      sign_in user
+      get season_path(season)
+
+      # The first column renders its categories as small uppercase h3s; the
+      # special section is an h2 in the second column.
+      first_column_heading = %(uppercase tracking-wide mt-6 mb-2">\n          <i class="fa-solid fa-star)
+      expect(response.body).not_to include(first_column_heading)
+    end
+
     it "marks a special challenge as special" do
       sign_in user
       special = season.season_challenges.special.first

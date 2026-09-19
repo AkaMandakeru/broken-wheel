@@ -1,7 +1,7 @@
 Rails.application.routes.draw do
   get "up" => "rails/health#show", as: :rails_health_check
   get "manifest", to: "pwa#manifest", as: :pwa_manifest, defaults: { format: :json }
-  get "service-worker", to: "pwa#service_worker", as: :pwa_service_worker
+  get "service-worker", to: "pwa#service_worker", as: :pwa_service_worker, defaults: { format: :js }
 
   devise_for :users, controllers: {
     registrations: "users/registrations"

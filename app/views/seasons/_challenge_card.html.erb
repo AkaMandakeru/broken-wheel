@@ -7,8 +7,11 @@
 <div class="bg-white rounded-lg border p-4 <%= completed ? 'border-green-200' : 'border-gray-200' %> <%= 'opacity-70' if locked %>">
   <div class="flex items-start justify-between gap-3">
     <div class="min-w-0">
-      <%# Weekly challenges show the dates they cover, above the title. %>
-      <% if weekly && (range = season_challenge_date_range(season_challenge)) %>
+      <%# The dates a challenge covers, above the title — shown whenever it runs
+          over less than the whole season. Weeklies have always had this; a
+          one-day special needs it more, since missing the day is the whole
+          difference between attemptable and not. %>
+      <% if season_challenge.narrower_than_season? && (range = season_challenge_date_range(season_challenge)) %>
         <p class="text-[11px] font-medium uppercase tracking-wide text-gray-400 mb-0.5">
           <i class="fa-regular fa-calendar mr-1"></i><%= range %>
         </p>
