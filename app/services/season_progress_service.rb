@@ -90,7 +90,13 @@ class SeasonProgressService
       streak: [ streak_weeks, STREAK_CAP_WEEKS ].min * STREAK_XP_PER_WEEK,
       consistency: consistency_weeks * CONSISTENCY_XP_PER_WEEK,
       clubs: @user.club_memberships.exists? ? CLUB_BONUS : 0
-    }
+    }.merge(sandbox_xp)
+  end
+
+  # XP an admin added through the season sandbox. Left out of the breakdown
+  # entirely when zero, so real participants never see a line for it.
+  def sandbox_xp
+    @participation.sandbox_xp.to_i.zero? ? {} : { sandbox: @participation.sandbox_xp }
   end
 
   def total_xp

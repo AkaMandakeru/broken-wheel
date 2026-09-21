@@ -582,6 +582,120 @@ pt:
 
   # Área administrativa
   admin:
+    season_sandbox:
+      title: "Sandbox da temporada"
+      page_title: "Sandbox · %{season}"
+      warning: "Dados de teste. Tudo aqui grava registros reais para o jogador escolhido — use apenas em contas de desenvolvimento ou staging. Treinos e bots do sandbox são marcados para que o Reset possa removê-los."
+      user_not_found: "Nenhum usuário com esse email."
+      selection_hint: "Marque os que devem ser concluídos, ou deixe tudo desmarcado para concluir todos."
+      user:
+        title: "Jogador"
+        email: "Email"
+        pick: "Carregar jogador"
+        me: "Usar minha conta"
+      status:
+        coins:
+          one: "1 moeda"
+          other: "%{count} moedas"
+        level: "Nível"
+        xp: "XP"
+        sandbox_xp: "(%{xp} do sandbox)"
+        unclaimed: "Aguardando resgate"
+        rank: "Posição"
+        medal: "Medalha"
+        fragments:
+          one: "1 fragmento"
+          other: "%{count} fragmentos"
+        completion: "Conclusão"
+        rewards: "Recompensas concedidas"
+        activity: "Treinos na temporada"
+        activity_value: "%{count} · %{km} km (%{sandbox} do sandbox)"
+        not_enrolled: "Ainda não participa desta temporada."
+        enroll: "Inscrever"
+        auto_enroll: "Qualquer ação abaixo inscreve o jogador primeiro."
+        recalculate: "Recalcular"
+        reset: "Resetar"
+        reset_confirm: "Resetar %{email} nesta temporada? O progresso, as diárias, as moedas da temporada e as recompensas concedidas por ela são removidos, junto com os treinos do sandbox. Treinos reais são mantidos."
+      level:
+        title: "Nível e XP"
+        level: "Ir para o nível"
+        set: "Definir nível"
+        hint: "Adiciona o XP de sandbox necessário para chegar ao nível e concede todas as recompensas de nível no caminho. Nunca reduz um nível que o jogador conquistou."
+        xp: "XP a adicionar (negativo remove XP do sandbox)"
+        add_xp: "Adicionar XP"
+        premium_hint: "Virar premium concede as recompensas premium já desbloqueadas."
+        premium_on: "Tornar premium"
+        premium_off: "Remover premium"
+      workouts:
+        title: "Treinos"
+        hint: "Distribuídos igualmente entre as datas, com horário para que desafios por hora os contem. Deixe as datas em branco para a temporada até hoje, ou a temporada inteira se ela ainda não começou."
+        count: "Quantidade"
+        sport: "Esporte"
+        min_km: "Km mín."
+        max_km: "Km máx."
+        from: "De"
+        to: "Até"
+        generate: "Gerar treinos"
+      challenges:
+        title: "Desafios"
+        hint: "Conclui os desafios independentemente do status da temporada e do nível de desbloqueio, pagando moedas e fragmentos normalmente. Marque os que devem ser concluídos, ou deixe tudo desmarcado para concluir todos."
+        claim: "Resgatar o XP também"
+        complete: "Concluir desafios"
+        claimed: "Concluído e resgatado"
+        unclaimed: "Concluído, aguardando resgate"
+      objectives:
+        title: "Objetivos e missões de legado"
+        complete: "Concluir objetivos"
+        empty: "Esta temporada não tem objetivos."
+      dailies:
+        title: "Desafios diários"
+        hint: "Sorteia e conclui as %{per_day} diárias de cada dia, contando para trás a partir de hoje — ou para frente a partir do primeiro dia, se a temporada ainda não começou."
+        days: "Dias"
+        complete: "Concluir diárias"
+      rewards:
+        title: "Recompensas"
+        hint: "Conceda uma recompensa diretamente, qualquer que seja o nível, a trilha ou a regra de desbloqueio — do jeito que ela chegaria ao ser conquistada."
+        grant: "Conceder"
+        granted: "Concedida"
+        empty: "Esta temporada não tem recompensas."
+      bots:
+        title: "Outros corredores"
+        hint:
+          one: "Bots preenchem o ranking e a meta da comunidade. Existe 1 bot."
+          other: "Bots preenchem o ranking e a meta da comunidade. Existem %{count} bots."
+        count: "Bots a adicionar"
+        add: "Adicionar bots"
+        community: "Rodar metas da comunidade agora"
+        remove: "Remover todos os bots"
+        remove_confirm: "Excluir todos os %{count} bots do sandbox e tudo o que fizeram, em todas as temporadas?"
+      flashes:
+        enrolled: "Jogador inscrito."
+        workouts:
+          one: "1 treino adicionado."
+          other: "%{count} treinos adicionados."
+        challenges:
+          one: "1 desafio atualizado."
+          other: "%{count} desafios atualizados."
+        objectives:
+          one: "1 objetivo concluído."
+          other: "%{count} objetivos concluídos."
+        dailies:
+          one: "1 diária concluída."
+          other: "%{count} diárias concluídas."
+        level: "O jogador agora está no nível %{level}."
+        xp: "O jogador agora tem %{xp} XP."
+        premium_on: "O jogador é premium."
+        premium_off: "O jogador não é mais premium."
+        reward: "%{name} concedida."
+        recalculated: "Progresso recalculado."
+        reset: "%{name} foi resetado nesta temporada."
+        community: "Metas da comunidade atualizadas. As recompensas dos marcos estão sendo entregues."
+        bots_added:
+          one: "1 bot adicionado."
+          other: "%{count} bots adicionados."
+        bots_removed:
+          one: "1 bot removido."
+          other: "%{count} bots removidos."
     flashes:
       not_authorized: "Você não tem permissão para acessar essa página."
       cosmetics:

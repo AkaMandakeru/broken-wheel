@@ -610,6 +610,120 @@ en:
 
   # Admin area
   admin:
+    season_sandbox:
+      title: "Season sandbox"
+      page_title: "Sandbox · %{season}"
+      warning: "Test data. Everything here writes real rows for the chosen player — use it on development or staging accounts only. Sandbox workouts and bots are marked so Reset can remove them."
+      user_not_found: "No user with that email."
+      selection_hint: "Tick the ones to complete, or leave everything unticked to complete them all."
+      user:
+        title: "Player"
+        email: "Email"
+        pick: "Load player"
+        me: "Use my account"
+      status:
+        coins:
+          one: "1 coin"
+          other: "%{count} coins"
+        level: "Level"
+        xp: "XP"
+        sandbox_xp: "(%{xp} from sandbox)"
+        unclaimed: "Waiting to claim"
+        rank: "Rank"
+        medal: "Medal"
+        fragments:
+          one: "1 fragment"
+          other: "%{count} fragments"
+        completion: "Completion"
+        rewards: "Rewards granted"
+        activity: "Workouts in season"
+        activity_value: "%{count} · %{km} km (%{sandbox} sandbox)"
+        not_enrolled: "Not taking part in this season yet."
+        enroll: "Enroll"
+        auto_enroll: "Any action below enrolls the player first."
+        recalculate: "Recalculate"
+        reset: "Reset"
+        reset_confirm: "Reset %{email} in this season? Their progress, dailies, season coins and the rewards this season granted are removed, along with sandbox workouts. Real workouts are kept."
+      level:
+        title: "Level & XP"
+        level: "Jump to level"
+        set: "Set level"
+        hint: "Adds just enough sandbox XP to reach the level, and grants every level reward on the way. Never lowers a level the player has earned."
+        xp: "XP to add (negative removes sandbox XP)"
+        add_xp: "Add XP"
+        premium_hint: "Going premium grants the premium rewards already unlocked."
+        premium_on: "Make premium"
+        premium_off: "Remove premium"
+      workouts:
+        title: "Workouts"
+        hint: "Spread evenly over the dates, with a clock time so hour-based challenges count them. Leave the dates blank for the season so far, or the whole season if it has not started."
+        count: "How many"
+        sport: "Sport"
+        min_km: "Min km"
+        max_km: "Max km"
+        from: "From"
+        to: "To"
+        generate: "Generate workouts"
+      challenges:
+        title: "Challenges"
+        hint: "Completes them whatever the season's status and unlock level, paying coins and fragments as usual. Tick the ones to complete, or leave everything unticked to complete them all."
+        claim: "Claim the XP too"
+        complete: "Complete challenges"
+        claimed: "Completed and claimed"
+        unclaimed: "Completed, waiting to be claimed"
+      objectives:
+        title: "Objectives & legacy missions"
+        complete: "Complete objectives"
+        empty: "This season has no objectives."
+      dailies:
+        title: "Daily challenges"
+        hint: "Draws and completes the %{per_day} dailies for each day, counting back from today — or forward from the first day, if the season has not started."
+        days: "Days"
+        complete: "Complete dailies"
+      rewards:
+        title: "Rewards"
+        hint: "Grant one reward directly, whatever its level, track or unlock rule — the way it would arrive when earned."
+        grant: "Grant"
+        granted: "Granted"
+        empty: "This season has no rewards."
+      bots:
+        title: "Other runners"
+        hint:
+          one: "Bots fill the leaderboard and the community goal. 1 bot exists."
+          other: "Bots fill the leaderboard and the community goal. %{count} bots exist."
+        count: "Bots to add"
+        add: "Add bots"
+        community: "Run community goals now"
+        remove: "Remove all bots"
+        remove_confirm: "Delete all %{count} sandbox bots and everything they did, in every season?"
+      flashes:
+        enrolled: "Player enrolled."
+        workouts:
+          one: "1 workout added."
+          other: "%{count} workouts added."
+        challenges:
+          one: "1 challenge updated."
+          other: "%{count} challenges updated."
+        objectives:
+          one: "1 objective completed."
+          other: "%{count} objectives completed."
+        dailies:
+          one: "1 daily completed."
+          other: "%{count} dailies completed."
+        level: "Player is now level %{level}."
+        xp: "Player now has %{xp} XP."
+        premium_on: "Player is premium."
+        premium_off: "Player is no longer premium."
+        reward: "Granted %{name}."
+        recalculated: "Progress recalculated."
+        reset: "%{name} was reset for this season."
+        community: "Community goals refreshed. Milestone rewards are being handed out."
+        bots_added:
+          one: "1 bot added."
+          other: "%{count} bots added."
+        bots_removed:
+          one: "1 bot removed."
+          other: "%{count} bots removed."
     flashes:
       not_authorized: "You are not authorized to access that page."
       cosmetics:

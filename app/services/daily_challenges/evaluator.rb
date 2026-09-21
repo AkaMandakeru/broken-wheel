@@ -23,6 +23,36 @@ module DailyChallenges
       assignments.select { |assignment| complete_if_met(assignment) }
     end
 
+    # Pays one assignment out. Public so the admin season sandbox can complete a
+    # daily through the same path a real one takes.
+    def award(assignment, template)
+      assignment.update!(
+        completed_at: Time.current,
+        xp_awarded: template.xp_reward,
+        coin_awarded: template.coin_reward
+      )
+
+      Wallet.credit(
+        @user,
+        amount: template.coin_reward,
+        reason: "daily_challenge",
+        reason_key: "daily_challenge:#{assignment.id}",
+        metadata: { season_id: @season.id, daily: template.key }
+      )
+
+      SeasonActivity.create!(
+        season: @season,
+        user: @user,
+        kind: "daily_completed",
+        metadata: { daily: template.display_title, xp: template.xp_reward }
+      )
+
+      SeasonAnalytics.track(
+        user: @user, event: "season_daily_completed", season: @season,
+        template_key: template.key, xp: template.xp_reward
+      )
+    end
+
     private
 
     def pending_assignments
@@ -52,34 +82,6 @@ module DailyChallenges
       @context ||= ChallengeMetrics::Context.new(
         user: @user, window: @season.date_window,
         season: @season, participation: @participation
-      )
-    end
-
-    def award(assignment, template)
-      assignment.update!(
-        completed_at: Time.current,
-        xp_awarded: template.xp_reward,
-        coin_awarded: template.coin_reward
-      )
-
-      Wallet.credit(
-        @user,
-        amount: template.coin_reward,
-        reason: "daily_challenge",
-        reason_key: "daily_challenge:#{assignment.id}",
-        metadata: { season_id: @season.id, daily: template.key }
-      )
-
-      SeasonActivity.create!(
-        season: @season,
-        user: @user,
-        kind: "daily_completed",
-        metadata: { daily: template.display_title, xp: template.xp_reward }
-      )
-
-      SeasonAnalytics.track(
-        user: @user, event: "season_daily_completed", season: @season,
-        template_key: template.key, xp: template.xp_reward
       )
     end
   end

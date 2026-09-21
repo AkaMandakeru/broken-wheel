@@ -23,6 +23,12 @@ class SeasonRewardGranter
     grant(@season.season_rewards.by_unlock(kind.to_s, value).on_track(@participation.premium?))
   end
 
+  # One specific reward, whatever its unlock rule or track. Used by the admin
+  # season sandbox to try out a reward without earning everything before it.
+  def grant_reward(reward)
+    grant(@season.season_rewards.where(id: reward.id))
+  end
+
   private
 
   def grant(scope)

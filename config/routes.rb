@@ -74,6 +74,23 @@ Rails.application.routes.draw do
       resources :season_challenges, only: [:create, :destroy]
       resources :season_objectives, only: [:create, :destroy]
       resources :season_rewards, only: [:create, :destroy]
+      # Test data for staging and development; 404s anywhere else.
+      resource :sandbox, only: [:show], controller: "season_sandboxes" do
+        post :enroll
+        post :workouts
+        post :challenges
+        post :objectives
+        post :dailies
+        post :level
+        post :xp
+        post :premium
+        post :reward
+        post :recalculate
+        post :community
+        post :bots, action: :add_bots
+        delete :bots, action: :remove_bots
+        delete :reset
+      end
     end
     resources :season_imports, only: [:new, :create] do
       collection { get :template }

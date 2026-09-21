@@ -1,0 +1,309 @@
+<% content_for :title, t("admin.season_sandbox.page_title", season: @season.name) %>
+<% card = "bg-white rounded-lg shadow-sm border border-gray-200 p-5" %>
+<% input = "block w-full rounded-lg border border-gray-300 px-3 py-2 text-sm" %>
+<% label = "block text-xs text-gray-500 mb-1" %>
+<% primary = "bg-gray-900 text-white px-4 py-2 rounded-lg hover:bg-gray-700 transition font-medium text-sm cursor-pointer" %>
+<% secondary = "border border-gray-300 px-4 py-2 rounded-lg hover:bg-gray-50 transition font-medium text-sm cursor-pointer" %>
+<% danger = "border border-red-300 text-red-700 px-4 py-2 rounded-lg hover:bg-red-50 transition font-medium text-sm cursor-pointer" %>
+<% as_user = @user ? { user_id: @user.id } : {} %>
+
+<div class="pt-8 space-y-6">
+  <div>
+    <%= link_to admin_season_path(@season), class: "text-sm text-gray-500 hover:text-[#FC4C02] flex items-center gap-1 mb-2" do %>
+      <i class="fa-solid fa-arrow-left text-xs"></i> <%= @season.name %>
+    <% end %>
+    <h1 class="text-2xl font-bold text-gray-900 flex items-center gap-2">
+      <i class="fa-solid fa-flask text-[#FC4C02]"></i> <%= t("admin.season_sandbox.title") %>
+    </h1>
+    <p class="text-sm text-gray-500 mt-1">
+      <span class="px-2 py-0.5 rounded-full text-xs <%= season_status_badge_class(@season.status) %>"><%= t("seasons.statuses.#{@season.status}", default: @season.status.capitalize) %></span>
+      · <%= @season.starts_at&.strftime("%b %-d") %> – <%= @season.ends_at&.strftime("%b %-d, %Y") %>
+      · <%= t("admin.seasons.fields.max_level") %>: <%= @season.max_level %>
+    </p>
+  </div>
+
+  <div class="rounded-lg border border-amber-200 bg-amber-50 p-4 text-sm text-amber-800">
+    <i class="fa-solid fa-triangle-exclamation mr-1"></i> <%= t("admin.season_sandbox.warning") %>
+  </div>
+
+  <%# Who the data goes to %>
+  <div class="<%= card %>">
+    <h2 class="text-sm font-semibold text-gray-900 mb-3"><%= t("admin.season_sandbox.user.title") %></h2>
+    <%= form_with url: admin_season_sandbox_path(@season), method: :get, class: "flex flex-wrap items-end gap-3" do %>
+      <div class="flex-1 min-w-60">
+        <label class="<%= label %>" for="email"><%= t("admin.season_sandbox.user.email") %></label>
+        <%= email_field_tag :email, @user&.email, list: "sandbox-users", required: true, class: input %>
+        <datalist id="sandbox-users">
+          <% @users.each do |u| %>
+            <option value="<%= u.email %>"><%= u.first_name %> <%= u.last_name %></option>
+          <% end %>
+        </datalist>
+      </div>
+      <%= submit_tag t("admin.season_sandbox.user.pick"), name: nil, class: primary %>
+      <%= link_to t("admin.season_sandbox.user.me"), admin_season_sandbox_path(@season, user_id: current_user.id), class: secondary %>
+    <% end %>
+  </div>
+
+  <% if @user %>
+    <% curve = @season.level_curve_object %>
+    <%# Where the player stands %>
+    <div class="<%= card %>">
+      <div class="flex flex-wrap items-start justify-between gap-3 mb-4">
+        <div>
+          <h2 class="text-lg font-semibold text-gray-900"><%= @user.first_name %> <%= @user.last_name %></h2>
+          <p class="text-xs text-gray-500"><%= @user.email %> · <%= t("admin.season_sandbox.status.coins", count: @user.coins) %></p>
+        </div>
+        <div class="flex flex-wrap gap-2">
+          <%= link_to t("admin.seasons.view_public"), season_path(@season), class: secondary, target: "_blank", rel: "noopener" %>
+          <% if @participation %>
+            <%= button_to t("admin.season_sandbox.status.recalculate"), recalculate_admin_season_sandbox_path(@season, **as_user), class: secondary %>
+            <%= button_to t("admin.season_sandbox.status.reset"), reset_admin_season_sandbox_path(@season, **as_user), method: :delete,
+                          form: { data: { turbo_confirm: t("admin.season_sandbox.status.reset_confirm", email: @user.email) } }, class: danger %>
+          <% end %>
+        </div>
+      </div>
+
+      <% if @participation %>
+        <dl class="grid grid-cols-2 sm:grid-cols-4 gap-4 text-sm">
+          <div>
+            <dt class="text-xs text-gray-500"><%= t("admin.season_sandbox.status.level") %></dt>
+            <dd class="font-semibold text-gray-900"><%= @participation.level %> / <%= curve.max_level %></dd>
+          </div>
+          <div>
+            <dt class="text-xs text-gray-500"><%= t("admin.season_sandbox.status.xp") %></dt>
+            <dd class="font-semibold text-gray-900">
+              <%= number_with_delimiter(@participation.xp) %>
+              <% if @participation.sandbox_xp.positive? %>
+                <span class="text-xs font-normal text-gray-400"><%= t("admin.season_sandbox.status.sandbox_xp", xp: number_with_delimiter(@participation.sandbox_xp)) %></span>
+              <% end %>
+            </dd>
+          </div>
+          <div>
+            <dt class="text-xs text-gray-500"><%= t("admin.season_sandbox.status.unclaimed") %></dt>
+            <dd class="font-semibold text-gray-900"><%= @participation.unclaimed_count %> · <%= @participation.unclaimed_xp %> XP</dd>
+          </div>
+          <div>
+            <dt class="text-xs text-gray-500"><%= t("admin.season_sandbox.status.rank") %></dt>
+            <dd class="font-semibold text-gray-900">#<%= @participation.rank %> / <%= @season.season_participations.count %></dd>
+          </div>
+          <div>
+            <dt class="text-xs text-gray-500"><%= t("admin.season_sandbox.status.medal") %></dt>
+            <dd class="font-semibold text-gray-900"><%= medal_chip(@participation.medal_tier) || "—" %> <span class="text-xs font-normal text-gray-400"><%= t("admin.season_sandbox.status.fragments", count: @participation.medal_fragments) %></span></dd>
+          </div>
+          <div>
+            <dt class="text-xs text-gray-500"><%= t("admin.season_sandbox.status.completion") %></dt>
+            <dd class="font-semibold text-gray-900"><%= @participation.completion_percent %>%</dd>
+          </div>
+          <div>
+            <dt class="text-xs text-gray-500"><%= t("admin.season_sandbox.status.rewards") %></dt>
+            <dd class="font-semibold text-gray-900"><%= @granted_reward_ids.size %> / <%= @season.season_rewards.size %></dd>
+          </div>
+          <div>
+            <dt class="text-xs text-gray-500"><%= t("admin.season_sandbox.status.activity") %></dt>
+            <dd class="font-semibold text-gray-900"><%= t("admin.season_sandbox.status.activity_value", count: @participation.activities_count, km: @participation.total_distance_km.to_f.round(1), sandbox: @sandbox_workouts_count) %></dd>
+          </div>
+        </dl>
+      <% else %>
+        <div class="flex flex-wrap items-center gap-3">
+          <p class="text-sm text-gray-500"><%= t("admin.season_sandbox.status.not_enrolled") %></p>
+          <%= button_to t("admin.season_sandbox.status.enroll"), enroll_admin_season_sandbox_path(@season, **as_user), class: primary %>
+        </div>
+        <p class="text-xs text-gray-400 mt-2"><%= t("admin.season_sandbox.status.auto_enroll") %></p>
+      <% end %>
+    </div>
+
+    <div class="grid lg:grid-cols-2 gap-6">
+      <%# Level, XP and premium %>
+      <div class="<%= card %> space-y-4">
+        <h2 class="text-sm font-semibold text-gray-900"><%= t("admin.season_sandbox.level.title") %></h2>
+        <%= form_with url: level_admin_season_sandbox_path(@season, **as_user), class: "flex items-end gap-3" do %>
+          <div class="flex-1">
+            <label class="<%= label %>" for="level"><%= t("admin.season_sandbox.level.level") %></label>
+            <%= number_field_tag :level, [ @participation&.level.to_i + 1, curve.max_level ].min, min: 1, max: curve.max_level, class: input %>
+          </div>
+          <%= submit_tag t("admin.season_sandbox.level.set"), name: nil, class: primary %>
+        <% end %>
+        <p class="text-xs text-gray-400"><%= t("admin.season_sandbox.level.hint") %></p>
+
+        <%= form_with url: xp_admin_season_sandbox_path(@season, **as_user), class: "flex items-end gap-3" do %>
+          <div class="flex-1">
+            <label class="<%= label %>" for="amount"><%= t("admin.season_sandbox.level.xp") %></label>
+            <%= number_field_tag :amount, 500, step: 1, class: input %>
+          </div>
+          <%= submit_tag t("admin.season_sandbox.level.add_xp"), name: nil, class: secondary %>
+        <% end %>
+
+        <div class="flex items-center justify-between border-t border-gray-100 pt-4">
+          <div>
+            <p class="text-sm font-medium text-gray-900"><%= t("seasons.tracks.premium") %></p>
+            <p class="text-xs text-gray-400"><%= t("admin.season_sandbox.level.premium_hint") %></p>
+          </div>
+          <% premium = @participation&.premium? %>
+          <%= button_to t(premium ? "admin.season_sandbox.level.premium_off" : "admin.season_sandbox.level.premium_on"),
+                        premium_admin_season_sandbox_path(@season, **as_user, premium: premium ? "0" : "1"),
+                        class: premium ? secondary : primary %>
+        </div>
+      </div>
+
+      <%# Workouts %>
+      <div class="<%= card %>">
+        <h2 class="text-sm font-semibold text-gray-900 mb-1"><%= t("admin.season_sandbox.workouts.title") %></h2>
+        <p class="text-xs text-gray-400 mb-3"><%= t("admin.season_sandbox.workouts.hint") %></p>
+        <%= form_with url: workouts_admin_season_sandbox_path(@season, **as_user), class: "space-y-3" do %>
+          <div class="grid grid-cols-2 gap-3">
+            <div>
+              <label class="<%= label %>" for="count"><%= t("admin.season_sandbox.workouts.count") %></label>
+              <%= number_field_tag :count, 20, min: 1, max: SeasonSandbox::MAX_WORKOUTS, class: input %>
+            </div>
+            <div>
+              <label class="<%= label %>" for="sport"><%= t("admin.season_sandbox.workouts.sport") %></label>
+              <%= select_tag :sport, options_for_select(Challenge::SPORTS, "run"), class: input %>
+            </div>
+            <div>
+              <label class="<%= label %>" for="min_km"><%= t("admin.season_sandbox.workouts.min_km") %></label>
+              <%= number_field_tag :min_km, 3, min: 0, step: "any", class: input %>
+            </div>
+            <div>
+              <label class="<%= label %>" for="max_km"><%= t("admin.season_sandbox.workouts.max_km") %></label>
+              <%= number_field_tag :max_km, 12, min: 0, step: "any", class: input %>
+            </div>
+            <div>
+              <label class="<%= label %>" for="from"><%= t("admin.season_sandbox.workouts.from") %></label>
+              <%= date_field_tag :from, nil, min: @season.starts_at&.to_date, max: @season.ends_at&.to_date, class: input %>
+            </div>
+            <div>
+              <label class="<%= label %>" for="to"><%= t("admin.season_sandbox.workouts.to") %></label>
+              <%= date_field_tag :to, nil, min: @season.starts_at&.to_date, max: @season.ends_at&.to_date, class: input %>
+            </div>
+          </div>
+          <%= submit_tag t("admin.season_sandbox.workouts.generate"), name: nil, class: primary %>
+        <% end %>
+      </div>
+    </div>
+
+    <%# Challenges %>
+    <div class="<%= card %>">
+      <h2 class="text-sm font-semibold text-gray-900 mb-1"><%= t("admin.season_sandbox.challenges.title") %></h2>
+      <p class="text-xs text-gray-400 mb-3"><%= t("admin.season_sandbox.challenges.hint") %></p>
+      <% season_challenges = @season.season_challenges.includes(:challenge) %>
+      <% if season_challenges.any? %>
+        <%= form_with url: challenges_admin_season_sandbox_path(@season, **as_user), class: "space-y-3" do %>
+          <div class="grid sm:grid-cols-2 gap-x-6 gap-y-1 max-h-96 overflow-y-auto">
+            <% season_challenges.each do |sc| %>
+              <label class="flex items-center gap-2 text-sm py-1">
+                <%= check_box_tag "ids[]", sc.id, false, id: "challenge_#{sc.id}", class: "rounded text-[#FC4C02]" %>
+                <i class="<%= season_category_icon(sc.category) %> text-gray-400 w-4"></i>
+                <span class="text-gray-900 truncate"><%= sc.challenge.display_title %></span>
+                <span class="text-xs text-gray-400 shrink-0">+<%= sc.xp_reward %> XP<%= " · L#{sc.unlock_level}" if sc.unlock_level.positive? %></span>
+                <% if @claimed_challenge_ids.include?(sc.id) %>
+                  <i class="fa-solid fa-circle-check text-green-600" title="<%= t("admin.season_sandbox.challenges.claimed") %>"></i>
+                <% elsif @completed_challenge_ids.include?(sc.id) %>
+                  <i class="fa-solid fa-hourglass-half text-amber-500" title="<%= t("admin.season_sandbox.challenges.unclaimed") %>"></i>
+                <% end %>
+              </label>
+            <% end %>
+          </div>
+          <div class="flex flex-wrap items-center gap-4 border-t border-gray-100 pt-3">
+            <label class="flex items-center gap-2 text-sm text-gray-700">
+              <%= check_box_tag :claim, "1", true, class: "rounded text-[#FC4C02]" %> <%= t("admin.season_sandbox.challenges.claim") %>
+            </label>
+            <%= submit_tag t("admin.season_sandbox.challenges.complete"), name: nil, class: primary %>
+          </div>
+        <% end %>
+      <% else %>
+        <p class="text-sm text-gray-400"><%= t("admin.seasons.challenges.empty") %></p>
+      <% end %>
+    </div>
+
+    <div class="grid lg:grid-cols-2 gap-6">
+      <%# Objectives and legacy missions %>
+      <div class="<%= card %>">
+        <h2 class="text-sm font-semibold text-gray-900 mb-1"><%= t("admin.season_sandbox.objectives.title") %></h2>
+        <p class="text-xs text-gray-400 mb-3"><%= t("admin.season_sandbox.selection_hint") %></p>
+        <% if @season.season_objectives.any? %>
+          <%= form_with url: objectives_admin_season_sandbox_path(@season, **as_user), class: "space-y-3" do %>
+            <div class="space-y-1 max-h-72 overflow-y-auto">
+              <% @season.season_objectives.each do |objective| %>
+                <label class="flex items-center gap-2 text-sm py-1">
+                  <%= check_box_tag "ids[]", objective.id, false, id: "objective_#{objective.id}", class: "rounded text-[#FC4C02]" %>
+                  <span class="text-gray-900 truncate"><%= objective.display_name %></span>
+                  <span class="text-xs text-gray-400 shrink-0"><%= objective.track %> · +<%= objective.xp_reward %> XP</span>
+                  <% if @completed_objective_ids.include?(objective.id) %>
+                    <i class="fa-solid fa-circle-check text-green-600"></i>
+                  <% end %>
+                </label>
+              <% end %>
+            </div>
+            <%= submit_tag t("admin.season_sandbox.objectives.complete"), name: nil, class: primary %>
+          <% end %>
+        <% else %>
+          <p class="text-sm text-gray-400"><%= t("admin.season_sandbox.objectives.empty") %></p>
+        <% end %>
+      </div>
+
+      <%# Dailies %>
+      <div class="<%= card %>">
+        <h2 class="text-sm font-semibold text-gray-900 mb-1"><%= t("admin.season_sandbox.dailies.title") %></h2>
+        <p class="text-xs text-gray-400 mb-3"><%= t("admin.season_sandbox.dailies.hint", per_day: DailyChallenges::Assigner::PER_DAY) %></p>
+        <%= form_with url: dailies_admin_season_sandbox_path(@season, **as_user), class: "flex items-end gap-3" do %>
+          <div class="flex-1">
+            <label class="<%= label %>" for="days"><%= t("admin.season_sandbox.dailies.days") %></label>
+            <%= number_field_tag :days, 7, min: 1, max: SeasonSandbox::MAX_DAILY_DAYS, class: input %>
+          </div>
+          <%= submit_tag t("admin.season_sandbox.dailies.complete"), name: nil, class: primary %>
+        <% end %>
+      </div>
+    </div>
+
+    <%# Rewards %>
+    <div class="<%= card %>">
+      <h2 class="text-sm font-semibold text-gray-900 mb-1"><%= t("admin.season_sandbox.rewards.title") %></h2>
+      <p class="text-xs text-gray-400 mb-3"><%= t("admin.season_sandbox.rewards.hint") %></p>
+      <div class="divide-y divide-gray-100 max-h-[28rem] overflow-y-auto">
+        <% @season.season_rewards.order(:unlock_kind, :unlock_value, :track).each do |reward| %>
+          <div class="flex items-center justify-between gap-3 py-2 text-sm">
+            <div class="min-w-0">
+              <i class="<%= season_reward_icon(reward) %> text-gray-400 w-4"></i>
+              <span class="font-medium text-gray-900"><%= season_reward_label(reward) %></span>
+              <span class="text-xs text-gray-400">
+                · <%= reward.unlock_kind %> <%= reward.unlock_value %> · <%= reward.reward_type %>
+              </span>
+              <% if reward.premium? %>
+                <span class="ml-1 text-[10px] px-1.5 py-0.5 rounded-full bg-amber-100 text-amber-700"><%= t("seasons.tracks.premium") %></span>
+              <% end %>
+            </div>
+            <% if @granted_reward_ids.include?(reward.id) %>
+              <span class="text-xs text-green-700 shrink-0"><i class="fa-solid fa-circle-check"></i> <%= t("admin.season_sandbox.rewards.granted") %></span>
+            <% else %>
+              <%= button_to t("admin.season_sandbox.rewards.grant"), reward_admin_season_sandbox_path(@season, **as_user, reward_id: reward.id),
+                            class: "text-xs text-[#FC4C02] hover:underline cursor-pointer shrink-0" %>
+            <% end %>
+          </div>
+        <% end %>
+        <% if @season.season_rewards.none? %>
+          <p class="text-sm text-gray-400 py-2"><%= t("admin.season_sandbox.rewards.empty") %></p>
+        <% end %>
+      </div>
+    </div>
+  <% end %>
+
+  <%# Everyone else: bots and the community bar %>
+  <div class="<%= card %>">
+    <h2 class="text-sm font-semibold text-gray-900 mb-1"><%= t("admin.season_sandbox.bots.title") %></h2>
+    <p class="text-xs text-gray-400 mb-3"><%= t("admin.season_sandbox.bots.hint", count: @bots_count) %></p>
+    <div class="flex flex-wrap items-end gap-3">
+      <%= form_with url: bots_admin_season_sandbox_path(@season, **as_user), class: "flex items-end gap-3" do %>
+        <div>
+          <label class="<%= label %>" for="bot_count"><%= t("admin.season_sandbox.bots.count") %></label>
+          <%= number_field_tag :count, 10, min: 1, max: SeasonSandbox::MAX_BOTS, id: "bot_count", class: input %>
+        </div>
+        <%= submit_tag t("admin.season_sandbox.bots.add"), name: nil, class: primary %>
+      <% end %>
+      <%= button_to t("admin.season_sandbox.bots.community"), community_admin_season_sandbox_path(@season, **as_user), class: secondary %>
+      <% if @bots_count.positive? %>
+        <%= button_to t("admin.season_sandbox.bots.remove"), bots_admin_season_sandbox_path(@season, **as_user), method: :delete,
+                      form: { data: { turbo_confirm: t("admin.season_sandbox.bots.remove_confirm", count: @bots_count) } }, class: danger %>
+      <% end %>
+    </div>
+  </div>
+</div>
