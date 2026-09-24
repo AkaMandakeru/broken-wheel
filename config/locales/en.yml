@@ -396,10 +396,16 @@ en:
       empty_body: "Banners and frames are handed out as season rewards."
       browse_seasons: "Browse seasons"
       not_yet_offered: "Not offered by a season yet"
+      claim: "Claim"
+      claimable:
+        one: "Waiting for you · 1"
+        other: "Waiting for you · %{count}"
     flashes:
       equipped: "Profile updated."
       removed: "Removed."
       unavailable: "You haven't unlocked that yet."
+      claimed: "Claimed. It is yours now."
+      already_owned: "You already have that one."
 
   home:
     meta:
@@ -793,7 +799,7 @@ en:
         actions: "Actions"
       form:
         key_hint: "Stable identifier. A season reward of type Cosmetic uses this as its reward key."
-        image_hint: "Banners are cropped wide — 1200×400 works well. Frames should be square PNGs with a transparent middle; the avatar sits in the center 78%."
+        image_hint: "Banners are shown at 3:1 — 1800×600 works well. Frames should be square PNGs with a transparent middle; the avatar sits in the center 78%."
         save: "Save"
         cancel: "Cancel"
     nav:
@@ -946,6 +952,9 @@ en:
         join_window_hint: "Only for Taking part. Leave both blank for every member, whenever they joined."
         distribute: "Hand out now"
         confirm_distribute: "Hand this reward to everyone who qualifies?"
+        claimable: "Let members claim it themselves"
+        claimable_hint: "Shows up in their locker with a Claim button instead of being handed out."
+        claimable_badge: "Claimable"
         name: "Display name"
         track: "Track"
         coins: "Coins"

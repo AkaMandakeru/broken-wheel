@@ -13,8 +13,25 @@ class AppearancesController < ApplicationController
     @owned = current_user.owned_cosmetics(@kind).to_a
     @locked = current_user.unowned_cosmetics(@kind).to_a
     @equipped_key = current_user.equipped[@kind]
+    @claimable = SeasonRewardClaimer.available_for(current_user, kind: @kind)
+    # A claimable one is not "locked" — it is waiting to be taken, so it gets its
+    # own section rather than a padlock the player could do nothing about.
+    claimable_keys = @claimable.map { |cosmetic, _| cosmetic.key }.to_set
+    @locked.reject! { |cosmetic| claimable_keys.include?(cosmetic.key) }
     # Lets a locked card say "Season 8 · Level 12" rather than just greying out.
     @unlock_hints = SeasonReward.cosmetic_unlocks_for(@locked.map(&:key))
+  end
+
+  # The player taking a reward the season has put on offer.
+  def claim
+    kind = requested_kind
+    result = SeasonRewardClaimer.new(current_user).call(params[:key])
+
+    case result.status
+    when :claimed then back_to_locker(kind, notice: t("appearances.flashes.claimed"))
+    when :already_owned then back_to_locker(kind, notice: t("appearances.flashes.already_owned"))
+    else back_to_locker(kind, alert: t("appearances.flashes.unavailable"))
+    end
   end
 
   def update

@@ -36,6 +36,19 @@
     <% end %>
   </div>
 
+  <%# Waiting to be taken. First, because it is the only section with something
+      the player can act on without earning anything. %>
+  <% if @claimable.any? %>
+    <h2 class="text-xs font-semibold tracking-wider text-secondary mb-2">
+      <%= t("appearances.show.claimable", count: @claimable.size).upcase %>
+    </h2>
+    <div class="grid <%= @kind == 'frame' ? 'grid-cols-3 sm:grid-cols-4' : 'grid-cols-2 sm:grid-cols-3' %> gap-3 mb-8">
+      <% @claimable.each do |cosmetic, reward| %>
+        <%= render "appearances/claimable", cosmetic: cosmetic, reward: reward, kind: @kind %>
+      <% end %>
+    </div>
+  <% end %>
+
   <% if @owned.any? %>
     <h2 class="text-xs font-semibold tracking-wider text-gray-500 mb-2">
       <%= t("appearances.show.owned", count: @owned.size).upcase %>

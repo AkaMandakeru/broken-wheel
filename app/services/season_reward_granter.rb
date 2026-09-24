@@ -27,7 +27,9 @@ class SeasonRewardGranter
   # window is checked against when they joined, so a reward added today can
   # still be scoped to "whoever was already here".
   def grant_for_participation
-    scope = @season.season_rewards.participation.on_track(@participation.premium?)
+    # `pushed` and not `participation`: a claimable one is the player's to take,
+    # so handing it over automatically would defeat the Claim button.
+    scope = @season.season_rewards.pushed.on_track(@participation.premium?)
     eligible = scope.select { |reward| reward.covers_join?(@participation.created_at) }
     return if eligible.empty?
 

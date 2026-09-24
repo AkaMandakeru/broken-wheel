@@ -31,11 +31,15 @@ class SeasonReward < ApplicationRecord
   validates :unlock_value, presence: true, unless: -> { THRESHOLDLESS_KINDS.include?(unlock_kind) }
   validates :coins, numericality: { greater_than_or_equal_to: 0 }
   validate :join_window_is_ordered
+  validate :claimable_only_for_participation
 
   scope :for_level, ->(level) { where(unlock_kind: "level").where(level: ..level) }
   scope :on_track, ->(premium) { where(track: premium ? TRACKS : [ "free" ]) }
   scope :by_unlock, ->(kind, value) { where(unlock_kind: kind).where(unlock_value: ..value) }
   scope :participation, -> { where(unlock_kind: "participation") }
+  # Offered rather than pushed: the player takes it from their locker.
+  scope :claimable, -> { participation.where(claimable: true) }
+  scope :pushed, -> { participation.where(claimable: false) }
 
   # Where each of these cosmetics is first offered, keyed by cosmetic key. A
   # cosmetic handed out by several seasons resolves to its earliest unlock —
@@ -59,6 +63,12 @@ class SeasonReward < ApplicationRecord
 
   def participation?
     unlock_kind == "participation"
+  end
+
+  # Only a participation reward can be claimed. Everything else has a threshold
+  # the player has to clear, and a Claim button would skip it.
+  def claimable_by_hand?
+    participation? && claimable?
   end
 
   # Does someone who joined at `joined_at` qualify? An open end is what makes
@@ -85,6 +95,10 @@ class SeasonReward < ApplicationRecord
   # shape serves every unlock kind.
   def default_unlock_value
     self.unlock_value = level if unlock_kind == "level" && level.present?
+  end
+
+  def claimable_only_for_participation
+    errors.add(:claimable, :participation_only) if claimable? && !participation?
   end
 
   def join_window_is_ordered

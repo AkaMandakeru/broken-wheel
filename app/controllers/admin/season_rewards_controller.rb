@@ -19,7 +19,9 @@ module Admin
       @season = Season.find(params[:season_id])
       reward = @season.season_rewards.find(params[:id])
 
-      unless reward.participation?
+      # A claimable reward belongs to the player to take; pushing it would empty
+      # the locker's Claim button of its purpose.
+      unless reward.participation? && !reward.claimable?
         return redirect_to admin_season_path(@season),
                            alert: t("admin.flashes.season_rewards.not_distributable")
       end
@@ -39,7 +41,7 @@ module Admin
     def season_reward_params
       params.require(:season_reward).permit(:level, :reward_type, :reward_key, :name,
                                             :track, :coins, :unlock_kind, :unlock_value, :position,
-                                            :joined_from, :joined_until)
+                                            :joined_from, :joined_until, :claimable)
     end
   end
 end

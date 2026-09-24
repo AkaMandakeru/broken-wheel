@@ -13,6 +13,7 @@ Rails.application.routes.draw do
   get "profile/edit", to: "profiles#edit", as: :edit_profile
   get   "profile/appearance", to: "appearances#show",   as: :profile_appearance
   patch "profile/appearance", to: "appearances#update"
+  post  "profile/appearance/claim", to: "appearances#claim", as: :claim_profile_appearance
   patch "profile", to: "profiles#update"
   put "profile", to: "profiles#update"
 

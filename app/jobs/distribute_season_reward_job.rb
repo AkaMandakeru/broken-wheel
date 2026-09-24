@@ -14,7 +14,9 @@ class DistributeSeasonRewardJob < ApplicationJob
 
   def perform(season_reward_id)
     reward = SeasonReward.find_by(id: season_reward_id)
+    # A claimable reward is offered in the locker, not pushed from here.
     return unless reward&.participation?
+    return if reward.claimable?
 
     reward.season.season_participations.find_each do |participation|
       next unless reward.covers_join?(participation.created_at)

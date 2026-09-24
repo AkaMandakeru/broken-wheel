@@ -2,12 +2,19 @@
     full-bleed cover. A banner with no artwork uploaded yet falls back to a
     rarity gradient, the same way a season without a cover does.
 
+    The band takes the artwork's own 3:1 shape rather than a fixed height. With
+    a fixed height the slot ran from 2.49:1 on a phone to 4.82:1 on a desktop
+    while the variant was always 3:1, so object-cover ate the top and bottom of
+    every banner — on a wide screen, better than a third of it. Matching the
+    ratio leaves nothing to crop at any width.
+
     locals: user, owner (show the change affordance) %>
 <% banner = user.equipped_banner %>
-<% art    = cosmetic_image_source(banner, resize: [ 1200, 400 ]) %>
+<%# 1800 wide covers the widest the card ever gets (848 css px) on a 2x screen. %>
+<% art    = cosmetic_image_source(banner, resize: [ 1800, 600 ]) %>
 <% owner  = local_assigns.fetch(:owner, false) %>
 
-<div class="relative h-36 sm:h-44 <%= "bg-linear-to-br #{cosmetic_fallback_gradient(banner)}" unless art %>">
+<div class="relative aspect-[3/1] <%= "bg-linear-to-br #{cosmetic_fallback_gradient(banner)}" unless art %>">
   <% if art %>
     <%= image_tag art, alt: banner.display_name, class: "w-full h-full object-cover" %>
   <% end %>

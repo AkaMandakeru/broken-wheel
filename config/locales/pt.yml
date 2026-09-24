@@ -368,10 +368,16 @@ pt:
       empty_body: "Banners e molduras são recompensas de temporada."
       browse_seasons: "Ver temporadas"
       not_yet_offered: "Ainda não oferecido por uma temporada"
+      claim: "Resgatar"
+      claimable:
+        one: "Esperando por você · 1"
+        other: "Esperando por você · %{count}"
     flashes:
       equipped: "Perfil atualizado."
       removed: "Removido."
       unavailable: "Você ainda não desbloqueou isso."
+      claimed: "Resgatado. Agora é seu."
+      already_owned: "Você já tem esse."
 
   home:
     meta:
@@ -765,7 +771,7 @@ pt:
         actions: "Ações"
       form:
         key_hint: "Identificador estável. A recompensa de temporada do tipo Cosmético usa isto como chave."
-        image_hint: "Banners são cortados na horizontal — 1200×400 funciona bem. Molduras devem ser PNGs quadrados com o miolo transparente; o avatar ocupa os 78% centrais."
+        image_hint: "Banners são exibidos em 3:1 — 1800×600 funciona bem. Molduras devem ser PNGs quadrados com o miolo transparente; o avatar ocupa os 78% centrais."
         save: "Salvar"
         cancel: "Cancelar"
     nav:
@@ -918,6 +924,9 @@ pt:
         join_window_hint: "Só vale para Participar. Deixe ambos em branco para todo membro, tenha entrado quando tiver."
         distribute: "Entregar agora"
         confirm_distribute: "Entregar esta recompensa para todos que se qualificam?"
+        claimable: "Deixar que os membros resgatem"
+        claimable_hint: "Aparece na coleção deles com um botão Resgatar, em vez de ser entregue."
+        claimable_badge: "Resgatável"
         name: "Nome de exibição"
         track: "Trilha"
         coins: "Moedas"

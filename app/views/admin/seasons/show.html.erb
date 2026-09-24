@@ -176,7 +176,11 @@
             <div class="flex items-center gap-3 shrink-0">
               <%# Only a participation reward can be handed out on demand — every
                   other kind has a threshold the player has to clear first. %>
-              <% if reward.participation? %>
+              <% if reward.claimable_by_hand? %>
+                <span class="text-[11px] text-secondary font-semibold whitespace-nowrap">
+                  <i class="fa-solid fa-gift mr-1"></i><%= t("admin.seasons.rewards.claimable_badge") %>
+                </span>
+              <% elsif reward.participation? %>
                 <%= button_to t("admin.seasons.rewards.distribute"),
                       distribute_admin_season_season_reward_path(@season, reward),
                       method: :post,
@@ -248,6 +252,13 @@
           </div>
         </div>
         <p class="text-xs text-gray-400 -mt-1"><%= t("admin.seasons.rewards.join_window_hint") %></p>
+        <label class="flex items-start gap-2 text-sm text-gray-700">
+          <%= f.check_box :claimable, checked: true, class: "rounded text-[#FC4C02] mt-0.5" %>
+          <span>
+            <%= t("admin.seasons.rewards.claimable") %>
+            <span class="block text-xs text-gray-400"><%= t("admin.seasons.rewards.claimable_hint") %></span>
+          </span>
+        </label>
         <%= f.submit t("admin.seasons.rewards.add"), class: "bg-gray-900 text-white px-4 py-2 rounded-lg hover:bg-gray-700 transition font-medium text-sm cursor-pointer" %>
       <% end %>
     </div>
