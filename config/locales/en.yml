@@ -750,6 +750,8 @@ en:
         removed: "Objective removed from season."
       season_rewards:
         added: "Reward added."
+        distributing: "Handing it out to everyone who qualifies. This runs in the background."
+        not_distributable: "Only a participation reward can be handed out on demand."
         removed: "Reward removed."
       support:
         updated: "Ticket updated."
@@ -935,6 +937,15 @@ en:
         type: "Type"
         key: "Reward key"
         key_hint: "Title key (config/titles.yml), theme key, or a badge identifier."
+        unlock_kind: "Earned by"
+        unlock_level: "Reaching a level"
+        unlock_participation: "Taking part"
+        unlock_kind_hint: "Taking part gives it to every member, no level needed."
+        joined_from: "Joined from (optional)"
+        joined_until: "Joined until (optional)"
+        join_window_hint: "Only for Taking part. Leave both blank for every member, whenever they joined."
+        distribute: "Hand out now"
+        confirm_distribute: "Hand this reward to everyone who qualifies?"
         name: "Display name"
         track: "Track"
         coins: "Coins"
@@ -1299,12 +1310,17 @@ en:
       special: "Special"
       daily: "Daily"
       standard: "Challenges"
+    join_window:
+      from: "Joined from %{from}"
+      until: "Joined until %{to}"
+      between: "Joined %{from} – %{to}"
     unlock_kinds:
       level: "Level %{value}"
       legacy: "Complete %{value} legacy missions"
       completion_tier: "%{value}% of the season completed"
       medal_fragments: "%{value} medal fragments"
       community: "Community goal: %{value}%"
+      participation: "Everyone taking part"
     medals:
       earned: "%{medal} earned"
       bronze: "Bronze"

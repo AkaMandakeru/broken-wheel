@@ -23,6 +23,17 @@ class SeasonRewardGranter
     grant(@season.season_rewards.by_unlock(kind.to_s, value).on_track(@participation.premium?))
   end
 
+  # Everything this participant is owed simply for being in the season. The
+  # window is checked against when they joined, so a reward added today can
+  # still be scoped to "whoever was already here".
+  def grant_for_participation
+    scope = @season.season_rewards.participation.on_track(@participation.premium?)
+    eligible = scope.select { |reward| reward.covers_join?(@participation.created_at) }
+    return if eligible.empty?
+
+    grant(@season.season_rewards.where(id: eligible.map(&:id)))
+  end
+
   # One specific reward, whatever its unlock rule or track. Used by the admin
   # season sandbox to try out a reward without earning everything before it.
   def grant_reward(reward)

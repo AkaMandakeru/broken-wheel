@@ -183,6 +183,15 @@ module SeasonsHelper
              class: "ml-1 text-[10px] px-1.5 py-0.5 rounded-full bg-purple-100 text-purple-700")
   end
 
+  # "a partir de 12/10", "até 20/10", "12/10 – 20/10". Either end may be open.
+  def season_join_window_label(from, to)
+    return t("seasons.join_window.between", from: l(from.to_date), to: l(to.to_date)) if from && to
+    return t("seasons.join_window.from", from: l(from.to_date)) if from
+    return t("seasons.join_window.until", to: l(to.to_date)) if to
+
+    nil
+  end
+
   def cosmetic_rarity_classes(rarity)
     case rarity
     when "rare"      then "bg-sky-100 text-sky-700"

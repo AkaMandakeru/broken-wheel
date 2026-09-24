@@ -16,7 +16,15 @@ class SeasonProgressService
 
   def self.ensure_participation(user, season)
     participation = season.season_participations.find_or_create_by!(user: user)
-    track_join(participation) if participation.previously_new_record?
+
+    if participation.previously_new_record?
+      track_join(participation)
+      # Joining used to grant nothing at all: a participation row was created
+      # and no reward path ever ran for it, so anyone who joined and did not
+      # train never received even the level-1 reward every member is owed.
+      SeasonRecalcJob.enqueue_debounced(participation.user_id, season.id)
+    end
+
     participation
   rescue ActiveRecord::RecordNotUnique
     season.season_participations.find_by!(user: user)
@@ -200,6 +208,7 @@ class SeasonProgressService
     granter.grant_for_unlock("legacy", completed_legacy_missions)
     granter.grant_for_unlock("completion_tier", @participation.completion_percent)
     granter.grant_for_unlock("medal_fragments", @participation.medal_fragments)
+    granter.grant_for_participation
   end
 
   def completed_legacy_missions

@@ -167,8 +167,24 @@
               <% if reward.premium? %>
                 <span class="ml-1 text-[10px] px-1.5 py-0.5 rounded-full bg-amber-100 text-amber-700"><%= t("seasons.tracks.premium") %></span>
               <% end %>
+              <% if reward.participation? && (window = reward.join_window) %>
+                <p class="text-[11px] text-gray-500 mt-0.5">
+                  <i class="fa-regular fa-calendar mr-1"></i><%= season_join_window_label(*window) %>
+                </p>
+              <% end %>
             </div>
-            <%= button_to t("admin.seasons.rewards.remove"), admin_season_season_reward_path(@season, reward), method: :delete, form: { class: "inline" }, class: "text-red-600 hover:text-red-800 text-xs cursor-pointer" %>
+            <div class="flex items-center gap-3 shrink-0">
+              <%# Only a participation reward can be handed out on demand — every
+                  other kind has a threshold the player has to clear first. %>
+              <% if reward.participation? %>
+                <%= button_to t("admin.seasons.rewards.distribute"),
+                      distribute_admin_season_season_reward_path(@season, reward),
+                      method: :post,
+                      form: { class: "inline", data: { turbo_confirm: t("admin.seasons.rewards.confirm_distribute") } },
+                      class: "text-primary hover:underline text-xs cursor-pointer" %>
+              <% end %>
+              <%= button_to t("admin.seasons.rewards.remove"), admin_season_season_reward_path(@season, reward), method: :delete, form: { class: "inline" }, class: "text-red-600 hover:text-red-800 text-xs cursor-pointer" %>
+            </div>
           </div>
         <% end %>
         <% if @season.season_rewards.empty? %>
@@ -178,6 +194,14 @@
 
       <%= form_with url: admin_season_season_rewards_path(@season), scope: :season_reward, class: "border-t border-gray-100 pt-4 space-y-3" do |f| %>
         <div class="grid grid-cols-2 gap-3">
+          <div>
+            <%= f.label :unlock_kind, t("admin.seasons.rewards.unlock_kind"), class: "block text-xs text-gray-500 mb-1" %>
+            <%= f.select :unlock_kind,
+                  [ [ t("admin.seasons.rewards.unlock_level"), "level" ],
+                    [ t("admin.seasons.rewards.unlock_participation"), "participation" ] ],
+                  {}, class: "block w-full rounded-lg border border-gray-300 px-3 py-2 text-sm" %>
+            <p class="text-xs text-gray-400 mt-1"><%= t("admin.seasons.rewards.unlock_kind_hint") %></p>
+          </div>
           <div>
             <%= f.label :level, t("admin.seasons.rewards.level"), class: "block text-xs text-gray-500 mb-1" %>
             <%= f.number_field :level, value: 2, min: 1, max: @season.max_level, class: "block w-full rounded-lg border border-gray-300 px-3 py-2 text-sm" %>
@@ -211,6 +235,19 @@
           <%= f.label :name, t("admin.seasons.rewards.name"), class: "block text-xs text-gray-500 mb-1" %>
           <%= f.text_field :name, class: "block w-full rounded-lg border border-gray-300 px-3 py-2 text-sm" %>
         </div>
+        <%# Only meaningful for a participation reward. Left blank it means every
+            member, whenever they joined. %>
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <%= f.label :joined_from, t("admin.seasons.rewards.joined_from"), class: "block text-xs text-gray-500 mb-1" %>
+            <%= f.datetime_field :joined_from, class: "block w-full rounded-lg border border-gray-300 px-3 py-2 text-sm" %>
+          </div>
+          <div>
+            <%= f.label :joined_until, t("admin.seasons.rewards.joined_until"), class: "block text-xs text-gray-500 mb-1" %>
+            <%= f.datetime_field :joined_until, class: "block w-full rounded-lg border border-gray-300 px-3 py-2 text-sm" %>
+          </div>
+        </div>
+        <p class="text-xs text-gray-400 -mt-1"><%= t("admin.seasons.rewards.join_window_hint") %></p>
         <%= f.submit t("admin.seasons.rewards.add"), class: "bg-gray-900 text-white px-4 py-2 rounded-lg hover:bg-gray-700 transition font-medium text-sm cursor-pointer" %>
       <% end %>
     </div>

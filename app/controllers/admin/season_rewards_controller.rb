@@ -12,6 +12,22 @@ module Admin
       end
     end
 
+    # Hands an existing participation reward to everyone who already qualifies.
+    # The automatic path only reaches someone when they are recalculated, which
+    # for a reward added mid-season can be never.
+    def distribute
+      @season = Season.find(params[:season_id])
+      reward = @season.season_rewards.find(params[:id])
+
+      unless reward.participation?
+        return redirect_to admin_season_path(@season),
+                           alert: t("admin.flashes.season_rewards.not_distributable")
+      end
+
+      DistributeSeasonRewardJob.perform_later(reward.id)
+      redirect_to admin_season_path(@season), notice: t("admin.flashes.season_rewards.distributing")
+    end
+
     def destroy
       @season = Season.find(params[:season_id])
       @season.season_rewards.find_by(id: params[:id])&.destroy
@@ -22,7 +38,8 @@ module Admin
 
     def season_reward_params
       params.require(:season_reward).permit(:level, :reward_type, :reward_key, :name,
-                                            :track, :coins, :unlock_kind, :unlock_value, :position)
+                                            :track, :coins, :unlock_kind, :unlock_value, :position,
+                                            :joined_from, :joined_until)
     end
   end
 end

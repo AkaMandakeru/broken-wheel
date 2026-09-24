@@ -722,6 +722,8 @@ pt:
         removed: "Objetivo removido da temporada."
       season_rewards:
         added: "Recompensa adicionada."
+        distributing: "Entregando para todos que se qualificam. Isso roda em segundo plano."
+        not_distributable: "Só uma recompensa de participação pode ser entregue sob demanda."
         removed: "Recompensa removida."
       support:
         updated: "Ticket atualizado."
@@ -907,6 +909,15 @@ pt:
         type: "Tipo"
         key: "Chave da recompensa"
         key_hint: "Chave de título (config/titles.yml), chave de tema ou identificador de medalha."
+        unlock_kind: "Conquistada por"
+        unlock_level: "Alcançar um nível"
+        unlock_participation: "Participar"
+        unlock_kind_hint: "Participar entrega a todo membro, sem precisar de nível."
+        joined_from: "Entrou a partir de (opcional)"
+        joined_until: "Entrou até (opcional)"
+        join_window_hint: "Só vale para Participar. Deixe ambos em branco para todo membro, tenha entrado quando tiver."
+        distribute: "Entregar agora"
+        confirm_distribute: "Entregar esta recompensa para todos que se qualificam?"
         name: "Nome de exibição"
         track: "Trilha"
         coins: "Moedas"
@@ -1270,12 +1281,17 @@ pt:
       special: "Especiais"
       daily: "Diários"
       standard: "Desafios"
+    join_window:
+      from: "Entrou a partir de %{from}"
+      until: "Entrou até %{to}"
+      between: "Entrou entre %{from} e %{to}"
     unlock_kinds:
       level: "Nível %{value}"
       legacy: "Complete %{value} missões de legado"
       completion_tier: "%{value}% da temporada concluída"
       medal_fragments: "%{value} fragmentos de medalha"
       community: "Meta da comunidade: %{value}%"
+      participation: "Todos os participantes"
     medals:
       earned: "%{medal} conquistada"
       bronze: "Bronze"

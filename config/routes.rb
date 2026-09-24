@@ -73,7 +73,9 @@ Rails.application.routes.draw do
       end
       resources :season_challenges, only: [:create, :destroy]
       resources :season_objectives, only: [:create, :destroy]
-      resources :season_rewards, only: [:create, :destroy]
+      resources :season_rewards, only: [:create, :destroy] do
+        member { post :distribute }
+      end
       # Test data for staging and development; 404s anywhere else.
       resource :sandbox, only: [:show], controller: "season_sandboxes" do
         post :enroll

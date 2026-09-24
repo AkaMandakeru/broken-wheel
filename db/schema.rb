@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_09_21_100000) do
+ActiveRecord::Schema[8.1].define(version: 2026_09_24_100000) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -417,6 +417,8 @@ ActiveRecord::Schema[8.1].define(version: 2026_09_21_100000) do
   create_table "season_rewards", force: :cascade do |t|
     t.integer "coins", default: 0, null: false
     t.datetime "created_at", null: false
+    t.datetime "joined_from"
+    t.datetime "joined_until"
     t.integer "level"
     t.string "name"
     t.jsonb "payload", default: {}, null: false
@@ -430,6 +432,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_09_21_100000) do
     t.datetime "updated_at", null: false
     t.index ["season_id", "level"], name: "index_season_rewards_on_season_id_and_level"
     t.index ["season_id", "unlock_kind", "unlock_value"], name: "index_season_rewards_on_unlock"
+    t.index ["season_id", "unlock_kind"], name: "index_season_rewards_on_season_id_and_unlock_kind"
     t.index ["season_id"], name: "index_season_rewards_on_season_id"
   end
 
