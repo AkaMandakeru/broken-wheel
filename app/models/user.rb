@@ -1,5 +1,11 @@
 class User < ApplicationRecord
-  has_one_attached :avatar
+  # Named variants are generated right after upload (preprocessed), so the
+  # first person to see a picture never waits on libvips. Served through the
+  # CDN by the `cdn_image` route — see ImageUrls.
+  has_one_attached :avatar do |attachable|
+    attachable.variant :thumb, resize_to_limit: [ 160, 160 ], preprocessed: true
+    attachable.variant :medium, resize_to_limit: [ 512, 512 ], preprocessed: true
+  end
   has_one :strava_token, dependent: :destroy
 
   has_many :challenge_participations
@@ -22,16 +28,32 @@ class User < ApplicationRecord
   has_many :user_cosmetics, dependent: :destroy
   has_many :cosmetics, through: :user_cosmetics
   has_many :user_xp_boosts, dependent: :destroy
+  # Mobile API
+  has_many :api_sessions, dependent: :delete_all
+  has_many :device_tokens, dependent: :delete_all
+  has_many :idempotency_keys, dependent: :delete_all
+  has_many :content_reports, foreign_key: :reporter_id, dependent: :delete_all, inverse_of: :reporter
+  has_many :user_blocks, foreign_key: :blocker_id, dependent: :delete_all, inverse_of: :blocker
+  has_many :blocked_users, through: :user_blocks, source: :blocked
 
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :validatable,
          :lockable
 
+  # What a player may change about themselves, from the profile form or the
+  # app (PATCH /api/v1/me). `avatar` and `sports` are permitted beside these —
+  # the form uploads a file and the app sends a signed id.
+  PROFILE_ATTRIBUTES = %i[first_name last_name title nickname document phone blood_type address email_reminders].freeze
+  SPORTS = Challenge::SPORTS
+
   validates :first_name, :last_name, presence: true
+  validate :sports_are_known, if: :sports_changed?
   # The displayed title (singular) must be one the user has actually earned.
   validate :displayed_title_is_earned
 
   after_create :grant_default_titles
+  # A new password signs every mobile device out, wherever it was changed.
+  after_update_commit :revoke_api_sessions, if: :saved_change_to_encrypted_password?
 
   def connected_to_strava?
     strava_token.present? && strava_token.refresh_token.present?
@@ -128,6 +150,56 @@ class User < ApplicationRecord
     dismissed_season_announcements.include?(season_id.to_i)
   end
 
+  # --- Engagement emails -----------------------------------------------------
+
+  # Reminders and other non-transactional email. Account email (password reset,
+  # lockout) is never covered by this — those are sent regardless.
+  EMAIL_OPT_OUT_KEY = "email_reminders_opt_out"
+  # The locale the user last browsed in. Emails are sent from a job with no
+  # request to detect a locale from, so it is remembered here.
+  LOCALE_KEY = "locale"
+
+  # Bots live under a reserved domain no provider will deliver to.
+  scope :reachable_by_email, -> {
+    where("COALESCE((preferences ->> :key)::boolean, false) = false", key: EMAIL_OPT_OUT_KEY)
+      .where.not("email LIKE ?", "%@#{SeasonSandbox::BOT_EMAIL_DOMAIN}")
+  }
+
+  # Unsubscribe links must work without signing in and must never expire — a
+  # link from an old email that fails is how people end up marking us as spam.
+  generates_token_for :email_unsubscribe
+
+  def email_reminders?
+    !ActiveModel::Type::Boolean.new.cast(preferences_hash[EMAIL_OPT_OUT_KEY])
+  end
+  alias_method :email_reminders, :email_reminders?
+
+  # Lets the profile form submit a plain checkbox.
+  def email_reminders=(value)
+    self[:preferences] = preferences_hash.merge(EMAIL_OPT_OUT_KEY => !ActiveModel::Type::Boolean.new.cast(value))
+  end
+
+  def unsubscribe_from_emails!
+    update_column(:preferences, preferences_hash.merge(EMAIL_OPT_OUT_KEY => true))
+  end
+
+  def resubscribe_to_emails!
+    update_column(:preferences, preferences_hash.merge(EMAIL_OPT_OUT_KEY => false))
+  end
+
+  def email_locale
+    stored = preferences_hash[LOCALE_KEY].to_s
+    return stored.to_sym if I18n.available_locales.map(&:to_s).include?(stored)
+
+    ENV.fetch("MAILER_DEFAULT_LOCALE", I18n.default_locale).to_sym
+  end
+
+  def remember_locale(locale)
+    return if preferences_hash[LOCALE_KEY] == locale.to_s
+
+    update_column(:preferences, preferences_hash.merge(LOCALE_KEY => locale.to_s))
+  end
+
   # --- Cosmetics -------------------------------------------------------------
 
   # Everyone wearing this cosmetic in this slot. equipped_cosmetics is jsonb, so
@@ -198,11 +270,19 @@ class User < ApplicationRecord
     (self[:preferences] || {}).with_indifferent_access
   end
 
+  def revoke_api_sessions
+    api_sessions.active.update_all(revoked_at: Time.current, revoked_reason: "password_changed", updated_at: Time.current)
+  end
+
   def grant_default_titles
     defaults = Titles.defaults.map(&:to_s)
     return if defaults.empty?
 
     update_column(:titles, (Array(self[:titles]).map(&:to_s) | defaults))
+  end
+
+  def sports_are_known
+    errors.add(:sports, :inclusion) if (Array(sports) - SPORTS).any?
   end
 
   def displayed_title_is_earned

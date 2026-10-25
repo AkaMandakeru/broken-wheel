@@ -36,13 +36,11 @@ module SeasonsHelper
     "#{window.begin.strftime('%d/%m')} – #{window.end.strftime('%d/%m')}"
   end
 
-  # A weekly challenge's requirements run easiest to hardest, so the first
-  # earns bronze, the second silver, the third gold. Anything beyond the third
-  # has no medal — the ladder only makes sense while the tiers are distinct.
-  MEDAL_TIERS = %w[bronze silver gold].freeze
+  # Weekly medal tiers — see Seasons::WeeklyMedals, which the API shares.
+  MEDAL_TIERS = Seasons::WeeklyMedals::TIERS
 
   def requirement_medal(position)
-    MEDAL_TIERS[position]
+    Seasons::WeeklyMedals.for_requirement(position)
   end
 
   def medal_classes(medal)
@@ -58,18 +56,8 @@ module SeasonsHelper
     t("seasons.medals.#{medal}", default: medal.to_s.capitalize)
   end
 
-  # The best medal earned on a challenge: the highest tier whose requirement is
-  # met. Nil when none are.
   def highest_medal_earned(participation_for_challenge)
-    return nil if participation_for_challenge.nil?
-
-    statuses = participation_for_challenge.requirement_status
-    return nil if statuses.empty?
-
-    earned = statuses.first(MEDAL_TIERS.size).each_with_index.select { |status, _i| status[:met] }
-    return nil if earned.empty?
-
-    MEDAL_TIERS[earned.map(&:last).max]
+    Seasons::WeeklyMedals.highest_earned(participation_for_challenge)
   end
 
   def season_status_badge_class(status)
@@ -81,41 +69,11 @@ module SeasonsHelper
   end
 
   def season_activity_text(activity)
-    meta = activity.metadata || {}
-    case activity.kind
-    when "challenge_completed"
-      t("seasons.activity.challenge_completed", challenge: meta["challenge"], xp: meta["xp"])
-    when "objective_completed"
-      t("seasons.activity.objective_completed", objective: meta["objective"], xp: meta["xp"])
-    when "level_up"
-      t("seasons.activity.level_up", level: meta["level"])
-    when "reward_unlocked"
-      t("seasons.activity.reward_unlocked", name: meta["name"].presence || meta["reward_key"])
-    when "daily_completed"
-      t("seasons.activity.daily_completed", daily: meta["daily"], xp: meta["xp"])
-    when "special_completed"
-      t("seasons.activity.special_completed", challenge: meta["challenge"], xp: meta["xp"])
-    when "legacy_mission_completed"
-      t("seasons.activity.legacy_mission_completed", objective: meta["objective"], xp: meta["xp"])
-    when "community_milestone"
-      t("seasons.activity.community_milestone", percent: meta["percent"], goal: meta["title"].presence || meta["goal"])
-    when "community_tier_cleared"
-      t("seasons.activity.community_tier_cleared",
-        goal: meta["title"].presence || meta["goal"], tier: meta["tier"],
-        next_tier: meta["next_tier"], next_target: number_with_delimiter(meta["next_target"].to_f.round))
-    when "season_finalized"
-      t("seasons.activity.season_finalized", level: meta["level"], percent: meta["completion_percent"])
-    else
-      activity.kind
-    end
+    activity.description
   end
 
   def season_reward_label(reward)
-    case reward.reward_type
-    when "title" then Titles.label(reward.reward_key)
-    when "coins" then t("seasons.rewards.coins", count: reward.coins)
-    else reward.name.presence || reward.reward_key.to_s.humanize
-    end
+    reward.label
   end
 
   def season_reward_icon(reward)

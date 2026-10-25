@@ -12,3 +12,24 @@ amazon:
   secret_access_key: <%= ENV["BUCKETEER_AWS_SECRET_ACCESS_KEY"] %>
   region: <%= ENV.fetch("BUCKETEER_AWS_REGION", "us-east-1") %>
   bucket: <%= ENV["BUCKETEER_BUCKET_NAME"] %>
+
+# Cloudflare R2 (S3-compatible, no egress fees). R2_ENDPOINT is
+# https://<account id>.r2.cloudflarestorage.com. R2 has not always accepted the CRC checksums
+# newer aws-sdk-s3 versions send by default, hence "when_required".
+r2:
+  service: S3
+  endpoint: <%= ENV["R2_ENDPOINT"] %>
+  access_key_id: <%= ENV["R2_ACCESS_KEY_ID"] %>
+  secret_access_key: <%= ENV["R2_SECRET_ACCESS_KEY"] %>
+  region: auto
+  bucket: <%= ENV["R2_BUCKET"] %>
+  request_checksum_calculation: when_required
+  response_checksum_validation: when_required
+
+# Moving to R2 (docs/MOBILE_API_PLAN.md §5): writes go to both, reads come from
+# the primary. Point config.active_storage.service at :mirror, then run
+# Storage::MirrorBlobsJob to copy the existing files.
+# mirror:
+#   service: Mirror
+#   primary: amazon
+#   mirrors: [ r2 ]

@@ -28,6 +28,18 @@ class StravaService
     handle_fault!(e)
   end
 
+  # Exactly one page of the athlete's activities, newest first, as
+  # Strava::Models::SummaryActivity — for jobs that keep their own place in
+  # the history. #activities walks every page itself.
+  def activities_page(page:, per_page:, after: nil)
+    query = { page: page, per_page: per_page }
+    query[:after] = after.to_i if after
+
+    api_client.get("athlete/activities", query).map { |row| Strava::Models::SummaryActivity.new(row) }
+  rescue Strava::Errors::Fault => e
+    handle_fault!(e)
+  end
+
   def activity(id)
     api_client.activity(id)
   rescue Strava::Errors::Fault => e
@@ -65,17 +77,25 @@ class StravaService
     end
   end
 
+  # Strava invalidates the old refresh token as soon as it issues a new one,
+  # so a request and a job refreshing at once would leave one of them with a
+  # dead token. The row lock serialises them; whoever waited finds the token
+  # already fresh (with_lock reloads it) and uses that.
   def refresh_token!
-    response = oauth_client.oauth_token(
-      grant_type: "refresh_token",
-      refresh_token: @token.refresh_token
-    )
+    @token.with_lock do
+      next unless @token.expired?
 
-    @token.update!(
-      access_token:  response.access_token,
-      refresh_token: response.refresh_token || @token.refresh_token,
-      expires_at:    response.expires_at.to_i
-    )
+      response = oauth_client.oauth_token(
+        grant_type: "refresh_token",
+        refresh_token: @token.refresh_token
+      )
+
+      @token.update!(
+        access_token:  response.access_token,
+        refresh_token: response.refresh_token || @token.refresh_token,
+        expires_at:    response.expires_at.to_i
+      )
+    end
 
     @api_client = nil
   rescue Strava::Errors::Fault => e

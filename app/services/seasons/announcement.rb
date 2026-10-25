@@ -14,6 +14,15 @@ module Seasons
       new(user).season
     end
 
+    # Hides the banner for good and records the dismissal. The id is stored even
+    # when no such season exists, as the web always has — it's a UI preference.
+    def self.dismiss!(user, season_id)
+      season = Season.find_by(id: season_id)
+      user.dismiss_season_announcement(season_id)
+      SeasonAnalytics.track(user: user, event: "season_announcement_dismissed", season: season)
+      season
+    end
+
     def initialize(user)
       @user = user
     end

@@ -29,7 +29,7 @@ RSpec.describe Strava::ActivityImporter do
   end
 
   def run_import(activity)
-    allow(client).to receive(:activities).and_yield(activity)
+    allow(client).to receive(:activities_page).and_return([ activity ])
     described_class.new(user, client: client).call
   end
 
@@ -75,6 +75,19 @@ RSpec.describe Strava::ActivityImporter do
       activity = strava_activity(id: 99, sport_type: "Ride", distance: 10_000.0, moving_time: 1200)
       run_import(activity)
       expect { run_import(activity) }.not_to change { user.workouts.count }
+    end
+
+    it "walks the history a page at a time, yielding where to resume" do
+      stub_const("#{described_class}::PAGE_SIZE", 2)
+      full_page = [ strava_activity(id: 1), strava_activity(id: 2) ]
+      allow(client).to receive(:activities_page).with(page: 3, per_page: 2, after: nil).and_return(full_page)
+      allow(client).to receive(:activities_page).with(page: 4, per_page: 2, after: nil).and_return([ strava_activity(id: 3) ])
+
+      resumes = []
+      result = described_class.new(user, client: client).call(from_page: 3) { |page| resumes << page }
+
+      expect(resumes).to eq([ 4 ])
+      expect(result.imported).to eq(3)
     end
 
     it "skips activities with an unmapped sport type" do

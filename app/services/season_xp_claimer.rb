@@ -10,6 +10,21 @@ class SeasonXpClaimer
   Result = Struct.new(:claimed, :xp, :level_before, :level_after, :participation, keyword_init: true) do
     def any? = claimed.positive?
     def levelled_up? = level_after > level_before
+
+    # What the claim animation needs to move the bar — the same fields for the
+    # web's in-page claim and the mobile API.
+    def summary
+      {
+        claimed: claimed,
+        xp_gained: xp,
+        xp: participation.xp,
+        level: participation.level,
+        levelled_up: levelled_up?,
+        progress_percent: participation.progress_percent,
+        xp_to_next: participation.xp_to_next_level,
+        remaining: participation.unclaimed_count
+      }
+    end
   end
 
   def initialize(participation)

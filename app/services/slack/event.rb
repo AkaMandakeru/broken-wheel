@@ -12,7 +12,8 @@ module Slack
       Definition.new(key: :user_registered,  emoji: "🎉", label: "New user registered"),
       Definition.new(key: :premium_granted,  emoji: "⭐", label: "Premium pass granted"),
       Definition.new(key: :workout_imported, emoji: "🏃", label: "Workout imported"),
-      Definition.new(key: :season_started,   emoji: "🚩", label: "Season started")
+      Definition.new(key: :season_started,   emoji: "🚩", label: "Season started"),
+      Definition.new(key: :content_reported, emoji: "🚨", label: "Content reported")
     ].freeze
 
     module_function

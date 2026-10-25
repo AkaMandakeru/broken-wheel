@@ -6,20 +6,16 @@
 class AppearancesController < ApplicationController
   before_action :authenticate_user!
 
-  KINDS = Cosmetic::PICTURE_KINDS
+  KINDS = Locker::Catalogue::KINDS
 
   def show
     @kind = requested_kind
-    @owned = current_user.owned_cosmetics(@kind).to_a
-    @locked = current_user.unowned_cosmetics(@kind).to_a
-    @equipped_key = current_user.equipped[@kind]
-    @claimable = SeasonRewardClaimer.available_for(current_user, kind: @kind)
-    # A claimable one is not "locked" — it is waiting to be taken, so it gets its
-    # own section rather than a padlock the player could do nothing about.
-    claimable_keys = @claimable.map { |cosmetic, _| cosmetic.key }.to_set
-    @locked.reject! { |cosmetic| claimable_keys.include?(cosmetic.key) }
-    # Lets a locked card say "Season 8 · Level 12" rather than just greying out.
-    @unlock_hints = SeasonReward.cosmetic_unlocks_for(@locked.map(&:key))
+    catalogue = Locker::Catalogue.new(current_user, kind: @kind)
+    @owned = catalogue.owned
+    @locked = catalogue.locked
+    @equipped_key = catalogue.equipped_key
+    @claimable = catalogue.claimable
+    @unlock_hints = catalogue.unlock_hints
   end
 
   # The player taking a reward the season has put on offer.

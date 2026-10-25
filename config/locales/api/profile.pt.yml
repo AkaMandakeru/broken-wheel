@@ -1,0 +1,7 @@
+pt:
+  api:
+    errors:
+      cosmetic_unavailable: "Você ainda não desbloqueou isso."
+      invalid_kind: "Essa não é uma seção do armário."
+    profile:
+      unsupported_locale: "não é um idioma disponível"

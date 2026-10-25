@@ -1,0 +1,27 @@
+pt:
+  api:
+    errors:
+      not_found: "Não encontramos isso."
+      validation_failed: "Alguns campos precisam de atenção."
+      bad_request: "A requisição está incompleta ou mal formatada."
+      invalid_signed_id: "Essa referência de arquivo não é válida."
+      unauthorized: "Entre novamente na sua conta."
+      invalid_credentials: "E-mail ou senha incorretos."
+      account_locked: "Sua conta foi bloqueada após muitas tentativas. Verifique seu e-mail para desbloqueá-la ou tente de novo em uma hora."
+      invalid_refresh_token: "Sua sessão terminou. Entre novamente."
+      rate_limited: "Muitas tentativas. Aguarde um momento e tente de novo."
+      upgrade_required: "Esta versão do app não é mais suportada. Atualize o app."
+      feature_disabled: "%{feature} está indisponível no momento."
+      invalid_cursor: "Esse link de página não é mais válido."
+      invalid_idempotency_key: "O cabeçalho Idempotency-Key é longo demais."
+      idempotency_key_reused: "Esta Idempotency-Key já foi usada em outra requisição."
+      idempotency_key_in_progress: "Esta requisição ainda está sendo processada."
+      invalid_upload: "Essa imagem não pode ser enviada."
+      forbidden: "Você não pode fazer isso."
+    uploads:
+      checksum_missing: "está faltando"
+      bad_purpose: "não é um envio suportado"
+      bad_type: "deve ser uma imagem PNG, JPEG, WEBP ou GIF"
+      too_large: "deve ter no máximo %{size}"
+      unknown: "não foi enviado por você"
+      not_uploaded: "ainda não terminou de ser enviado"

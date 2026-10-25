@@ -1,0 +1,23 @@
+en:
+  api:
+    errors:
+      already_joined: "You already joined this challenge."
+      must_join_first: "Join the challenge first to invite friends."
+      not_participant: "Join the challenge to view and post on the timeline."
+      already_member: "You're already a member of this club."
+      not_member: "You're not a member of this club."
+      already_going: "You're already on the list for this event."
+      not_going: "You're not on the list for this event."
+      cannot_report_self: "You can't report yourself or your own content."
+      cannot_block_self: "You can't block yourself."
+    challenges:
+      invite_message: "Join me in the %{title} challenge!"
+    reports:
+      unknown_type: "is not something that can be reported"
+  activerecord:
+    errors:
+      models:
+        timeline_post:
+          attributes:
+            images:
+              too_many: "can have at most %{count} pictures"

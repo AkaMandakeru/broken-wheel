@@ -5,7 +5,9 @@ class Cosmetic < ApplicationRecord
   has_many :users, through: :user_cosmetics
 
   # Profile banners and avatar frames are pictures an operator uploads.
-  has_one_attached :image
+  has_one_attached :image do |attachable|
+    attachable.variant :display, resize_to_limit: [ 1200, 1200 ], preprocessed: true
+  end
 
   # Kinds we can draw today render on the profile; the rest are collectible now
   # and displayable once their art exists.

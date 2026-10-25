@@ -5,10 +5,7 @@ class SeasonAnnouncementsController < ApplicationController
   before_action :authenticate_user!
 
   def dismiss
-    season = Season.find_by(id: params[:season_id])
-    current_user.dismiss_season_announcement(params[:season_id])
-
-    SeasonAnalytics.track(user: current_user, event: "season_announcement_dismissed", season: season)
+    Seasons::Announcement.dismiss!(current_user, params[:season_id])
 
     respond_to do |format|
       format.json { head :no_content }

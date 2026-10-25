@@ -369,6 +369,9 @@ en:
       title: "Edit profile"
       back: "Back to profile"
       cancel: "Cancel"
+    email_reminders:
+      title: "Email reminders"
+      label: "Email me before special events and to keep my training on track"
     notifications:
       title: "Push notifications"
       description: "Get notified about new achievements and events, even when the app is closed."
@@ -751,6 +754,13 @@ en:
       season_challenges:
         added: "Challenge added to season."
         removed: "Challenge removed from season."
+        banner_saved: "Email banner saved."
+        banner_removed: "Email banner removed."
+        test_sent: "Test reminder sent to %{email}."
+        reminder_sent:
+          one: "Reminder queued for 1 player."
+          other: "Reminder queued for %{count} players."
+        reminder_not_sent: "Only special challenges have a reminder email."
       season_objectives:
         added: "Objective added to season."
         removed: "Objective removed from season."
@@ -925,6 +935,20 @@ en:
         coins: "Coins"
         fragments: "Medal fragments"
         add: "Add challenge"
+      reminders:
+        title: "Reminder email"
+        scheduled: "Goes out automatically on %{date}."
+        sent_on: "Sent %{date}."
+        no_date: "Give this challenge a date so its reminder can be scheduled."
+        banner_own: "Using this event's banner."
+        banner_fallback: "No banner yet — using the challenge or season image."
+        banner_none: "No banner yet — the email goes out without a picture."
+        upload: "Upload banner"
+        remove_banner: "Remove banner"
+        send_test: "Send test to me"
+        send_now: "Send to everyone now"
+        resend: "Send again"
+        confirm: "Email every player about this event now?"
       objectives:
         title: "Club objectives"
         hint: "Action-based goals like joining a club or working out as a member."
@@ -1170,6 +1194,11 @@ en:
         season:
           attributes:
             image:
+              invalid_type: "must be an image (%{types})"
+              too_large: "must be smaller than %{size}"
+        season_challenge:
+          attributes:
+            email_banner:
               invalid_type: "must be an image (%{types})"
               too_large: "must be smaller than %{size}"
 
@@ -1467,6 +1496,38 @@ en:
           other: "Log %{count} workouts as a club member"
 
   # Web Push notification copy
+  # Engagement emails
+  engagement_mailer:
+    special_event_reminder:
+      subject: "%{title} is almost here 🏁"
+      greeting: "Hi %{name},"
+      headline:
+        zero: "%{title} is today!"
+        one: "%{title} is tomorrow!"
+        other: "%{title} is in %{count} days!"
+      date: "On %{date}"
+      intro: "A one-day special event with bonus rewards. Log your activity on the day and the reward is yours — miss the day and it's gone."
+      goal: "Goal"
+      reward: "Reward:"
+      coins:
+        one: "1 coin"
+        other: "%{count} coins"
+      cta: "See the event"
+      footer: "You're getting this because you have an account at Broken Wheels."
+      unsubscribe: "Stop reminder emails"
+
+  # Unsubscribe page linked from engagement emails
+  email_subscriptions:
+    show:
+      title: "Reminder emails"
+      subscribed: "You're receiving reminder emails about special events and your training."
+      unsubscribed: "You won't receive reminder emails anymore. Account emails, like password resets, still arrive."
+      unsubscribe: "Unsubscribe"
+      resubscribe: "Subscribe again"
+    invalid:
+      title: "Link not valid"
+      body: "This unsubscribe link is invalid. You can manage reminder emails from your profile."
+
   push:
     achievement:
       title: "Achievement unlocked! 🎉"
@@ -1486,6 +1547,9 @@ en:
 
   # Flash messages set by controllers
   flashes:
+    email_subscriptions:
+      unsubscribed: "You've been unsubscribed from reminder emails."
+      resubscribed: "You'll receive reminder emails again."
     support:
       created: "Message sent! We'll reply here soon."
       message_sent: "Reply sent."

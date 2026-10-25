@@ -22,7 +22,19 @@ production:
     class: AssignDailyChallengesJob
     queue: default
     schedule: every day at 3:05am
+  # 9am in São Paulo. Sends each special event's reminder email once, three
+  # days ahead (or on the next run, if one was missed).
+  special_event_reminders:
+    class: SpecialEventRemindersJob
+    queue: default
+    schedule: every day at 12:00pm
   aggregate_community_goals:
     class: AggregateCommunityGoalsJob
     queue: default
     schedule: every 15 minutes
+  # Expired Idempotency-Key responses, dead API sessions and uploads that were
+  # never attached (docs/MOBILE_API_PLAN.md §5, §7).
+  api_housekeeping:
+    class: ApiHousekeepingJob
+    queue: default
+    schedule: every day at 6:30am

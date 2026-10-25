@@ -25,5 +25,7 @@ module SportsCommunities
     config.i18n.available_locales = [ :en, :pt ]
     config.i18n.default_locale = :en
     config.i18n.fallbacks = true
+    # API strings live in config/locales/api/, one file per feature area.
+    config.i18n.load_path += Dir[Rails.root.join("config/locales/**/*.yml")]
   end
 end

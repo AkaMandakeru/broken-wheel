@@ -1,0 +1,35 @@
+en:
+  api:
+    errors:
+      invalid_state: "That Strava link has expired. Please try connecting again."
+      strava_connect_failed: "We couldn't connect your Strava account. Please try again."
+      strava_not_connected: "Connect your Strava account first."
+      strava_auth_failed: "Strava access expired. Please reconnect your account."
+      strava_rate_limited: "Strava is busy right now. Please try again in a few minutes."
+      strava_unavailable: "We couldn't reach Strava. Please try again."
+      no_activities_selected: "Pick at least one activity to import."
+      too_many_activities: "You can import up to %{count} activities at a time."
+  activerecord:
+    attributes:
+      workout:
+        sport: "Sport"
+        workout_date: "Date"
+        distance_km: "Distance"
+        duration_minutes: "Duration"
+        start_time_input: "Start time"
+    errors:
+      models:
+        workout:
+          attributes:
+            sport:
+              inclusion: "must be one of: run, bike, soccer"
+            workout_date:
+              blank: "can't be blank"
+            distance_km:
+              not_a_number: "must be a number"
+              greater_than_or_equal_to: "can't be negative"
+            duration_minutes:
+              not_a_number: "must be a number"
+              greater_than: "must be longer than zero"
+            start_time_input:
+              invalid: "must be a time like 07:30"

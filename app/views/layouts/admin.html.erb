@@ -49,6 +49,13 @@
               <span class="text-xs bg-[#FC4C02] text-white rounded-full px-1.5 py-0.5"><%= open_tickets %></span>
             <% end %>
           <% end %>
+          <%= link_to admin_content_reports_path, class: "text-gray-600 hover:text-[#FC4C02] transition flex items-center gap-1" do %>
+            <%= t("admin.nav.content_reports") %>
+            <% open_reports = ContentReport.open.count %>
+            <% if open_reports.positive? %>
+              <span class="text-xs bg-[#FC4C02] text-white rounded-full px-1.5 py-0.5"><%= open_reports %></span>
+            <% end %>
+          <% end %>
         </div>
       </div>
     </div>

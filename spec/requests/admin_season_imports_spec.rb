@@ -94,7 +94,7 @@ RSpec.describe "Admin::SeasonImports", type: :request do
     it "asks for something to import when nothing was given" do
       post admin_season_imports_path, params: {}
 
-      expect(response).to have_http_status(:unprocessable_entity)
+      expect(response).to have_http_status(:unprocessable_content)
       expect(flash.now[:alert]).to be_present
     end
 
@@ -103,14 +103,14 @@ RSpec.describe "Admin::SeasonImports", type: :request do
         bad = minimal.sub("metric: distance_km", "metric: distnce_km")
 
         expect { post admin_season_imports_path, params: { content: bad } }.not_to change(Season, :count)
-        expect(response).to have_http_status(:unprocessable_entity)
+        expect(response).to have_http_status(:unprocessable_content)
         expect(response.body).to include("is not a known metric")
       end
 
       it "reports a YAML syntax error rather than raising" do
         post admin_season_imports_path, params: { content: "key: [unclosed\nname: broken" }
 
-        expect(response).to have_http_status(:unprocessable_entity)
+        expect(response).to have_http_status(:unprocessable_content)
         expect(response.body).to include("YAML syntax error")
       end
 
@@ -164,7 +164,7 @@ RSpec.describe "Admin::SeasonImports", type: :request do
       expect { post admin_season_imports_path, params: { blueprint_key: "../../../config/database" } }
         .not_to change(Season, :count)
 
-      expect(response).to have_http_status(:unprocessable_entity)
+      expect(response).to have_http_status(:unprocessable_content)
     end
   end
 

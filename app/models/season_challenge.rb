@@ -3,6 +3,14 @@ class SeasonChallenge < ApplicationRecord
   belongs_to :challenge
   has_many :season_challenge_completions, dependent: :destroy
 
+  # Artwork for the reminder email. Lives on the season challenge rather than
+  # the challenge because challenges are reused across seasons, and the banner
+  # is this season's dressing for the event.
+  has_one_attached :email_banner
+
+  # How far ahead of a special event its reminder email goes out.
+  REMINDER_LEAD_DAYS = 3
+
   CATEGORIES = %w[standard daily weekly monthly elite special].freeze
 
   # Spellings older blueprints still use. "hidden" was what special challenges
@@ -28,6 +36,7 @@ class SeasonChallenge < ApplicationRecord
   scope :special, -> { of_category("special") }
 
   validate :window_within_season
+  validate :email_banner_is_a_supported_picture
 
   # The dates this challenge is scored over *in this season*. Blank means the
   # whole season, which is what lets the same challenge be reused in a later
@@ -76,7 +85,39 @@ class SeasonChallenge < ApplicationRecord
     season.current_date > window.end
   end
 
+  # The day a special event happens, in the season's own calendar.
+  def event_date
+    date_window&.begin
+  end
+
+  # Due from REMINDER_LEAD_DAYS before the event until the day before it.
+  # A window rather than a single day, so a missed scheduler run still sends
+  # the next day instead of skipping the event entirely.
+  def reminder_due?(today: season.current_date)
+    return false unless special? && reminder_sent_at.nil? && event_date
+
+    today >= event_date - REMINDER_LEAD_DAYS && today < event_date
+  end
+
+  # The picture the reminder email shows: its own banner, else the challenge's
+  # artwork, else the season's. Nil when none of them has one.
+  def email_banner_source
+    [ email_banner, challenge.image, season.image ].find(&:attached?)
+  end
+
   private
+
+  def email_banner_is_a_supported_picture
+    return unless email_banner.attached?
+
+    unless Season::IMAGE_CONTENT_TYPES.include?(email_banner.blob.content_type)
+      errors.add(:email_banner, :invalid_type, types: "PNG, JPEG, WEBP, GIF")
+    end
+
+    return unless email_banner.blob.byte_size > Season::MAX_IMAGE_BYTES
+
+    errors.add(:email_banner, :too_large, size: "#{Season::MAX_IMAGE_BYTES / 1.megabyte} MB")
+  end
 
   def enroll_existing_participants
     EnrollSeasonParticipantsJob.perform_later(id)

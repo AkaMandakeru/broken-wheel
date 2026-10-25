@@ -1,4 +1,9 @@
 class Workout < ApplicationRecord
+  # The sports a player can log by hand (Strava imports map to the same set,
+  # see Strava::ActivityImporter::SPORT_MAP).
+  SPORTS = Challenge::SPORTS
+  START_TIME_FORMAT = /\A([01]?\d|2[0-3]):[0-5]\d\z/
+
   belongs_to :user
   belongs_to :challenge_participation, optional: true
 
@@ -8,6 +13,15 @@ class Workout < ApplicationRecord
   before_validation :assign_distance_and_duration
   before_validation :assign_start_time
   after_create_commit :credit_season_progress
+
+  # Only typed-in entries are checked: imports carry whatever Strava recorded.
+  with_options on: :manual_entry do
+    validates :sport, inclusion: { in: SPORTS }
+    validates :workout_date, presence: true
+    validates :distance_km, numericality: { greater_than_or_equal_to: 0 }, allow_nil: true
+    validates :duration_minutes, numericality: { greater_than: 0 }
+    validates :start_time_input, format: { with: START_TIME_FORMAT }, allow_blank: true
+  end
 
   scope :in_window, ->(window) { window ? where(workout_date: window_dates(window)) : none }
 
@@ -94,7 +108,7 @@ class Workout < ApplicationRecord
   # placeholder so ordering works, but flag it as unknown so hour-based
   # challenges skip the row.
   def assign_start_time
-    if start_time_input.present? && workout_date.present?
+    if start_time_input.to_s.match?(START_TIME_FORMAT) && workout_date.present?
       hour, minute = start_time_input.to_s.split(":")
       self.started_at_local = Time.utc(workout_date.year, workout_date.month, workout_date.day, hour.to_i, minute.to_i)
       self.started_at ||= started_at_local

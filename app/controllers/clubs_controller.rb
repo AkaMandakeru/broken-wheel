@@ -2,47 +2,36 @@
 
 class ClubsController < ApplicationController
   before_action :authenticate_user!
-  before_action :set_club, only: [:show, :join, :leave]
+  before_action :set_club, only: [ :show, :join, :leave ]
 
   def index
-    @clubs = Club.includes(:created_by).order(member_count: :desc)
-    sports = Array(current_user.sports).reject(&:blank?)
-    @clubs = @clubs.where(sport: sports) if sports.any?
+    @clubs = Club.for_sports(current_user.sports)
   end
 
   def show
-    @membership = current_user.club_memberships.find_by(club: @club)
+    @membership = Clubs::Membership.new(@club, current_user).current
   end
 
   def create
     @club = Club.new(club_params)
-    @club.created_by = current_user
-    if @club.save
-      @club.club_memberships.create!(user: current_user, role: "admin")
-      @club.increment!(:member_count)
+    if Clubs::Membership.create_with_founder(@club, current_user)
       redirect_to club_path(@club), notice: t("flashes.clubs.created")
     else
       @clubs = Club.all
-      render :index, status: :unprocessable_entity
+      render :index, status: :unprocessable_content
     end
   end
 
   def join
-    if current_user.club_memberships.exists?(club: @club)
+    if Clubs::Membership.new(@club, current_user).join
+      redirect_to club_path(@club), notice: t("flashes.clubs.joined")
+    else
       redirect_to club_path(@club), alert: t("flashes.clubs.already_member")
-      return
     end
-    @club.club_memberships.create!(user: current_user, role: "member")
-    @club.increment!(:member_count)
-    Analytics.track(user: current_user, event: "club_joined", properties: { club_id: @club.id, club_name: @club.name, sport: @club.sport })
-    redirect_to club_path(@club), notice: t("flashes.clubs.joined")
   end
 
   def leave
-    membership = current_user.club_memberships.find_by(club: @club)
-    if membership
-      membership.destroy!
-      @club.decrement!(:member_count)
+    if Clubs::Membership.new(@club, current_user).leave
       redirect_to clubs_path, notice: t("flashes.clubs.left")
     else
       redirect_to club_path(@club), alert: t("flashes.clubs.not_member")

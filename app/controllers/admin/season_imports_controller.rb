@@ -17,14 +17,14 @@ module Admin
 
       if @content.blank?
         flash.now[:alert] = t("admin.season_imports.errors.empty")
-        return render :new, status: :unprocessable_entity
+        return render :new, status: :unprocessable_content
       end
 
       @validation = Seasons::BlueprintImporter.validate_yaml(@content)
 
       if @validation.errors.any?
         flash.now[:alert] = t("admin.season_imports.errors.invalid", count: @validation.errors.size)
-        return render :new, status: :unprocessable_entity
+        return render :new, status: :unprocessable_content
       end
 
       return render :new, status: :ok if params[:validate_only].present?
@@ -48,11 +48,11 @@ module Admin
     rescue Seasons::BlueprintImporter::InvalidBlueprint => e
       @validation = Seasons::BlueprintImporter.validate_yaml(@content)
       flash.now[:alert] = t("admin.season_imports.errors.invalid", count: e.errors.size)
-      render :new, status: :unprocessable_entity
+      render :new, status: :unprocessable_content
     rescue ActiveRecord::RecordInvalid, ActiveRecord::StatementInvalid => e
       # The importer runs in a transaction, so nothing was written.
       flash.now[:alert] = t("admin.season_imports.errors.failed", message: e.message)
-      render :new, status: :unprocessable_entity
+      render :new, status: :unprocessable_content
     end
 
     # A pasted blueprint wins over a bundled one, so an edited paste is never

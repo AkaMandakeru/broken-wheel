@@ -20,13 +20,9 @@ module CosmeticsHelper
 
   # What a banner slot shows before anyone has uploaded its picture. Keyed off
   # rarity so the catalogue still reads as a ladder while the art is pending.
+  # The classes live in CosmeticStyle, which also gives the app their colours.
   def cosmetic_fallback_gradient(cosmetic)
-    case cosmetic&.rarity
-    when "rare"      then "from-sky-400 via-blue-500 to-indigo-500"
-    when "epic"      then "from-purple-400 via-fuchsia-500 to-purple-600"
-    when "legendary" then "from-amber-400 via-orange-500 to-amber-600"
-    else "from-primary via-primary/90 to-secondary"
-    end
+    CosmeticStyle.fallback_gradient(cosmetic&.rarity)
   end
 
   # The rarity pill, built once. Shaped like `medal_chip` in SeasonsHelper so
@@ -43,11 +39,6 @@ module CosmeticsHelper
   # Ring colour for a frame with no artwork yet, and for the rarity outline the
   # locker draws around a card.
   def cosmetic_rarity_border(rarity)
-    case rarity
-    when "rare"      then "border-sky-400"
-    when "epic"      then "border-purple-400"
-    when "legendary" then "border-amber-400"
-    else "border-gray-300"
-    end
+    CosmeticStyle.rarity_border(rarity)
   end
 end

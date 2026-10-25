@@ -4,12 +4,7 @@ class OauthController < ApplicationController
   before_action :authenticate_user!
 
   def connect
-    redirect_to oauth_client.authorize_url(
-      redirect_uri: auth_strava_callback_url,
-      scope: "read,activity:read_all",
-      approval_prompt: "auto",
-      response_type: "code"
-    ), allow_other_host: true
+    redirect_to Strava::Connection.authorize_url(redirect_uri: auth_strava_callback_url), allow_other_host: true
   end
 
   def callback
@@ -18,22 +13,7 @@ class OauthController < ApplicationController
       return redirect_to profile_path, alert: t("flashes.strava.connect_failed")
     end
 
-    token_response = oauth_client.oauth_token(code: params[:code])
-
-    token = current_user.strava_token || current_user.build_strava_token
-    token.update!(
-      access_token:  token_response.access_token,
-      refresh_token: token_response.refresh_token,
-      expires_at:    token_response.expires_at.to_i,
-      athlete_id:    token_response.athlete&.id,
-      scope:         params[:scope].to_s
-    )
-
-    Analytics.track(
-      user: current_user,
-      event: "user_connected_strava",
-      properties: { athlete_id: token_response.athlete&.id, scope: params[:scope].to_s }
-    )
+    Strava::Connection.new(current_user).connect!(code: params[:code], scope: params[:scope])
 
     redirect_to profile_path, notice: t("flashes.strava.connected")
   rescue Strava::Errors::Fault => e
@@ -42,13 +22,7 @@ class OauthController < ApplicationController
   end
 
   def disconnect
-    current_user.strava_token&.destroy
+    Strava::Connection.new(current_user).disconnect!
     redirect_to profile_path, notice: t("flashes.strava.disconnected")
-  end
-
-  private
-
-  def oauth_client
-    @oauth_client ||= StravaService.build_oauth_client
   end
 end

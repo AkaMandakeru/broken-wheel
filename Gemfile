@@ -1,7 +1,9 @@
 source "https://rubygems.org"
 
+ruby file: ".ruby-version"
+
 # Bundle edge Rails instead: gem "rails", github: "rails/rails", branch: "main"
-gem "rails", "~> 8.1.2"
+gem "rails", "~> 8.1.4"
 # The modern asset pipeline for Rails [https://github.com/rails/propshaft]
 gem "propshaft"
 # Use postgresql as the database for Active Record
@@ -67,6 +69,13 @@ gem "web-push"
 # Analytics
 gem "posthog-ruby"
 
+# Mobile API: JSON resources and keyset (cursor) pagination
+gem "alba", "~> 4.0"
+gem "pagy", "~> 43.8"
+
+# Job dashboard for admins (Solid Queue)
+gem "mission_control-jobs", "~> 1.3"
+
 group :development, :test do
   # See https://guides.rubyonrails.org/debugging_rails_applications.html#debugging-with-the-debug-gem
   gem "debug", platforms: %i[ mri windows ], require: "debug/prelude"
@@ -82,6 +91,9 @@ group :development, :test do
 
   # RSpec for Rails
   gem "rspec-rails"
+
+  # OpenAPI document generated from the API request specs
+  gem "rswag-specs", "~> 2.17"
 end
 
 group :development do

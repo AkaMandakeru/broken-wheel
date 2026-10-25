@@ -22,6 +22,8 @@ class ApplicationController < ActionController::Base
         session[:locale] ||= detect_user_locale
       end
     I18n.locale = safe_locale(requested)
+    # Emails go out from jobs with no request to detect a locale from.
+    current_user.remember_locale(I18n.locale) if user_signed_in?
   end
 
   private

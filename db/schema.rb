@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.1].define(version: 2026_09_24_110000) do
+ActiveRecord::Schema[8.1].define(version: 2026_10_24_120200) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -51,6 +51,25 @@ ActiveRecord::Schema[8.1].define(version: 2026_09_24_110000) do
     t.index ["created_at"], name: "index_analytics_events_on_created_at"
     t.index ["event_name"], name: "index_analytics_events_on_event_name"
     t.index ["user_id"], name: "index_analytics_events_on_user_id"
+  end
+
+  create_table "api_sessions", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.string "refresh_token_digest", null: false
+    t.uuid "family_id", null: false
+    t.string "device_name"
+    t.string "platform"
+    t.string "app_version"
+    t.datetime "last_used_at"
+    t.datetime "expires_at", null: false
+    t.datetime "revoked_at"
+    t.string "revoked_reason"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["family_id"], name: "index_api_sessions_on_family_id"
+    t.index ["refresh_token_digest"], name: "index_api_sessions_on_refresh_token_digest", unique: true
+    t.index ["user_id", "revoked_at"], name: "index_api_sessions_on_user_id_and_revoked_at"
+    t.index ["user_id"], name: "index_api_sessions_on_user_id"
   end
 
   create_table "badges", force: :cascade do |t|
@@ -151,6 +170,26 @@ ActiveRecord::Schema[8.1].define(version: 2026_09_24_110000) do
     t.index ["user_id"], name: "index_coin_transactions_on_user_id"
   end
 
+  create_table "content_reports", force: :cascade do |t|
+    t.bigint "reporter_id", null: false
+    t.string "reportable_type", null: false
+    t.bigint "reportable_id", null: false
+    t.bigint "reported_user_id"
+    t.string "reason", null: false
+    t.text "details"
+    t.string "status", default: "open", null: false
+    t.bigint "resolved_by_id"
+    t.datetime "resolved_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["reportable_type", "reportable_id"], name: "index_content_reports_on_reportable"
+    t.index ["reported_user_id"], name: "index_content_reports_on_reported_user_id"
+    t.index ["reporter_id", "reportable_type", "reportable_id"], name: "index_content_reports_once_per_reporter", unique: true
+    t.index ["reporter_id"], name: "index_content_reports_on_reporter_id"
+    t.index ["resolved_by_id"], name: "index_content_reports_on_resolved_by_id"
+    t.index ["status"], name: "index_content_reports_on_status"
+  end
+
   create_table "cosmetics", force: :cascade do |t|
     t.boolean "animated", default: false, null: false
     t.datetime "created_at", null: false
@@ -203,6 +242,19 @@ ActiveRecord::Schema[8.1].define(version: 2026_09_24_110000) do
     t.index ["season_id"], name: "index_daily_challenge_templates_on_season_id"
   end
 
+  create_table "device_tokens", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.string "platform", null: false
+    t.string "token", null: false
+    t.string "app_version"
+    t.string "locale"
+    t.datetime "last_seen_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["token"], name: "index_device_tokens_on_token", unique: true
+    t.index ["user_id"], name: "index_device_tokens_on_user_id"
+  end
+
   create_table "event_participations", force: :cascade do |t|
     t.string "bib_number"
     t.datetime "created_at", null: false
@@ -244,6 +296,19 @@ ActiveRecord::Schema[8.1].define(version: 2026_09_24_110000) do
     t.string "key", null: false
     t.datetime "updated_at", null: false
     t.index ["key"], name: "index_feature_flags_on_key", unique: true
+  end
+
+  create_table "idempotency_keys", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.string "key", null: false
+    t.string "request_digest", null: false
+    t.integer "response_status"
+    t.jsonb "response_body"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["created_at"], name: "index_idempotency_keys_on_created_at"
+    t.index ["user_id", "key"], name: "index_idempotency_keys_on_user_id_and_key", unique: true
+    t.index ["user_id"], name: "index_idempotency_keys_on_user_id"
   end
 
   create_table "push_subscriptions", force: :cascade do |t|
@@ -292,6 +357,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_09_24_110000) do
     t.datetime "ends_at"
     t.integer "fragment_reward", default: 0, null: false
     t.integer "position", default: 0, null: false
+    t.datetime "reminder_sent_at"
     t.boolean "required", default: false, null: false
     t.bigint "season_id", null: false
     t.datetime "starts_at"
@@ -460,6 +526,138 @@ ActiveRecord::Schema[8.1].define(version: 2026_09_24_110000) do
     t.index ["status"], name: "index_seasons_on_status"
   end
 
+  create_table "solid_cache_entries", force: :cascade do |t|
+    t.binary "key", null: false
+    t.binary "value", null: false
+    t.datetime "created_at", null: false
+    t.bigint "key_hash", null: false
+    t.integer "byte_size", null: false
+    t.index ["byte_size"], name: "index_solid_cache_entries_on_byte_size"
+    t.index ["key_hash", "byte_size"], name: "index_solid_cache_entries_on_key_hash_and_byte_size"
+    t.index ["key_hash"], name: "index_solid_cache_entries_on_key_hash", unique: true
+  end
+
+  create_table "solid_queue_blocked_executions", force: :cascade do |t|
+    t.bigint "job_id", null: false
+    t.string "queue_name", null: false
+    t.integer "priority", default: 0, null: false
+    t.string "concurrency_key", null: false
+    t.datetime "expires_at", null: false
+    t.datetime "created_at", null: false
+    t.index ["concurrency_key", "priority", "job_id"], name: "index_solid_queue_blocked_executions_for_release"
+    t.index ["expires_at", "concurrency_key"], name: "index_solid_queue_blocked_executions_for_maintenance"
+    t.index ["job_id"], name: "index_solid_queue_blocked_executions_on_job_id", unique: true
+  end
+
+  create_table "solid_queue_claimed_executions", force: :cascade do |t|
+    t.bigint "job_id", null: false
+    t.bigint "process_id"
+    t.datetime "created_at", null: false
+    t.index ["job_id"], name: "index_solid_queue_claimed_executions_on_job_id", unique: true
+    t.index ["process_id", "job_id"], name: "index_solid_queue_claimed_executions_on_process_id_and_job_id"
+  end
+
+  create_table "solid_queue_failed_executions", force: :cascade do |t|
+    t.bigint "job_id", null: false
+    t.text "error"
+    t.datetime "created_at", null: false
+    t.index ["job_id"], name: "index_solid_queue_failed_executions_on_job_id", unique: true
+  end
+
+  create_table "solid_queue_jobs", force: :cascade do |t|
+    t.string "queue_name", null: false
+    t.string "class_name", null: false
+    t.text "arguments"
+    t.integer "priority", default: 0, null: false
+    t.string "active_job_id"
+    t.datetime "scheduled_at"
+    t.datetime "finished_at"
+    t.string "concurrency_key"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["active_job_id"], name: "index_solid_queue_jobs_on_active_job_id"
+    t.index ["class_name"], name: "index_solid_queue_jobs_on_class_name"
+    t.index ["finished_at"], name: "index_solid_queue_jobs_on_finished_at"
+    t.index ["queue_name", "finished_at"], name: "index_solid_queue_jobs_for_filtering"
+    t.index ["scheduled_at", "finished_at"], name: "index_solid_queue_jobs_for_alerting"
+  end
+
+  create_table "solid_queue_pauses", force: :cascade do |t|
+    t.string "queue_name", null: false
+    t.datetime "created_at", null: false
+    t.index ["queue_name"], name: "index_solid_queue_pauses_on_queue_name", unique: true
+  end
+
+  create_table "solid_queue_processes", force: :cascade do |t|
+    t.string "kind", null: false
+    t.datetime "last_heartbeat_at", null: false
+    t.bigint "supervisor_id"
+    t.integer "pid", null: false
+    t.string "hostname"
+    t.text "metadata"
+    t.datetime "created_at", null: false
+    t.string "name", null: false
+    t.index ["last_heartbeat_at"], name: "index_solid_queue_processes_on_last_heartbeat_at"
+    t.index ["name", "supervisor_id"], name: "index_solid_queue_processes_on_name_and_supervisor_id", unique: true
+    t.index ["supervisor_id"], name: "index_solid_queue_processes_on_supervisor_id"
+  end
+
+  create_table "solid_queue_ready_executions", force: :cascade do |t|
+    t.bigint "job_id", null: false
+    t.string "queue_name", null: false
+    t.integer "priority", default: 0, null: false
+    t.datetime "created_at", null: false
+    t.index ["job_id"], name: "index_solid_queue_ready_executions_on_job_id", unique: true
+    t.index ["priority", "job_id"], name: "index_solid_queue_poll_all"
+    t.index ["queue_name", "priority", "job_id"], name: "index_solid_queue_poll_by_queue"
+  end
+
+  create_table "solid_queue_recurring_executions", force: :cascade do |t|
+    t.bigint "job_id", null: false
+    t.string "task_key", null: false
+    t.datetime "run_at", null: false
+    t.datetime "created_at", null: false
+    t.index ["job_id"], name: "index_solid_queue_recurring_executions_on_job_id", unique: true
+    t.index ["task_key", "run_at"], name: "index_solid_queue_recurring_executions_on_task_key_and_run_at", unique: true
+  end
+
+  create_table "solid_queue_recurring_tasks", force: :cascade do |t|
+    t.string "key", null: false
+    t.string "schedule", null: false
+    t.string "command", limit: 2048
+    t.string "class_name"
+    t.text "arguments"
+    t.string "queue_name"
+    t.integer "priority", default: 0
+    t.boolean "static", default: true, null: false
+    t.text "description"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["key"], name: "index_solid_queue_recurring_tasks_on_key", unique: true
+    t.index ["static"], name: "index_solid_queue_recurring_tasks_on_static"
+  end
+
+  create_table "solid_queue_scheduled_executions", force: :cascade do |t|
+    t.bigint "job_id", null: false
+    t.string "queue_name", null: false
+    t.integer "priority", default: 0, null: false
+    t.datetime "scheduled_at", null: false
+    t.datetime "created_at", null: false
+    t.index ["job_id"], name: "index_solid_queue_scheduled_executions_on_job_id", unique: true
+    t.index ["scheduled_at", "priority", "job_id"], name: "index_solid_queue_dispatch_all"
+  end
+
+  create_table "solid_queue_semaphores", force: :cascade do |t|
+    t.string "key", null: false
+    t.integer "value", default: 1, null: false
+    t.datetime "expires_at", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["expires_at"], name: "index_solid_queue_semaphores_on_expires_at"
+    t.index ["key", "value"], name: "index_solid_queue_semaphores_on_key_and_value"
+    t.index ["key"], name: "index_solid_queue_semaphores_on_key", unique: true
+  end
+
   create_table "strava_tokens", force: :cascade do |t|
     t.string "access_token"
     t.bigint "athlete_id"
@@ -532,6 +730,16 @@ ActiveRecord::Schema[8.1].define(version: 2026_09_24_110000) do
     t.index ["badge_id"], name: "index_user_badges_on_badge_id"
     t.index ["challenge_id"], name: "index_user_badges_on_challenge_id"
     t.index ["user_id"], name: "index_user_badges_on_user_id"
+  end
+
+  create_table "user_blocks", force: :cascade do |t|
+    t.bigint "blocker_id", null: false
+    t.bigint "blocked_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["blocked_id"], name: "index_user_blocks_on_blocked_id"
+    t.index ["blocker_id", "blocked_id"], name: "index_user_blocks_on_blocker_id_and_blocked_id", unique: true
+    t.index ["blocker_id"], name: "index_user_blocks_on_blocker_id"
   end
 
   create_table "user_cosmetics", force: :cascade do |t|
@@ -627,6 +835,7 @@ ActiveRecord::Schema[8.1].define(version: 2026_09_24_110000) do
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "analytics_events", "users"
+  add_foreign_key "api_sessions", "users"
   add_foreign_key "challenge_participations", "challenges"
   add_foreign_key "challenge_participations", "seasons"
   add_foreign_key "challenge_participations", "users"
@@ -636,14 +845,19 @@ ActiveRecord::Schema[8.1].define(version: 2026_09_24_110000) do
   add_foreign_key "club_memberships", "users"
   add_foreign_key "clubs", "users", column: "created_by_id"
   add_foreign_key "coin_transactions", "users"
+  add_foreign_key "content_reports", "users", column: "reported_user_id"
+  add_foreign_key "content_reports", "users", column: "reporter_id"
+  add_foreign_key "content_reports", "users", column: "resolved_by_id"
   add_foreign_key "daily_challenge_assignments", "daily_challenge_templates"
   add_foreign_key "daily_challenge_assignments", "seasons"
   add_foreign_key "daily_challenge_assignments", "users"
   add_foreign_key "daily_challenge_templates", "seasons"
+  add_foreign_key "device_tokens", "users"
   add_foreign_key "event_participations", "events"
   add_foreign_key "event_participations", "users"
   add_foreign_key "event_participations", "workouts"
   add_foreign_key "events", "seasons"
+  add_foreign_key "idempotency_keys", "users"
   add_foreign_key "push_subscriptions", "users"
   add_foreign_key "season_activities", "seasons"
   add_foreign_key "season_activities", "users"
@@ -662,6 +876,12 @@ ActiveRecord::Schema[8.1].define(version: 2026_09_24_110000) do
   add_foreign_key "season_reward_grants", "season_participations"
   add_foreign_key "season_reward_grants", "season_rewards"
   add_foreign_key "season_rewards", "seasons"
+  add_foreign_key "solid_queue_blocked_executions", "solid_queue_jobs", column: "job_id", on_delete: :cascade
+  add_foreign_key "solid_queue_claimed_executions", "solid_queue_jobs", column: "job_id", on_delete: :cascade
+  add_foreign_key "solid_queue_failed_executions", "solid_queue_jobs", column: "job_id", on_delete: :cascade
+  add_foreign_key "solid_queue_ready_executions", "solid_queue_jobs", column: "job_id", on_delete: :cascade
+  add_foreign_key "solid_queue_recurring_executions", "solid_queue_jobs", column: "job_id", on_delete: :cascade
+  add_foreign_key "solid_queue_scheduled_executions", "solid_queue_jobs", column: "job_id", on_delete: :cascade
   add_foreign_key "strava_tokens", "users"
   add_foreign_key "support_messages", "support_tickets"
   add_foreign_key "support_messages", "users"
@@ -674,6 +894,8 @@ ActiveRecord::Schema[8.1].define(version: 2026_09_24_110000) do
   add_foreign_key "user_badges", "badges"
   add_foreign_key "user_badges", "challenges"
   add_foreign_key "user_badges", "users"
+  add_foreign_key "user_blocks", "users", column: "blocked_id"
+  add_foreign_key "user_blocks", "users", column: "blocker_id"
   add_foreign_key "user_cosmetics", "cosmetics"
   add_foreign_key "user_cosmetics", "users"
   add_foreign_key "user_xp_boosts", "users"

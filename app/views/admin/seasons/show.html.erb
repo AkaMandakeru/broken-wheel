@@ -106,6 +106,9 @@
             </div>
             <%= button_to t("admin.seasons.challenges.remove"), admin_season_season_challenge_path(@season, sc), method: :delete, form: { class: "inline" }, class: "text-red-600 hover:text-red-800 text-xs cursor-pointer" %>
           </div>
+          <% if sc.special? %>
+            <%= render "admin/seasons/special_event_reminder", season: @season, season_challenge: sc %>
+          <% end %>
         <% end %>
         <% if @season_challenges.empty? %>
           <p class="text-gray-400 text-sm"><%= t("admin.seasons.challenges.empty") %></p>

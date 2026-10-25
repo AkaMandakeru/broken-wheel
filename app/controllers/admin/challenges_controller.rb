@@ -25,7 +25,7 @@ module Admin
       if @challenge.save
         redirect_to admin_challenge_path(@challenge), notice: t("admin.flashes.challenges.created")
       else
-        render :new, status: :unprocessable_entity
+        render :new, status: :unprocessable_content
       end
     end
 
@@ -33,7 +33,7 @@ module Admin
       if @challenge.update(challenge_params)
         redirect_to admin_challenge_path(@challenge), notice: t("admin.flashes.challenges.updated")
       else
-        render :edit, status: :unprocessable_entity
+        render :edit, status: :unprocessable_content
       end
     end
 

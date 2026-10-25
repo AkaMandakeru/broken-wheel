@@ -1,0 +1,17 @@
+<%= t(".greeting", name: @user.first_name) %>
+
+<%= t(".headline", title: @challenge.display_title, count: @days_left) %>
+<% if @event_date %><%= t(".date", date: l(@event_date, format: :long)) %>
+<% end %>
+<%= t(".intro") %>
+
+<%= t(".goal") %>
+<% @challenge.challenge_requirements.each do |requirement| %>- <%= requirement.label %>
+<% end %>
+<%= t(".reward") %> +<%= @season_challenge.xp_reward %> XP<% if @season_challenge.coin_reward.positive? %> · <%= t(".coins", count: @season_challenge.coin_reward) %><% end %>
+
+<%= t(".cta") %>: <%= season_url(@season) %>
+
+--
+<%= t(".footer") %>
+<%= t(".unsubscribe") %>: <%= @unsubscribe_url %>

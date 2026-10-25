@@ -86,6 +86,21 @@ RSpec.describe StravaService do
       expect { described_class.new(user.reload) }.to raise_error(StravaService::AuthError)
     end
 
+    it "uses the token another process refreshed while it waited for the lock" do
+      token.update!(expires_at: 1.hour.ago.to_i)
+      stale_user = User.find(user.id)
+      stale_user.strava_token # loaded while still expired
+
+      # Meanwhile a job refreshed it (and Strava revoked "refresh-1").
+      StravaToken.find(token.id).update!(access_token: "job-access", refresh_token: "job-refresh",
+                                         expires_at: 2.hours.from_now.to_i)
+
+      expect(Strava::OAuth::Client).not_to receive(:new)
+      expect(Strava::Api::Client).to receive(:new).with(access_token: "job-access").and_return(instance_double(Strava::Api::Client, athlete: :me))
+
+      expect(described_class.new(stale_user).athlete).to eq(:me)
+    end
+
     it "does not refresh when token is still valid" do
       expect(Strava::OAuth::Client).not_to receive(:new)
       described_class.new(user)
@@ -119,7 +134,7 @@ RSpec.describe StravaService do
       api_client = instance_double(Strava::Api::Client)
       allow(Strava::Api::Client).to receive(:new).and_return(api_client)
 
-      activities = [double(id: 1), double(id: 2)]
+      activities = [ double(id: 1), double(id: 2) ]
       allow(api_client).to receive(:athlete_activities) do |_opts, &block|
         activities.each(&block) if block
         activities
@@ -128,7 +143,7 @@ RSpec.describe StravaService do
       service = described_class.new(user)
       collected = []
       service.activities(page_size: 50) { |a| collected << a }
-      expect(collected.map(&:id)).to eq([1, 2])
+      expect(collected.map(&:id)).to eq([ 1, 2 ])
     end
 
     it "passes after parameter when provided" do

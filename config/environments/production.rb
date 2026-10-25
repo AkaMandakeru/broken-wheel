@@ -49,27 +49,42 @@ Rails.application.configure do
   # Don't log any deprecations.
   config.active_support.report_deprecations = false
 
-  # Replace the default in-process memory cache store with a durable alternative.
-  config.cache_store = :memory_store
+  # Shared across dynos and restarts — the API's rate limits count here, so a
+  # per-process store would hand every dyno its own allowance.
+  config.cache_store = :solid_cache_store
 
-  # Use inline jobs on Heroku (single DB, no SolidQueue tables).
-  config.active_job.queue_adapter = :async
+  # Durable jobs. Solid Queue's tables live in the primary database (see
+  # CreateSolidQueueTables); the `worker` process in the Procfile runs them, and
+  # config/recurring.yml only fires under this adapter.
+  config.active_job.queue_adapter = :solid_queue
 
-  # Ignore bad email addresses and do not raise email delivery errors.
-  # Set this to true and configure the email server for immediate delivery to raise delivery errors.
-  # config.action_mailer.raise_delivery_errors = false
+  # SQL comments naming the controller and action, so slow API queries can be
+  # traced from the Postgres logs.
+  config.active_record.query_log_tags_enabled = true
+  config.active_record.query_log_tags = [ :application, :controller, :action, :job ]
 
-  # Set host to be used by links generated in mailer templates.
-  config.action_mailer.default_url_options = { host: "example.com" }
+  # Links in emails must point at the real site — an unsubscribe link to
+  # example.com is worse than none.
+  config.action_mailer.default_url_options = { host: ENV.fetch("APP_HOST", "example.com"), protocol: "https" }
 
-  # Specify outgoing SMTP server. Remember to add smtp/* credentials via bin/rails credentials:edit.
-  # config.action_mailer.smtp_settings = {
-  #   user_name: Rails.application.credentials.dig(:smtp, :user_name),
-  #   password: Rails.application.credentials.dig(:smtp, :password),
-  #   address: "smtp.example.com",
-  #   port: 587,
-  #   authentication: :plain
-  # }
+  # Any provider that speaks SMTP (Postmark, Resend, SendGrid, SES) plugs in here
+  # through the environment, so switching provider is a config change. Without
+  # SMTP_ADDRESS nothing is sent — emails are rendered and dropped rather than
+  # failing the job that triggered them.
+  if ENV["SMTP_ADDRESS"].present?
+    config.action_mailer.delivery_method = :smtp
+    config.action_mailer.raise_delivery_errors = true
+    config.action_mailer.smtp_settings = {
+      address: ENV["SMTP_ADDRESS"],
+      port: ENV.fetch("SMTP_PORT", 587).to_i,
+      user_name: ENV["SMTP_USERNAME"],
+      password: ENV["SMTP_PASSWORD"],
+      authentication: :plain,
+      enable_starttls_auto: true
+    }
+  else
+    config.action_mailer.perform_deliveries = false
+  end
 
   # Enable locale fallbacks for I18n (makes lookups for any locale fall back to
   # the I18n.default_locale when a translation cannot be found).

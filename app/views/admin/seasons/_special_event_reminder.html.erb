@@ -1,0 +1,53 @@
+<%# The reminder email for one special event: its banner, when it goes out, and
+    buttons to try it on yourself or send it now. %>
+<% banner = season_challenge.email_banner_source %>
+<% event_date = season_challenge.event_date %>
+<div class="ml-3 -mt-1 mb-2 border-l-2 border-purple-200 pl-3 py-2 text-xs text-gray-600 space-y-2">
+  <p class="font-medium text-gray-700">
+    <i class="fa-solid fa-envelope mr-1 text-purple-500"></i><%= t("admin.seasons.reminders.title") %>
+  </p>
+
+  <p>
+    <% if season_challenge.reminder_sent_at %>
+      <%= t("admin.seasons.reminders.sent_on", date: l(season_challenge.reminder_sent_at, format: :long)) %>
+    <% elsif event_date %>
+      <%= t("admin.seasons.reminders.scheduled", date: l(event_date - SeasonChallenge::REMINDER_LEAD_DAYS, format: :long)) %>
+    <% else %>
+      <%= t("admin.seasons.reminders.no_date") %>
+    <% end %>
+  </p>
+
+  <div class="flex items-start gap-3">
+    <% if banner %>
+      <%= image_tag banner.variable? ? banner.variant(resize_to_limit: [ 240, 120 ]) : banner, class: "rounded border border-gray-200" %>
+    <% end %>
+    <div class="space-y-1">
+      <p>
+        <% if season_challenge.email_banner.attached? %>
+          <%= t("admin.seasons.reminders.banner_own") %>
+        <% elsif banner %>
+          <%= t("admin.seasons.reminders.banner_fallback") %>
+        <% else %>
+          <%= t("admin.seasons.reminders.banner_none") %>
+        <% end %>
+      </p>
+      <%= form_with model: season_challenge, url: admin_season_season_challenge_path(season, season_challenge), method: :patch, class: "flex items-center gap-2" do |f| %>
+        <%= f.file_field :email_banner, accept: Season::IMAGE_CONTENT_TYPES.join(","), required: true, class: "text-xs" %>
+        <%= f.submit t("admin.seasons.reminders.upload"), class: "text-xs bg-gray-800 text-white rounded px-2 py-1 cursor-pointer" %>
+      <% end %>
+      <% if season_challenge.email_banner.attached? %>
+        <%= button_to t("admin.seasons.reminders.remove_banner"), admin_season_season_challenge_path(season, season_challenge),
+              method: :patch, params: { remove_email_banner: 1 }, class: "text-red-600 hover:text-red-800 cursor-pointer" %>
+      <% end %>
+    </div>
+  </div>
+
+  <div class="flex items-center gap-3">
+    <%= button_to t("admin.seasons.reminders.send_test"), send_test_reminder_admin_season_season_challenge_path(season, season_challenge),
+          class: "text-purple-700 hover:text-purple-900 underline cursor-pointer" %>
+    <%= button_to t(season_challenge.reminder_sent_at ? "admin.seasons.reminders.resend" : "admin.seasons.reminders.send_now"),
+          send_reminder_admin_season_season_challenge_path(season, season_challenge),
+          form: { data: { turbo_confirm: t("admin.seasons.reminders.confirm") } },
+          class: "text-purple-700 hover:text-purple-900 underline cursor-pointer" %>
+  </div>
+</div>

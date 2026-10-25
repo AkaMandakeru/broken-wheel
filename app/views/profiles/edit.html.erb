@@ -79,6 +79,14 @@
         </div>
       </div>
 
+      <div>
+        <p class="form-label"><%= t('profiles.email_reminders.title') %></p>
+        <label class="flex items-start gap-2 text-sm text-neutral-700 dark:text-neutral-300">
+          <%= f.check_box :email_reminders, class: "mt-0.5 rounded border-neutral-300 text-neutral-800 focus:ring-neutral-600" %>
+          <span><%= t('profiles.email_reminders.label') %></span>
+        </label>
+      </div>
+
       <div class="pt-2 flex items-center gap-3">
         <%= f.submit t('profiles.show.update_profile'), class: "btn-primary w-full sm:w-auto" %>
         <%= link_to t('profiles.edit.cancel'), profile_path, class: "text-sm text-gray-500 hover:text-gray-700" %>

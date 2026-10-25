@@ -26,7 +26,7 @@ module Admin
       if @event.save
         redirect_to admin_event_path(@event), notice: t("admin.flashes.events.created")
       else
-        render :new, status: :unprocessable_entity
+        render :new, status: :unprocessable_content
       end
     end
 
@@ -34,7 +34,7 @@ module Admin
       if @event.update(event_params)
         redirect_to admin_event_path(@event), notice: t("admin.flashes.events.updated")
       else
-        render :edit, status: :unprocessable_entity
+        render :edit, status: :unprocessable_content
       end
     end
 

@@ -1,0 +1,56 @@
+en:
+  admin:
+    nav:
+      content_reports: Reports
+    flashes:
+      content_reports:
+        updated: Report updated.
+        removed: Content removed and its reports closed.
+        not_removable: This content can't be removed from here.
+    content_reports:
+      title: Reports
+      empty: No reports.
+      open_count:
+        zero: Nothing waiting for review
+        one: 1 waiting for review
+        other: "%{count} waiting for review"
+      deleted_user: Deleted user
+      removed_content: This content has been removed.
+      view_club: View club
+      reported_by: "Reported by %{name} on %{date}"
+      resolved_by: "resolved by %{name} on %{date}"
+      related:
+        one: 1 other report about this
+        other: "%{count} other reports about this"
+      filters:
+        all: All
+      statuses:
+        open: Open
+        dismissed: Dismissed
+        actioned: Actioned
+      types:
+        timeline_post: Post
+        timeline_post_comment: Comment
+        club: Club
+        user: Player
+      reasons:
+        spam: Spam
+        harassment: Harassment
+        hate: Hate speech
+        sexual: Sexual content
+        violence: Violence
+        other: Other
+      fields:
+        content: Content
+        reason: Reason
+        reported_user: Reported player
+        reporter: Reported by
+        created: Reported
+        status: Status
+        details: Details
+      actions:
+        dismiss: Dismiss
+        action: Mark as actioned
+        reopen: Reopen
+        remove_content: Remove content
+        remove_confirm: Remove this content for everyone? This can't be undone.

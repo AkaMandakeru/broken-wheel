@@ -1,0 +1,8 @@
+pt:
+  activerecord:
+    errors:
+      models:
+        device_token:
+          attributes:
+            token:
+              not_expo_token: "não é um token de push da Expo"

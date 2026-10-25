@@ -9,25 +9,21 @@ class SeasonsController < ApplicationController
     @past_seasons = Season.recent_archive
   end
 
+  # The sections are built by Seasons::Dashboard, which the mobile API's season
+  # endpoints share; this only hands them to the views.
   def show
-    # Lazy auto-enrollment: viewing an active season creates the participation
-    # so progress/rank show immediately (starting at zero).
-    @participation = if user_signed_in? && @season.active?
-      SeasonProgressService.ensure_participation(current_user, @season)
-    elsif user_signed_in?
-      current_user.season_participations.find_by(season_id: @season.id)
-    end
+    dashboard = Seasons::Dashboard.new(@season, user: current_user, board: params[:board])
+    @participation = dashboard.enroll!
+    @unclaimed_completions = dashboard.unclaimed_completions
 
-    @unclaimed_completions = @participation&.unclaimed_completions.to_a
+    assign_challenges(dashboard)
+    assign_objectives(dashboard)
+    assign_dailies(dashboard)
+    assign_rewards(dashboard)
+    assign_leaderboard(dashboard)
 
-    load_challenges
-    load_objectives
-    load_dailies
-    load_rewards
-    load_leaderboard
-    load_community
-
-    @activities = @season.season_activities.recent.includes(:user).limit(15)
+    @community_goal = dashboard.community_goal
+    @activities = dashboard.recent_activities
 
     track_announcement_click
   end
@@ -46,86 +42,42 @@ class SeasonsController < ApplicationController
   # A season that has aged out is closed, not missing — so this sends the player
   # back to the list with a reason rather than a bare 404.
   def set_season
-    @season = season_scope.find_by(id: params[:id])
+    @season = Seasons::Dashboard.season_scope(current_user).find_by(id: params[:id])
     return if @season
 
     redirect_to seasons_path, alert: t("flashes.seasons.archived")
   end
 
-  # Admins keep the whole history, so the admin panel's "view public" link still
-  # resolves for a season players can no longer open.
-  def season_scope
-    current_user&.admin? ? Season.all : Season.browsable
+  def assign_challenges(dashboard)
+    @season_challenges = dashboard.challenges
+    @challenges_by_category = dashboard.challenges_by_category
+    @weekly_challenges = dashboard.weekly_challenges
+    @my_challenge_progress = dashboard.challenge_progress
   end
 
-  def load_challenges
-    scope = @season.season_challenges.includes(challenge: :challenge_requirements)
-
-    # Every challenge is on the board. Special ones used to be withheld until a
-    # player stumbled into completing one; they are listed like the rest now, so
-    # the progress bar is something to aim at rather than a reveal.
-    challenges = scope.to_a
-
-    @challenges_by_category = challenges.group_by(&:category)
-    @weekly_challenges = (@challenges_by_category["weekly"] || []).sort_by { |sc| sc.week_index.to_i }
-    @season_challenges = challenges
-    @my_challenge_progress = my_challenge_progress(challenges.map(&:challenge_id))
+  def assign_objectives(dashboard)
+    @season_objectives = dashboard.objectives
+    @legacy_missions = dashboard.legacy_missions
+    @completed_objective_ids = dashboard.completed_objective_ids
+    @legacy_completed_count = dashboard.legacy_completed_count
   end
 
-  def load_objectives
-    @season_objectives = @season.season_objectives.standard
-    @legacy_missions = @season.season_objectives.legacy
-    @completed_objective_ids = @participation&.season_objective_completions&.pluck(:season_objective_id) || []
-    @legacy_completed_count = @legacy_missions.count { |m| @completed_objective_ids.include?(m.id) }
+  def assign_dailies(dashboard)
+    @daily_assignments = dashboard.daily_assignments
+    @daily_progress = dashboard.daily_progress
   end
 
-  def load_dailies
-    return @daily_assignments = [] unless @participation && @season.active?
-
-    # Assigning here as well as in the nightly job means someone who joins
-    # mid-day sees today's set immediately. The draw is deterministic, so both
-    # paths produce the same three.
-    @daily_assignments = DailyChallenges::Assigner.call(current_user, @season)
-    @daily_progress = daily_progress(@daily_assignments)
+  def assign_rewards(dashboard)
+    @rewards = dashboard.level_rewards
+    @rewards_by_level = dashboard.rewards_by_level
+    @bonus_rewards = dashboard.bonus_rewards
+    @granted_reward_ids = dashboard.granted_reward_ids
   end
 
-  def load_rewards
-    @rewards = @season.season_rewards.where(unlock_kind: "level").order(:level, :track)
-    @rewards_by_level = @rewards.group_by(&:level)
-    @bonus_rewards = @season.season_rewards.where.not(unlock_kind: "level").order(:unlock_kind, :unlock_value)
-    @granted_reward_ids = @participation&.granted_reward_ids || []
-  end
-
-  def load_leaderboard
-    @board = (params[:board].presence || "xp").to_sym
-    @leaderboard = SeasonLeaderboard.new(@season, board: @board)
-    @leaderboard_rows = @leaderboard.top(10)
-    @my_position = @leaderboard.position_for(@participation)
-  end
-
-  def load_community
-    @community_goal = @season.season_community_goals.includes(:season_community_milestones).first
-  end
-
-  # { challenge_id => participation } for the current user, for the season's challenges.
-  def my_challenge_progress(challenge_ids)
-    return {} unless user_signed_in?
-
-    current_user.challenge_participations
-                .where(challenge_id: challenge_ids, season_id: @season.id)
-                .index_by(&:challenge_id)
-  end
-
-  # Live value for each of today's dailies, so the bars move before the next
-  # recalculation lands. One context is built and shared, so the whole set costs
-  # a single read of the user's workouts.
-  def daily_progress(assignments)
-    return {} if assignments.empty?
-
-    context = ChallengeMetrics::Context.new(
-      user: current_user, window: nil, season: @season, participation: @participation
-    )
-
-    assignments.index_with { |assignment| assignment.progress_in(context) }
+  def assign_leaderboard(dashboard)
+    @board = dashboard.board
+    @leaderboard = dashboard.leaderboard
+    @leaderboard_rows = dashboard.leaderboard_rows
+    @my_position = dashboard.my_position
   end
 end

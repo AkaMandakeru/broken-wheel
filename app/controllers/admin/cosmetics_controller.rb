@@ -24,7 +24,7 @@ module Admin
       if @cosmetic.save
         redirect_to admin_cosmetics_path, notice: t("admin.flashes.cosmetics.created")
       else
-        render :new, status: :unprocessable_entity
+        render :new, status: :unprocessable_content
       end
     end
 
@@ -32,7 +32,7 @@ module Admin
       if @cosmetic.update(cosmetic_params)
         redirect_to admin_cosmetics_path, notice: t("admin.flashes.cosmetics.updated")
       else
-        render :edit, status: :unprocessable_entity
+        render :edit, status: :unprocessable_content
       end
     end
 

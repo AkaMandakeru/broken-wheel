@@ -61,6 +61,20 @@ class SeasonReward < ApplicationRecord
     track == "premium"
   end
 
+  # What the reward is called on the battle pass, in the current locale.
+  def label
+    case reward_type
+    when "title" then Titles.label(reward_key)
+    when "coins" then I18n.t("seasons.rewards.coins", count: coins)
+    else name.presence || reward_key.to_s.humanize
+    end
+  end
+
+  # How it is earned ("Reach level 5", "Complete 3 legacy missions").
+  def unlock_label
+    I18n.t("seasons.unlock_kinds.#{unlock_kind}", value: unlock_value, default: unlock_kind)
+  end
+
   def participation?
     unlock_kind == "participation"
   end

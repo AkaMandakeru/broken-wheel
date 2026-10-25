@@ -1,0 +1,4 @@
+en:
+  api:
+    errors:
+      season_not_joined: "You haven't joined this season yet."

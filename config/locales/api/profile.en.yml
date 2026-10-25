@@ -1,0 +1,7 @@
+en:
+  api:
+    errors:
+      cosmetic_unavailable: "You haven't unlocked that yet."
+      invalid_kind: "That isn't a part of the locker."
+    profile:
+      unsupported_locale: "is not a supported language"

@@ -1,0 +1,23 @@
+pt:
+  api:
+    errors:
+      already_joined: "Você já participa deste desafio."
+      must_join_first: "Participe do desafio primeiro para convidar amigos."
+      not_participant: "Participe do desafio para ver e publicar na linha do tempo."
+      already_member: "Você já é membro deste clube."
+      not_member: "Você não é membro deste clube."
+      already_going: "Você já está na lista deste evento."
+      not_going: "Você não está na lista deste evento."
+      cannot_report_self: "Você não pode denunciar a si mesmo nem o seu próprio conteúdo."
+      cannot_block_self: "Você não pode bloquear a si mesmo."
+    challenges:
+      invite_message: "Venha participar comigo do desafio %{title}!"
+    reports:
+      unknown_type: "não é algo que possa ser denunciado"
+  activerecord:
+    errors:
+      models:
+        timeline_post:
+          attributes:
+            images:
+              too_many: "pode ter no máximo %{count} fotos"

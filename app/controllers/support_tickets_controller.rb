@@ -17,19 +17,12 @@ class SupportTicketsController < ApplicationController
   end
 
   def create
-    @ticket = current_user.support_tickets.new(ticket_params)
-    @ticket.status = "open"
-    @ticket.support_messages.build(
-      user: current_user,
-      body: params.dig(:support_ticket, :body).to_s,
-      from_admin: false
-    )
+    @ticket = SupportDesk.open_ticket(current_user, **ticket_params.to_h.symbolize_keys, body: params.dig(:support_ticket, :body))
 
-    if @ticket.save
-      Analytics.track(user: current_user, event: "support_ticket_created", properties: { category: @ticket.category, source: @ticket.source })
+    if @ticket.persisted?
       redirect_to support_ticket_path(@ticket), notice: t("flashes.support.created")
     else
-      render :new, status: :unprocessable_entity
+      render :new, status: :unprocessable_content
     end
   end
 

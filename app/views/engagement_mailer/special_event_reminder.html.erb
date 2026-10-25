@@ -1,0 +1,63 @@
+<%# Email clients ignore stylesheets, so everything is inline and table-based. %>
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#f4f4f5;padding:24px 0;font-family:Helvetica,Arial,sans-serif;">
+  <tr>
+    <td align="center">
+      <table role="presentation" width="600" cellpadding="0" cellspacing="0" style="max-width:600px;width:100%;background:#ffffff;border-radius:12px;overflow:hidden;">
+        <% if @banner_filename %>
+          <tr>
+            <td>
+              <%= image_tag attachments[@banner_filename].url, alt: @challenge.display_title, width: 600,
+                    style: "display:block;width:100%;max-width:600px;height:auto;border:0;" %>
+            </td>
+          </tr>
+        <% end %>
+
+        <tr>
+          <td style="padding:28px 32px 8px;color:#111827;">
+            <p style="margin:0 0 12px;font-size:15px;"><%= t(".greeting", name: @user.first_name) %></p>
+            <h1 style="margin:0 0 12px;font-size:22px;line-height:1.3;">
+              <%= t(".headline", title: @challenge.display_title, count: @days_left) %>
+            </h1>
+            <% if @event_date %>
+              <p style="margin:0 0 16px;font-size:14px;color:#6b7280;">
+                <%= t(".date", date: l(@event_date, format: :long)) %>
+              </p>
+            <% end %>
+            <p style="margin:0 0 16px;font-size:15px;line-height:1.5;"><%= t(".intro") %></p>
+          </td>
+        </tr>
+
+        <tr>
+          <td style="padding:0 32px;">
+            <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#fff7ed;border-radius:8px;">
+              <tr>
+                <td style="padding:16px 20px;font-size:14px;color:#111827;line-height:1.6;">
+                  <strong><%= t(".goal") %></strong><br>
+                  <% @challenge.challenge_requirements.each do |requirement| %>
+                    • <%= requirement.label %><br>
+                  <% end %>
+                  <strong><%= t(".reward") %></strong>
+                  +<%= @season_challenge.xp_reward %> XP<% if @season_challenge.coin_reward.positive? %> · <%= t(".coins", count: @season_challenge.coin_reward) %><% end %>
+                </td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+
+        <tr>
+          <td align="center" style="padding:24px 32px 28px;">
+            <%= link_to t(".cta"), season_url(@season),
+                  style: "display:inline-block;background:#FC4C02;color:#ffffff;text-decoration:none;font-weight:bold;font-size:15px;padding:12px 28px;border-radius:8px;" %>
+          </td>
+        </tr>
+
+        <tr>
+          <td style="padding:16px 32px 24px;border-top:1px solid #e5e7eb;font-size:12px;color:#9ca3af;line-height:1.5;">
+            <%= t(".footer") %><br>
+            <%= link_to t(".unsubscribe"), @unsubscribe_url, style: "color:#9ca3af;" %>
+          </td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+</table>

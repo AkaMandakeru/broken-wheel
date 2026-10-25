@@ -1,0 +1,27 @@
+en:
+  api:
+    errors:
+      not_found: "We couldn't find that."
+      validation_failed: "Some fields need attention."
+      bad_request: "The request was missing something or was malformed."
+      invalid_signed_id: "That file reference is not valid."
+      unauthorized: "Please sign in again."
+      invalid_credentials: "Wrong email or password."
+      account_locked: "Your account is locked after too many attempts. Check your email to unlock it, or try again in an hour."
+      invalid_refresh_token: "Your session has ended. Please sign in again."
+      rate_limited: "Too many attempts. Please wait a moment and try again."
+      upgrade_required: "This version of the app is no longer supported. Please update it."
+      feature_disabled: "%{feature} is unavailable right now."
+      invalid_cursor: "That page link is no longer valid."
+      invalid_idempotency_key: "The Idempotency-Key header is too long."
+      idempotency_key_reused: "This Idempotency-Key was already used for a different request."
+      idempotency_key_in_progress: "This request is still being processed."
+      invalid_upload: "That image can't be uploaded."
+      forbidden: "You can't do that."
+    uploads:
+      checksum_missing: "is missing"
+      bad_purpose: "is not a supported upload"
+      bad_type: "must be a PNG, JPEG, WEBP or GIF image"
+      too_large: "must be at most %{size}"
+      unknown: "was not uploaded by you"
+      not_uploaded: "has not finished uploading"

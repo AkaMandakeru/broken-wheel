@@ -16,7 +16,7 @@ class PushSubscriptionsController < ApplicationController
     if subscription.save
       head :created
     else
-      render json: { errors: subscription.errors.full_messages }, status: :unprocessable_entity
+      render json: { errors: subscription.errors.full_messages }, status: :unprocessable_content
     end
   end
 

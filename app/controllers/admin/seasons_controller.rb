@@ -29,7 +29,7 @@ module Admin
       if @season.save
         redirect_to admin_season_path(@season), notice: t("admin.flashes.seasons.created")
       else
-        render :new, status: :unprocessable_entity
+        render :new, status: :unprocessable_content
       end
     end
 
@@ -37,7 +37,7 @@ module Admin
       if @season.update(season_params)
         redirect_to admin_season_path(@season), notice: t("admin.flashes.seasons.updated")
       else
-        render :edit, status: :unprocessable_entity
+        render :edit, status: :unprocessable_content
       end
     end
 

@@ -2,7 +2,7 @@
 
 class WorkoutsController < ApplicationController
   before_action :authenticate_user!
-  before_action :require_strava_connection, only: [:strava_activities, :import_strava]
+  before_action :require_strava_connection, only: [ :strava_activities, :import_strava ]
 
   rescue_from StravaService::Error do |e|
     Rails.logger.error("Strava error for user=#{current_user.id}: #{e.message}")
@@ -48,28 +48,7 @@ class WorkoutsController < ApplicationController
       return redirect_to strava_activities_workouts_path, alert: t("flashes.workouts.no_activities_selected")
     end
 
-    service = StravaService.new(current_user)
-    importer = Strava::ActivityImporter.new(current_user, client: service)
-    imported = 0
-
-    Analytics.track(user: current_user, event: "workout_import_started", properties: { provider: "strava", requested_count: activity_ids.size })
-
-    activity_ids.each do |strava_id|
-      activity = service.activity(strava_id)
-      imported += 1 if importer.import_one(activity)
-    end
-
-    Analytics.track(user: current_user, event: "workout_import_completed",
-                    properties: { provider: "strava", imported_count: imported,
-                                  requested_count: activity_ids.size,
-                                  season_key: Season.active.by_recent.first&.key })
-
-    # One message per import, not per workout — a 40-activity import should not
-    # produce 40 Slack notifications.
-    if imported.positive?
-      SlackNotifier.notify(:workout_imported, user: current_user,
-                                              extra: { "Workouts" => imported, "Source" => "Strava" })
-    end
+    imported = Strava::ManualImport.new(current_user, activity_ids).call
 
     notice = t("flashes.workouts.strava_imported", count: imported)
     # Back to the season, where the import actually shows up: new XP to claim,
@@ -79,10 +58,8 @@ class WorkoutsController < ApplicationController
   end
 
   def create
-    workout = current_user.workouts.build(workout_params.merge(provider: "manual"))
-    if workout.save
-      Analytics.track(user: current_user, event: "workout_created_manually", properties: { sport: workout.sport, distance_km: workout.distance_km, duration_minutes: workout.duration_minutes })
-      update_participation_progress(workout)
+    workout = Workouts::ManualEntry.new(current_user, workout_params).call
+    if workout.persisted?
       redirect_to workouts_path, notice: t("flashes.workouts.added")
     else
       redirect_to workouts_path, alert: workout.errors.full_messages.join(", ")
@@ -99,14 +76,5 @@ class WorkoutsController < ApplicationController
 
   def workout_params
     params.require(:workout).permit(:sport, :distance_km_input, :distance_m_input, :duration_hours_input, :duration_minutes_input, :duration_seconds_input, :workout_date, :challenge_participation_id)
-  end
-
-  def update_participation_progress(_workout)
-    # Recompute every active challenge the user is in — a workout counts toward
-    # all challenges it qualifies for, not just the one it was attached to.
-    current_user.challenge_participations
-                .joins(:challenge)
-                .where(challenges: { status: "active" }, completed_at: nil)
-                .find_each { |participation| RecomputeChallengeProgress.new(participation).call }
   end
 end

@@ -1,0 +1,56 @@
+pt:
+  admin:
+    nav:
+      content_reports: Denúncias
+    flashes:
+      content_reports:
+        updated: Denúncia atualizada.
+        removed: Conteúdo removido e denúncias encerradas.
+        not_removable: Este conteúdo não pode ser removido por aqui.
+    content_reports:
+      title: Denúncias
+      empty: Nenhuma denúncia.
+      open_count:
+        zero: Nada aguardando revisão
+        one: 1 aguardando revisão
+        other: "%{count} aguardando revisão"
+      deleted_user: Usuário excluído
+      removed_content: Este conteúdo foi removido.
+      view_club: Ver clube
+      reported_by: "Denunciado por %{name} em %{date}"
+      resolved_by: "resolvido por %{name} em %{date}"
+      related:
+        one: Mais 1 denúncia sobre isto
+        other: "Mais %{count} denúncias sobre isto"
+      filters:
+        all: Todas
+      statuses:
+        open: Aberta
+        dismissed: Descartada
+        actioned: Resolvida
+      types:
+        timeline_post: Publicação
+        timeline_post_comment: Comentário
+        club: Clube
+        user: Atleta
+      reasons:
+        spam: Spam
+        harassment: Assédio
+        hate: Discurso de ódio
+        sexual: Conteúdo sexual
+        violence: Violência
+        other: Outro
+      fields:
+        content: Conteúdo
+        reason: Motivo
+        reported_user: Atleta denunciado
+        reporter: Denunciado por
+        created: Data
+        status: Status
+        details: Detalhes
+      actions:
+        dismiss: Descartar
+        action: Marcar como resolvida
+        reopen: Reabrir
+        remove_content: Remover conteúdo
+        remove_confirm: Remover este conteúdo para todos? Isso não pode ser desfeito.

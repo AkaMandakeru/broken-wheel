@@ -13,7 +13,7 @@ class SeasonClaimsController < ApplicationController
     result = SeasonXpClaimer.new(@participation).call(completion: completion)
 
     respond_to do |format|
-      format.json { render json: claim_json(result) }
+      format.json { render json: result.summary }
       format.html { redirect_to season_path(@season), notice: notice_for(result) }
     end
   end
@@ -47,19 +47,6 @@ class SeasonClaimsController < ApplicationController
     return nil if params[:id].blank?
 
     @participation.season_challenge_completions.find_by(id: params[:id])
-  end
-
-  def claim_json(result)
-    {
-      claimed: result.claimed,
-      xp_gained: result.xp,
-      xp: @participation.xp,
-      level: @participation.level,
-      levelled_up: result.levelled_up?,
-      progress_percent: @participation.progress_percent,
-      xp_to_next: @participation.xp_to_next_level,
-      remaining: @participation.unclaimed_count
-    }
   end
 
   def notice_for(result)

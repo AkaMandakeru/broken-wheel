@@ -1,5 +1,8 @@
 class Season < ApplicationRecord
-  has_one_attached :image
+  has_one_attached :image do |attachable|
+    attachable.variant :card, resize_to_limit: [ 800, 400 ], preprocessed: true
+    attachable.variant :hero, resize_to_limit: [ 1600, 800 ], preprocessed: true
+  end
 
   has_many :season_challenges, -> { order(:position) }, dependent: :destroy
   has_many :challenges, through: :season_challenges

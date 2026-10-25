@@ -15,6 +15,9 @@ module Strava
       "Soccer"           => "soccer"
     }.freeze
 
+    # Strava's maximum, to spend as few of the rate-limited requests as possible.
+    PAGE_SIZE = 200
+
     Result = Struct.new(:imported, :skipped, keyword_init: true)
 
     def initialize(user, client: nil, after: nil)
@@ -23,16 +26,27 @@ module Strava
       @after = after
     end
 
-    def call
+    # Walks the athlete's history a page at a time, from `from_page`, and
+    # yields the next page number after each one is saved — so a job can
+    # record its place and resume there after a restart.
+    def call(from_page: 1)
       imported = 0
       skipped = 0
+      page = from_page
 
-      @client.activities(after: @after) do |activity|
-        if upsert(activity)
-          imported += 1
-        else
-          skipped += 1
+      loop do
+        activities = @client.activities_page(page: page, per_page: PAGE_SIZE, after: @after)
+        activities.each do |activity|
+          if upsert(activity)
+            imported += 1
+          else
+            skipped += 1
+          end
         end
+        break if activities.size < PAGE_SIZE
+
+        page += 1
+        yield page if block_given?
       end
 
       finalize!

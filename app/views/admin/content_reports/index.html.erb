@@ -1,0 +1,56 @@
+<div class="pt-8">
+  <div class="flex items-center justify-between mb-6">
+    <h1 class="text-2xl font-bold text-gray-900"><%= t("admin.content_reports.title") %></h1>
+    <span class="text-sm text-gray-500"><%= t("admin.content_reports.open_count", count: @open_count) %></span>
+  </div>
+
+  <%# Status filter %>
+  <div class="flex gap-2 mb-6 text-sm">
+    <%= link_to t("admin.content_reports.filters.all"), admin_content_reports_path,
+          class: "px-3 py-1.5 rounded-lg #{@status.nil? ? 'bg-[#FC4C02] text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'}" %>
+    <% ContentReport::STATUSES.each do |status| %>
+      <%= link_to t("admin.content_reports.statuses.#{status}"), admin_content_reports_path(status: status),
+            class: "px-3 py-1.5 rounded-lg #{@status == status ? 'bg-[#FC4C02] text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'}" %>
+    <% end %>
+  </div>
+
+  <% if @reports.any? %>
+    <div class="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden">
+      <table class="min-w-full divide-y divide-gray-200">
+        <thead class="bg-gray-50">
+          <tr>
+            <th class="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider"><%= t("admin.content_reports.fields.content") %></th>
+            <th class="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider"><%= t("admin.content_reports.fields.reason") %></th>
+            <th class="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider"><%= t("admin.content_reports.fields.reported_user") %></th>
+            <th class="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider"><%= t("admin.content_reports.fields.reporter") %></th>
+            <th class="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider"><%= t("admin.content_reports.fields.created") %></th>
+            <th class="px-4 py-3 text-left text-xs font-semibold text-gray-500 uppercase tracking-wider"><%= t("admin.content_reports.fields.status") %></th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-gray-100">
+          <% @reports.each do |report| %>
+            <tr class="hover:bg-gray-50">
+              <td class="px-4 py-3">
+                <%= link_to admin_content_report_path(report), class: "font-medium text-gray-900 hover:text-[#FC4C02]" do %>
+                  <%= t("admin.content_reports.types.#{report.api_reportable_type}") %>
+                  <span class="block text-sm font-normal text-gray-500 truncate max-w-xs">
+                    <%= report.reportable ? report.reportable_excerpt.to_s.truncate(80) : t("admin.content_reports.removed_content") %>
+                  </span>
+                <% end %>
+              </td>
+              <td class="px-4 py-3 text-sm text-gray-600"><%= t("admin.content_reports.reasons.#{report.reason}") %></td>
+              <td class="px-4 py-3 text-sm text-gray-600"><%= content_report_user_name(report.reported_user) %></td>
+              <td class="px-4 py-3 text-sm text-gray-600"><%= content_report_user_name(report.reporter) %></td>
+              <td class="px-4 py-3 text-sm text-gray-600"><%= report.created_at.strftime("%b %-d, %Y") %></td>
+              <td class="px-4 py-3">
+                <span class="text-xs px-2 py-1 rounded-full <%= content_report_badge_class(report.status) %>"><%= t("admin.content_reports.statuses.#{report.status}") %></span>
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+  <% else %>
+    <p class="text-gray-500 py-8"><%= t("admin.content_reports.empty") %></p>
+  <% end %>
+</div>

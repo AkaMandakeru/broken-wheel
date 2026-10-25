@@ -49,7 +49,7 @@ RSpec.describe "Admin cosmetics", type: :request do
       post admin_cosmetics_path, params: { cosmetic: { key: "taken", kind: "banner", name: "Again" } }
     }.not_to change(Cosmetic, :count)
 
-    expect(response).to have_http_status(:unprocessable_entity)
+    expect(response).to have_http_status(:unprocessable_content)
   end
 
   it "lists banners and frames" do

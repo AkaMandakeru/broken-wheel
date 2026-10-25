@@ -1,5 +1,27 @@
 pt:
 
+  # Datas e horas — usadas por l(); sem isto o português cai nos nomes de mês em inglês.
+  date:
+    formats:
+      default: "%d/%m/%Y"
+      short: "%d de %b"
+      long: "%d de %B de %Y"
+    day_names: [domingo, segunda-feira, terça-feira, quarta-feira, quinta-feira, sexta-feira, sábado]
+    abbr_day_names: [dom, seg, ter, qua, qui, sex, sáb]
+    month_names: [~, janeiro, fevereiro, março, abril, maio, junho, julho, agosto, setembro, outubro, novembro, dezembro]
+    abbr_month_names: [~, jan, fev, mar, abr, mai, jun, jul, ago, set, out, nov, dez]
+    order:
+      - :day
+      - :month
+      - :year
+  time:
+    formats:
+      default: "%a, %d de %B de %Y, %H:%M:%S %z"
+      short: "%d de %B, %H:%M"
+      long: "%d de %B de %Y, %H:%M"
+    am: "am"
+    pm: "pm"
+
   # Achievements (Conquistas)
   achievements:
     index:
@@ -341,6 +363,9 @@ pt:
       title: "Editar perfil"
       back: "Voltar ao perfil"
       cancel: "Cancelar"
+    email_reminders:
+      title: "Lembretes por e-mail"
+      label: "Me avise por e-mail antes de eventos especiais e para manter meus treinos em dia"
     notifications:
       title: "Notificações push"
       description: "Receba avisos de novas conquistas e eventos, mesmo com o app fechado."
@@ -723,6 +748,13 @@ pt:
       season_challenges:
         added: "Desafio adicionado à temporada."
         removed: "Desafio removido da temporada."
+        banner_saved: "Banner do e-mail salvo."
+        banner_removed: "Banner do e-mail removido."
+        test_sent: "Lembrete de teste enviado para %{email}."
+        reminder_sent:
+          one: "Lembrete enfileirado para 1 jogador."
+          other: "Lembrete enfileirado para %{count} jogadores."
+        reminder_not_sent: "Só desafios especiais têm e-mail de lembrete."
       season_objectives:
         added: "Objetivo adicionado à temporada."
         removed: "Objetivo removido da temporada."
@@ -897,6 +929,20 @@ pt:
         coins: "Moedas"
         fragments: "Fragmentos de medalha"
         add: "Adicionar desafio"
+      reminders:
+        title: "E-mail de lembrete"
+        scheduled: "Sai automaticamente em %{date}."
+        sent_on: "Enviado em %{date}."
+        no_date: "Defina uma data para este desafio para que o lembrete seja agendado."
+        banner_own: "Usando o banner deste evento."
+        banner_fallback: "Sem banner ainda — usando a imagem do desafio ou da temporada."
+        banner_none: "Sem banner ainda — o e-mail sai sem imagem."
+        upload: "Enviar banner"
+        remove_banner: "Remover banner"
+        send_test: "Enviar teste para mim"
+        send_now: "Enviar para todos agora"
+        resend: "Enviar novamente"
+        confirm: "Enviar e-mail sobre este evento para todos os jogadores agora?"
       objectives:
         title: "Objetivos de clube"
         hint: "Metas baseadas em ações, como entrar em um clube ou treinar como membro."
@@ -1140,6 +1186,11 @@ pt:
         season:
           attributes:
             image:
+              invalid_type: "deve ser uma imagem (%{types})"
+              too_large: "deve ser menor que %{size}"
+        season_challenge:
+          attributes:
+            email_banner:
               invalid_type: "deve ser uma imagem (%{types})"
               too_large: "deve ser menor que %{size}"
 
@@ -1438,6 +1489,38 @@ pt:
           other: "Registre %{count} treinos como membro de um clube"
 
   # Texto das notificações push
+  # E-mails de engajamento
+  engagement_mailer:
+    special_event_reminder:
+      subject: "%{title} está chegando 🏁"
+      greeting: "Olá, %{name}!"
+      headline:
+        zero: "%{title} é hoje!"
+        one: "%{title} é amanhã!"
+        other: "Faltam %{count} dias para %{title}!"
+      date: "Dia %{date}"
+      intro: "Um evento especial de um dia só, com recompensas extras. Registre sua atividade no dia e a recompensa é sua — perdeu o dia, perdeu a recompensa."
+      goal: "Meta"
+      reward: "Recompensa:"
+      coins:
+        one: "1 moeda"
+        other: "%{count} moedas"
+      cta: "Ver o evento"
+      footer: "Você recebeu este e-mail porque tem uma conta no Broken Wheels."
+      unsubscribe: "Parar de receber lembretes"
+
+  # Página de descadastro, linkada nos e-mails de engajamento
+  email_subscriptions:
+    show:
+      title: "E-mails de lembrete"
+      subscribed: "Você está recebendo e-mails de lembrete sobre eventos especiais e seus treinos."
+      unsubscribed: "Você não vai mais receber e-mails de lembrete. E-mails da conta, como redefinição de senha, continuam chegando."
+      unsubscribe: "Descadastrar"
+      resubscribe: "Voltar a receber"
+    invalid:
+      title: "Link inválido"
+      body: "Este link de descadastro é inválido. Você pode gerenciar os e-mails de lembrete no seu perfil."
+
   push:
     achievement:
       title: "Conquista desbloqueada! 🎉"
@@ -1456,6 +1539,9 @@ pt:
       body: "Você ganhou %{xp} XP!"
 
   flashes:
+    email_subscriptions:
+      unsubscribed: "Você foi descadastrado dos e-mails de lembrete."
+      resubscribed: "Você voltará a receber e-mails de lembrete."
     support:
       created: "Mensagem enviada! Responderemos aqui em breve."
       message_sent: "Resposta enviada."

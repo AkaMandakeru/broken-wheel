@@ -3,10 +3,10 @@
 class TimelinePostsController < ApplicationController
   before_action :authenticate_user!
   before_action :set_challenge
-  before_action :ensure_participant, only: [:index, :create]
+  before_action :ensure_participant, only: [ :index, :create ]
 
   def index
-    @timeline_posts = @challenge.timeline_posts.includes(:user, :workout, images_attachments: :blob).order(created_at: :desc)
+    @timeline_posts = @challenge.timeline_posts.includes(:user, :workout, images_attachments: :blob).visible_to(current_user).order(created_at: :desc)
     @timeline_post = TimelinePost.new
   end
 
@@ -18,7 +18,7 @@ class TimelinePostsController < ApplicationController
       redirect_to challenge_timeline_posts_path(@challenge), notice: t("flashes.timeline_posts.created")
     else
       @timeline_posts = @challenge.timeline_posts.includes(:user, :workout).order(created_at: :desc)
-      render :index, status: :unprocessable_entity
+      render :index, status: :unprocessable_content
     end
   end
 
@@ -29,7 +29,7 @@ class TimelinePostsController < ApplicationController
   end
 
   def ensure_participant
-    return if current_user.challenge_participations.exists?(challenge_id: @challenge.id)
+    return if Challenges::Context.participant?(current_user, @challenge)
 
     redirect_to challenge_path(@challenge), alert: t("flashes.timeline_posts.must_join")
   end
