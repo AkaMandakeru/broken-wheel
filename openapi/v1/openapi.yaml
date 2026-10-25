@@ -1831,13 +1831,24 @@ paths:
           description: not a member
   "/api/v1/config":
     get:
-      summary: 'App configuration: features, locales, minimum version'
+      summary: 'App configuration: available features, locales, minimum version'
       tags:
       - Config
+      description: |
+        Show only the features listed in `features`, in that order; anything else is
+        switched off. Every API response carries an `X-Features-Version` header: when it
+        differs from `features_version`, fetch this again (it supports `If-None-Match`).
       security: []
+      parameters:
+      - "$ref": "#/components/parameters/accept_language"
       responses:
         '200':
           description: configuration
+          headers:
+            X-Features-Version:
+              schema:
+                type: string
+              description: Changes whenever a feature is switched on or off
           content:
             application/json:
               schema:
@@ -1849,6 +1860,8 @@ paths:
                     type: object
                     required:
                     - features
+                    - unavailable_features
+                    - features_version
                     - locales
                     - default_locale
                     - links
@@ -1857,9 +1870,70 @@ paths:
                         type: string
                         nullable: true
                       features:
-                        type: object
-                        additionalProperties:
-                          type: boolean
+                        type: array
+                        items:
+                          type: object
+                          required:
+                          - key
+                          - name
+                          - description
+                          - icon
+                          properties:
+                            key:
+                              type: string
+                              enum:
+                              - challenges
+                              - events
+                              - seasons
+                              - workouts
+                              - achievements
+                              - clubs
+                              - integrations
+                              - support
+                            name:
+                              type: string
+                            description:
+                              type: string
+                            icon:
+                              type: object
+                              required:
+                              - set
+                              - style
+                              - name
+                              properties:
+                                set:
+                                  type: string
+                                  enum:
+                                  - FontAwesome6
+                                style:
+                                  type: string
+                                  example: solid
+                                name:
+                                  type: string
+                                  example: trophy
+                      unavailable_features:
+                        type: array
+                        items:
+                          type: object
+                          required:
+                          - key
+                          - name
+                          properties:
+                            key:
+                              type: string
+                              enum:
+                              - challenges
+                              - events
+                              - seasons
+                              - workouts
+                              - achievements
+                              - clubs
+                              - integrations
+                              - support
+                            name:
+                              type: string
+                      features_version:
+                        type: string
                       locales:
                         type: array
                         items:
@@ -8073,6 +8147,9 @@ components:
               type: string
             message:
               type: string
+            feature:
+              type: string
+              description: 'With `feature_disabled`: the switched-off feature''s key'
             fields:
               type: object
               additionalProperties:

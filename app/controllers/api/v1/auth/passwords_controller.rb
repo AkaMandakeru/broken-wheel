@@ -11,8 +11,7 @@ module Api
       class PasswordsController < BaseController
         allow_unauthenticated_access only: :create
 
-        rate_limit to: 5, within: 10.minutes, only: :create,
-                   with: -> { render_error :too_many_requests, "rate_limited" }
+        rate_limit to: 5, within: 10.minutes, only: :create
 
         def create
           User.send_reset_password_instructions(email: params[:email].to_s.downcase.strip)

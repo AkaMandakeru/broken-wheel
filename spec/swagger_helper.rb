@@ -48,6 +48,7 @@ RSpec.configure do |config|
                 properties: {
                   code: { type: :string },
                   message: { type: :string },
+                  feature: { type: :string, description: "With `feature_disabled`: the switched-off feature's key" },
                   fields: { type: :object, additionalProperties: { type: :array, items: { type: :string } } }
                 }
               }

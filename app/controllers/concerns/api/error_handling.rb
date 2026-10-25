@@ -23,6 +23,12 @@ module Api
         render_error :bad_request, "bad_request"
       end
 
+      # Raised by every `rate_limit` (its default `with:`), so throttled
+      # endpoints all answer the same way without repeating a handler.
+      rescue_from ActionController::TooManyRequests do
+        render_error :too_many_requests, "rate_limited"
+      end
+
       rescue_from ActiveSupport::MessageVerifier::InvalidSignature do
         render_error :unprocessable_content, "invalid_signed_id"
       end
@@ -32,9 +38,11 @@ module Api
 
     # rescue_from handlers run outside Api::Localized's around_action, so the
     # request's locale is set again here rather than inherited.
-    def render_error(status, code, message: nil, fields: nil)
+    # `details` adds machine-readable context beside the code, e.g. which
+    # feature was switched off. It can't replace `code` or `message`.
+    def render_error(status, code, message: nil, fields: nil, **details)
       I18n.with_locale(api_locale) do
-        body = { code: code, message: message || I18n.t("api.errors.#{code}") }
+        body = { **details, code: code, message: message || I18n.t("api.errors.#{code}") }
         body[:fields] = fields if fields.present?
         render json: { error: body }, status: status
       end

@@ -6,8 +6,7 @@ module Api
     # Reporting the same thing twice is not an error: the first report comes
     # back with 200, so a retry or a second tap needs no special handling.
     class ReportsController < BaseController
-      rate_limit to: 30, within: 1.hour, only: :create, by: -> { current_user.id },
-                 with: -> { render_error :too_many_requests, "rate_limited" }
+      rate_limit to: 30, within: 1.hour, only: :create, by: -> { current_user.id }
 
       def create
         type, id, reason = params.expect(:reportable_type, :reportable_id, :reason)

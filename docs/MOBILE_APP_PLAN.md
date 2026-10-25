@@ -76,9 +76,17 @@ mobile/
 
 ## 2. Information architecture
 
-Five tabs. A tab is hidden when its feature is switched off (`GET /api/v1/config` → enabled
-features — the same catalogue as `Features::CATALOGUE`); a deep link into a disabled
-feature shows a friendly "unavailable" screen instead of an error.
+Five tabs. The app builds its menu from `GET /api/v1/config` → `features`, which lists
+only the features that are switched on (key, localised name, description and a
+FontAwesome6 icon name), in menu order. A tab or entry point whose feature isn't listed
+is hidden. A deep link into one of `unavailable_features` shows a friendly
+"<name> is unavailable" screen instead of an error.
+
+Keeping it current: every API response carries an `X-Features-Version` header. When it
+differs from the `features_version` the app last saw, the app refetches `/config` (sending
+`If-None-Match`, so an unchanged menu costs a 304) and the tabs update. A 403 with
+`error.code = "feature_disabled"` names the feature in `error.feature`, so a screen that
+was open when an admin switched it off can close itself.
 
 | Tab | Content | Web equivalent | Feature flag |
 |---|---|---|---|

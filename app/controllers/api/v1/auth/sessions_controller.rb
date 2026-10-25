@@ -9,13 +9,10 @@ module Api
       class SessionsController < BaseController
         allow_unauthenticated_access only: [ :create, :refresh ]
 
-        rate_limit to: 10, within: 3.minutes, only: :create, name: "login-ip",
-                   with: -> { render_error :too_many_requests, "rate_limited" }
+        rate_limit to: 10, within: 3.minutes, only: :create, name: "login-ip"
         rate_limit to: 10, within: 3.minutes, only: :create, name: "login-email",
-                   by: -> { params[:email].to_s.downcase.strip },
-                   with: -> { render_error :too_many_requests, "rate_limited" }
-        rate_limit to: 30, within: 3.minutes, only: :refresh,
-                   with: -> { render_error :too_many_requests, "rate_limited" }
+                   by: -> { params[:email].to_s.downcase.strip }
+        rate_limit to: 30, within: 3.minutes, only: :refresh
 
         def create
           user = User.find_for_authentication(email: params[:email].to_s.downcase.strip)

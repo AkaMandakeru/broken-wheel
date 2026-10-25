@@ -47,4 +47,24 @@ RSpec.describe "API v1 foundation", type: :request do
 
     expect(seen.size).to eq(5)
   end
+
+  it "answers throttled requests with 429 rate_limited, in the app's language" do
+    # The test cache is a null store, so force the counter past the limit.
+    allow(Api::V1::Auth::PasswordsController.cache_store).to receive(:increment).and_return(1_000)
+
+    post "/api/v1/auth/password", params: { email: user.email }, as: :json, headers: { "Accept-Language" => "pt" }
+
+    expect(response).to have_http_status(:too_many_requests)
+    expect(json_body["error"]).to include("code" => "rate_limited", "message" => I18n.t("api.errors.rate_limited", locale: :pt))
+  end
+
+  it "never lets error details replace the code or message" do
+    controller = Api::V1::ConfigController.new
+    allow(controller).to receive(:render) { |json:, **| @rendered = json }
+    allow(controller).to receive(:api_locale).and_return(:en)
+
+    controller.send(:render_error, :forbidden, "feature_disabled", code: "spoofed", feature: "clubs")
+
+    expect(@rendered[:error]).to include(code: "feature_disabled", feature: "clubs")
+  end
 end

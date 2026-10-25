@@ -7,8 +7,7 @@ module Api
       class RegistrationsController < BaseController
         allow_unauthenticated_access only: :create
 
-        rate_limit to: 5, within: 10.minutes, only: :create,
-                   with: -> { render_error :too_many_requests, "rate_limited" }
+        rate_limit to: 5, within: 10.minutes, only: :create
 
         def create
           user = Accounts::Registration.call(registration_params)
