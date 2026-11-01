@@ -4,7 +4,10 @@
 # sports the app doesn't track; `imported` once it is already a workout.
 class StravaActivityResource < ApplicationResource
   attribute(:id) { |activity| activity.id.to_s }
-  attributes :name, :sport_type
+  # Strava's models are Hash subclasses with string keys, so Alba's plain
+  # `attributes` would `fetch(:name)` and miss. Blocks call the methods instead.
+  attribute(:name, &:name)
+  attribute(:sport_type, &:sport_type)
 
   attribute(:sport) { |activity| Strava::ActivityImporter::SPORT_MAP[activity.sport_type] }
   attribute(:importable) { |activity| Strava::ActivityImporter::SPORT_MAP.key?(activity.sport_type) }

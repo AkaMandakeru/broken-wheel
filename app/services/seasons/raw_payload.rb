@@ -10,8 +10,14 @@ module Seasons
     # Hash lookup comes first on purpose: a payload hash `respond_to?(:map)`
     # via Enumerable, so method dispatch would silently return the pairs array
     # instead of the activity's "map" field.
+    #
+    # Strava's gem models are Hashie::Dash, a Hash subclass that raises on any
+    # key it hasn't declared (symbol keys included, since it declares strings),
+    # so they are read through their methods; an undeclared field is nil.
     def field(payload, key)
-      if payload.is_a?(Hash)
+      if payload.is_a?(Hashie::Dash)
+        payload.public_send(key) if payload.respond_to?(key)
+      elsif payload.is_a?(Hash)
         payload[key.to_s].nil? ? payload[key.to_sym] : payload[key.to_s]
       elsif payload.respond_to?(key)
         payload.public_send(key)

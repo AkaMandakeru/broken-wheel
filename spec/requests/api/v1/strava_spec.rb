@@ -13,9 +13,11 @@ RSpec.describe "API v1 Strava", type: :request do
   end
 
   def strava_activity(id:, sport_type: "Run", name: "Morning Run")
-    double("Activity", id: id, sport_type: sport_type, name: name, distance: 10_000.0, moving_time: 3000,
-                       elapsed_time: 3100, start_date_local: Time.utc(2026, 5, 10, 8),
-                       start_date: Time.utc(2026, 5, 10, 11), to_h: { "id" => id, "sport_type" => sport_type })
+    # The real model, not a double: it is a Hash subclass, which changes how Alba reads it.
+    Strava::Models::SummaryActivity.new(
+      "id" => id, "sport_type" => sport_type, "name" => name, "distance" => 10_000.0, "moving_time" => 3000,
+      "elapsed_time" => 3100, "start_date_local" => "2026-05-10T08:00:00Z", "start_date" => "2026-05-10T11:00:00Z"
+    )
   end
 
   def stub_strava_service
