@@ -10,7 +10,7 @@ module Api
         rate_limit to: 5, within: 10.minutes, only: :create
 
         def create
-          user = Accounts::Registration.call(registration_params)
+          user = Accounts::Registration.call(registration_params, source: signup_source)
           return render_invalid(user) unless user.persisted?
 
           tokens = ApiSession.start!(user, device_name: params[:device_name], platform: params[:platform],
@@ -21,6 +21,13 @@ module Api
         end
 
         private
+
+        # Neither app sends a platform on sign-up yet, so this is often just
+        # "App"; the param or X-Platform header adds it when present.
+        def signup_source
+          Accounts::Registration.app_source(platform: params[:platform].presence || request.headers["X-Platform"],
+                                            app_version: app_version)
+        end
 
         def registration_params
           attributes = params.expect(user: [ :first_name, :last_name, :nickname, :email, :password ])

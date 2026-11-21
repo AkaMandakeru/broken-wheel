@@ -27,7 +27,7 @@ class Users::RegistrationsController < Devise::RegistrationsController
   end
 
   def after_sign_up_path_for(resource)
-    Accounts::Registration.announce(resource)
+    Accounts::Registration.announce(resource, source: Accounts::Registration::WEB)
     logged_in_home_path
   end
 end

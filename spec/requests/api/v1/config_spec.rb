@@ -90,6 +90,41 @@ RSpec.describe "API v1 config", type: :request do
     expect(json_data["features"].pluck("key")).not_to include("events")
   end
 
+  describe "legal links" do
+    around do |example|
+      saved = ENV.values_at("PRIVACY_POLICY_URL", "TERMS_URL", "DELETE_ACCOUNT_URL")
+      example.run
+    ensure
+      ENV["PRIVACY_POLICY_URL"], ENV["TERMS_URL"], ENV["DELETE_ACCOUNT_URL"] = saved
+    end
+
+    it "points at the privacy policy, terms and account deletion page on the company site" do
+      ENV.delete("PRIVACY_POLICY_URL")
+      ENV.delete("TERMS_URL")
+      ENV.delete("DELETE_ACCOUNT_URL")
+
+      get "/api/v1/config"
+
+      expect(json_data["links"]).to include(
+        "privacy_policy" => "https://mandakeru-labs.com/broken-wheels/privacy",
+        "terms" => "https://mandakeru-labs.com/broken-wheels/terms",
+        "delete_account" => "https://mandakeru-labs.com/broken-wheels/delete-account"
+      )
+    end
+
+    it "lets the environment override them, and a change reaches apps holding a cached copy" do
+      ENV.delete("TERMS_URL")
+      get "/api/v1/config"
+      etag = response.headers["ETag"]
+
+      ENV["TERMS_URL"] = "https://example.com/terms"
+      get "/api/v1/config", headers: { "If-None-Match" => etag }
+
+      expect(response).to have_http_status(:ok)
+      expect(json_data["links"]["terms"]).to eq("https://example.com/terms")
+    end
+  end
+
   describe "X-Features-Version on every response" do
     let(:user) { build_user }
 

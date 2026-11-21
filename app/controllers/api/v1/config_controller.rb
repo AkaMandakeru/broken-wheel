@@ -10,8 +10,18 @@ module Api
       allow_unauthenticated_access
       skip_before_action :ensure_supported_app_version
 
+      # Link name => [env var that overrides it, page on the company site].
+      LEGAL_LINKS = {
+        privacy_policy: [ "PRIVACY_POLICY_URL", "https://mandakeru-labs.com/broken-wheels/privacy" ],
+        terms: [ "TERMS_URL", "https://mandakeru-labs.com/broken-wheels/terms" ],
+        delete_account: [ "DELETE_ACCOUNT_URL", "https://mandakeru-labs.com/broken-wheels/delete-account" ]
+      }.freeze
+
       def show
-        return unless stale?(etag: [ Api::FeatureSet.version, Api::AppVersion.minimum, I18n.locale ])
+        legal = legal_links
+        # The legal links are in the ETag so a change to them reaches apps
+        # holding a cached copy, not just a feature switch.
+        return unless stale?(etag: [ Api::FeatureSet.version, Api::AppVersion.minimum, I18n.locale, legal ])
 
         render_data({
           min_supported_version: Api::AppVersion.minimum,
@@ -27,10 +37,15 @@ module Api
           links: {
             web: root_url,
             password_reset: new_user_password_url,
-            privacy_policy: ENV["PRIVACY_POLICY_URL"].presence,
-            terms: ENV["TERMS_URL"].presence
+            **legal
           }
         })
+      end
+
+      private
+
+      def legal_links
+        LEGAL_LINKS.transform_values { |(env_var, default)| ENV[env_var].presence || default }
       end
     end
   end

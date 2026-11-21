@@ -450,7 +450,7 @@ Additions that the app plan asked for, now part of this plan:
   | `STRAVA_MOBILE_REDIRECT_URI` | Strava connect from the app (unset: the web callback) |
   | `EXPO_ACCESS_TOKEN` | Expo push, if the Expo project requires it |
   | `IOS_APP_IDS`, `ANDROID_APP_PACKAGE`, `ANDROID_SHA256_CERT_FINGERPRINTS` | Universal links / app links (unset: 404) |
-  | `PRIVACY_POLICY_URL`, `TERMS_URL` | Links returned by `GET /api/v1/config` |
+  | `PRIVACY_POLICY_URL`, `TERMS_URL`, `DELETE_ACCOUNT_URL` | Override the legal links returned by `GET /api/v1/config` (default: `https://mandakeru-labs.com/broken-wheels/privacy`, `/terms` and `/delete-account`) |
   | `SLACK_WEBHOOK_URL_CONTENT_REPORTED` | Optional: a separate Slack channel for content reports |
   | `R2_ENDPOINT`, `R2_BUCKET`, `R2_ACCESS_KEY_ID`, `R2_SECRET_ACCESS_KEY` | Only for the optional R2 move (§5) |
 
